@@ -1,0 +1,16 @@
+.checkout_details{
+
+}
+.nav-tabs{
+    border: none;
+}
+.nav-tabs .nav-item{
+    width: 49%;
+    text-align: center;
+}
+
+.nav-tabs .nav-link::before {
+    height: 0px;
+}
+
+

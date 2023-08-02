@@ -1,0 +1,99 @@
+.center-div {
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    /*border: 3px solid green;*/
+    /*padding: 10px;*/
+}
+
+.element-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 375px) {
+    .cz-countdown .cz-countdown-seconds {
+        margin-top: 0px !important;
+    }
+}
+
+.btn-gap-right {
+    margin-right: 2px;
+}
+
+.btn-gap-left {
+    margin-left: 2px;
+}
+
+.shop-name-left {
+    padding-left: 10px;
+}
+
+.shop-name-right {
+    padding-right: 10px;
+}
+
+.feature_header span {
+    color: black;
+}
+a {
+    color: black;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+.page-footer {
+    background: #373a41;
+    color: white;
+}
+
+.social-btn {
+    border-radius: 50%;
+    height: 2rem;
+    width: 2rem;
+}
+
+.social-btn i {
+    line-height: 1.9rem;
+}
+
+.for-margin {
+    margin-top: 10px;
+}
+
+.font-weight-bold {
+    font-weight: 600 !important;
+}
+
+.footer-heder {
+    color: #000;
+}
+
+.widget-list-link {
+    color: #d9dce2;
+}
+
+.page-footer hr {
+    border: 0.001px solid #2d3542;
+}
+
+.btn-secondary {
+    color: white !important;
+}
+
+.btn-outline-primary:hover {
+    color: white !important;
+}
+
+@media (max-width: 452px) {
+    .top-margin {
+        margin-top: 5px;
+    }
+}
+
+.string-limit {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}

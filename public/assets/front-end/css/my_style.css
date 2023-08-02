@@ -1,0 +1,61 @@
+.featured_cats .owl-nav.disabled{display: none!important;}
+.featured_cats.mains .owl-nav.disabled{display: none!important;}
+ .owl-dots.disabled{display: flex!important;}
+.owl-theme .owl-dots .owl-dot span {height: 13px!important;width: 13px!important;margin: auto!important;margin-right: 7px!important;}
+
+
+.checkbox-alphanumeric--style-1 label {height: 24px!important;padding: 0 18px!important;border-radius: 16px!important;}
+
+.real_image_container {height: 147px; overflow: hidden}
+.larg_container {height: 360px!important;}
+/*.product_container {background: red}*/
+.product_container_side {direction: rtl;border-radius: 10px;border: solid 1px rgba(0, 0, 0, 0.3);}
+
+
+.small-featured-product .product_container_side {height: 100%}
+
+.__number-filter-btn a {background: #fe7a85!important;}
+.navbar-light .navbar-tool-icon-box.bg-secondary {background-color: inherit!important;}
+a.bg-secondary:hover, a.bg-secondary:focus, button.bg-secondary:hover, button.bg-secondary:focus {background-color: inherit!important;}
+/*.widget-cart-item .close {left: 15px}*/
+.dropdown-menu {min-width: 321px!important;}
+#cart_items .btn.btn-outline-secondary.btn-sm {width: 100%}
+.cart_btns .btn > i {margin-top: 4px!important;}
+
+.pop_image_div {padding: 0 12px 5px 12px!important;}
+.pop_image {width: 50px}
+.pop_text {padding-top: 15px!important;}
+.pop_download {padding-top: 4px;}
+.pop_download a {padding: 7px 0;font-size: 12px;}
+.close_pop_up {position: absolute;left: 34px;top: 17px;cursor: pointer}
+.s_pop_txt {margin-right: 30px}
+
+#pac-input-billing {z-index:1500;font-family: 'Droid-Arabic-Kufi', sans-serif;height: 3.5em;width: 250px!important;top: 11px!important;}
+#pac-input-main {z-index:1500;font-family: 'Droid-Arabic-Kufi', sans-serif;height: 3.5em;width: 250px!important;top: 11px!important;}
+#pac-input {z-index:1500;font-family: 'Droid-Arabic-Kufi', sans-serif;height: 3.5em;width: 250px!important;padding-right: 10px!important;top: 13px!important;}
+#pac-input-new-main {z-index:1500;font-family: 'Droid-Arabic-Kufi', sans-serif;height: 3.5em;width: 250px!important;top: 11px!important; display: none}
+.line_through {position: absolute;top: -48px;right: 25%;z-index: 100;}
+.login_with h4 {font-size: 16px!important;}
+
+.custom-map-control-button {
+    position: absolute;
+    bottom: 39px;
+    right: 11%;
+    top: auto!important;
+    left: auto!important;
+    font-family: 'Droid-Arabic-Kufi', serif;
+    border: 1px solid #fe696a;
+    /* background: #fff; */
+    color: #fff;
+    background-color: #fe696a;
+    box-shadow: none;
+    padding: 6px 14px;
+    border-radius: 3px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+
+.pac-container.pac-logo.hdpi {z-index: 1500}
+.owl-theme .owl-dots .owl-dot {margin: auto!important;}
+#carouselExampleIndicators .carousel-control-prev, #carouselExampleIndicators .carousel-control-next {display: none!important;}
