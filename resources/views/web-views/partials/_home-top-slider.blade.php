@@ -43,15 +43,13 @@
 
     @if(Route::currentRouteName() == 'home' )
         @php($home_banner = \App\Model\HomeBannerSetting::first())
-        <div class=" first_banner_section col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 d-none d-lg-inline-block d-md-inline-block m-auto text-center"
-             dir="rtl"
-             style="padding: 0!important; background-image:url('{{asset('uploads/banners_home/'. $home_banner->image_o)}}'); width: 100%; height: 100px;background-size: 100% 100% ">
+        <div class="first_banner_section col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 d-none d-lg-inline-block d-md-inline-block m-auto text-center"
+            dir="rtl" style="padding: 0!important; background-image:url('{{asset('uploads/banners_home/'. $home_banner->image_o)}}'); width: 100%; height: 80px;background-size: 100% 100% ">
             <div class="row banner_row" dir="{{session('direction')}}">
-
                 <div class="col-xxl-9 col-lg-9 col-md-9 col-sm-12 col-12">
                     <div class="row">
                         <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 col-12 up_slider_banner_title_1">
-                            <h4 class="bold mb-1 s_27">
+                            <h4 class="bold mb-1 s_24">
                                 {{$home_banner->title_o}}
                             </h4>
                             <span class="bold s_19">
@@ -59,7 +57,7 @@
                             </span>
                         </div>
                         <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 col-12 up_slider_banner_title_2">
-                            <h4 class="bold mb-1 s_27">
+                            <h4 class="bold mb-1 s_24">
                                 {{$home_banner->title_t}}
                             </h4>
                             <span class="bold s_19">
@@ -71,10 +69,7 @@
             </div>
         </div>
         <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-12 col-12 m-auto text-center side_img_div d-none d-lg-inline-block d-md-inline-block" dir="rtl"
-             style="padding: 0;
-    /* margin: 0!important; */
-    height: 340px;
-    overflow: hidden;">
+            style="padding: 0;height: 250px;overflow: hidden;">
             <img src="{{asset('uploads/banners_home/'. $home_banner->image_t)}}" alt="" style="width: 100%;height: 100%">
         </div>
         <div

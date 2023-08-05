@@ -2,40 +2,23 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <title>
-        @yield('title')
-    </title>
+    <title> @yield('title') </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="apple-touch-icon" sizes="180x180"
-          href="{{asset('storage/company')}}/{{$web_config['fav_icon']->value}}">
-    <link rel="icon" type="image/png" sizes="32x32"
-          href="{{asset('storage/company')}}/{{$web_config['fav_icon']->value}}">
-
-    <link rel="stylesheet" media="screen"
-          href="{{asset('assets/front-end')}}/vendor/simplebar/dist/simplebar.min.css"/>
-    <link rel="stylesheet" media="screen"
-          href="{{asset('assets/front-end')}}/vendor/tiny-slider/dist/tiny-slider.css"/>
-    <link rel="stylesheet" media="screen"
-          href="{{asset('assets/front-end')}}/vendor/drift-zoom/dist/drift-basic.min.css"/>
-    <link rel="stylesheet" media="screen"
-          href="{{asset('assets/front-end')}}/vendor/lightgallery.js/dist/css/lightgallery.min.css"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="{{asset('storage/company')}}/{{$web_config['fav_icon']->value}}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{asset('storage/company')}}/{{$web_config['fav_icon']->value}}">
+    <link rel="stylesheet" media="screen" href="{{asset('assets/front-end')}}/vendor/simplebar/dist/simplebar.min.css"/>
+    <link rel="stylesheet" media="screen" href="{{asset('assets/front-end')}}/vendor/tiny-slider/dist/tiny-slider.css"/>
+    <link rel="stylesheet" media="screen" href="{{asset('assets/front-end')}}/vendor/drift-zoom/dist/drift-basic.min.css"/>
+    <link rel="stylesheet" media="screen" href="{{asset('assets/front-end')}}/vendor/lightgallery.js/dist/css/lightgallery.min.css"/>
     <link rel="stylesheet" href="{{asset('assets/back-end')}}/css/toastr.css"/>
     <!-- Main Theme Styles + Bootstrap-->
-
-
     <link rel="stylesheet" media="screen" href="{{asset('assets/front-end')}}/css/theme.min.css">
     <link rel="stylesheet" media="screen" href="{{asset('assets/front-end')}}/css/slick.css">
     <link rel="stylesheet" media="screen" href="{{asset('assets/front-end')}}/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" href="{{asset('assets/back-end')}}/css/toastr.css"/>
     <link rel="stylesheet" href="{{asset('assets/front-end')}}/css/master.css"/>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Titillium+Web:wght@400;600;700&display=swap"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Titillium+Web:wght@400;600;700&display=swap" rel="stylesheet">
     {{-- light box --}}
     <link rel="stylesheet" href="{{asset('css/lightbox.css')}}">
     <link rel="stylesheet" href="{{asset('assets/back-end')}}/vendor/icon-set/style.css">
@@ -46,213 +29,23 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
-    <link rel="stylesheet"
-          href="https://maxst.icons8.com/vue-static/landings/line-awesome/font-awesome-line-awesome/css/all.min.css">
-
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/font-awesome-line-awesome/css/all.min.css">
     <link rel="stylesheet" href="{{asset('assets/front-end')}}/css/owl.carousel.min.css"/>
     <link rel="stylesheet" href="{{asset('assets/front-end')}}/css/owl.theme.default.min.css"/>
     <link rel="stylesheet" href="{{asset('assets/front-end')}}/css/style.css">
     <link rel="stylesheet" href="{{asset('assets/front-end')}}/css/my_style.css">
+    <link rel="stylesheet" href="{{asset('assets/front-end')}}/css/alaa_ar.css">
     <link rel="stylesheet" href="{{asset('assets/front-end')}}/css/media-queries.css">
-
     <link rel="stylesheet" href="{{asset('assets/front-end/css/select2.min.css')}}">
-
     {{--dont touch this--}}
     <meta name="_token" content="{{csrf_token()}}">
     {{--dont touch this--}}
 <!--to make http ajax request to https-->
     <!--<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">-->
     <style>
-        .rtl {
-            direction: {{ Session::get('direction') }};
-        }
-
-        .password-toggle-btn .password-toggle-indicator:hover {
-            color: {{$web_config['primary_color']}};
-        }
-
-        .password-toggle-btn .custom-control-input:checked ~ .password-toggle-indicator {
-            color: {{$web_config['secondary_color']}};
-        }
-
-        .dropdown-item:hover, .dropdown-item:focus {
-            color: {{$web_config['primary_color']}};
-        }
-
-        .dropdown-item.active, .dropdown-item:active {
-            color: {{$web_config['secondary_color']}};
-        }
-
-        .navbar-light .navbar-tool-icon-box {
-            color: {{$web_config['primary_color']}};
-        }
-
-        .search_button {
-            background-color: {{$web_config['primary_color']}};
-        }
-
-        .first_banner_item_details {
-            position: absolute;
-            width: 62%;
-            top: 21%;
-        {{session('direction') == 'rtl' ? 'right: 19%;text-align: right;' : 'left: 13%;text-align: left;'}}
-
-
-        }
-
-        .sorting_div {
-        {{session('direction') == 'ltr' ? 'right: 4%;left:auto;' : ''}}
-
-        }
-
-        .item_details {
-            width: 70% !important;
-        {{session('direction') == 'ltr' ? 'margin-left: 10px;text-align: left' : 'margin-right: 10px;text-align: right'}}
-
-        }
-
-        .footer-web-logo a img {
-        {{session('direction') == 'ltr' ? 'object-position: left center;' : 'object-position: right center;'}}
-
-        }
-
-        .large-featured-product {
-            padding: {{session('direction') == 'ltr' ? '0 14px 0 5px!important' : '0 0 0 19px!important;'}}
-
-        }
-
-
-        .navbar-stuck-menu {
-            background-color: {{$web_config['primary_color']}};
-        }
-
-        .mega-nav .nav-item .nav-link {
-            color: {{$web_config['primary_color']}}                               !important;
-        }
-
-        .checkbox-alphanumeric label:hover {
-            border-color: {{$web_config['primary_color']}};
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: {{$web_config['secondary_color']}}            !important;
-        }
-
-        [type="radio"] {
-            border: 0;
-            clip: rect(0 0 0 0);
-            height: 1px;
-            margin: -1px;
-            overflow: hidden;
-            padding: 0;
-            position: absolute;
-            width: 1px;
-        }
-
-        [type="radio"] + span:after {
-            box-shadow: 0 0 0 0.10em{{$web_config['secondary_color']}};
-        }
-
-        [type="radio"]:checked + span:after {
-            background: {{$web_config['secondary_color']}};
-            box-shadow: 0 0 0 0.10em{{$web_config['secondary_color']}};
-        }
-
-        .navbar-tool .navbar-tool-label {
-            background-color: {{$web_config['secondary_color']}}    !important;
-        }
-
-        .btn--primary {
-            color: #fff;
-            background-color: {{$web_config['primary_color']}}    !important;
-            border-color: {{$web_config['primary_color']}}    !important;
-        }
-
-        .btn--primary:hover {
-            color: #fff;
-            background-color: {{$web_config['primary_color']}}    !important;
-            border-color: {{$web_config['primary_color']}}    !important;
-        }
-
-        .btn-secondary {
-            background-color: {{$web_config['secondary_color']}}    !important;
-            border-color: {{$web_config['secondary_color']}}    !important;
-        }
-
-        .btn-outline-accent:hover {
-            color: #fff;
-            background-color: {{$web_config['primary_color']}};
-            border-color: {{$web_config['primary_color']}};
-        }
-
-        .btn-outline-accent {
-            color: {{$web_config['primary_color']}};
-            border-color: {{$web_config['primary_color']}};
-        }
-
-        .text-accent {
-            color: {{$web_config['primary_color']}};
-        }
-
-        a:hover {
-            color: {{$web_config['secondary_color']}};
-        }
-
-        .active-menu {
-            color: {{$web_config['secondary_color']}}    !important;
-        }
-
-        .page-item.active > .page-link {
-            box-shadow: 0 0.5rem 1.125rem -0.425rem{{$web_config['primary_color']}}
-
-
-
-
-
-
-        }
-
-        .page-item.active .page-link {
-            background-color: {{$web_config['primary_color']}};
-        }
-
-        .btn-outline-accent:not(:disabled):not(.disabled):active, .btn-outline-accent:not(:disabled):not(.disabled).active, .show > .btn-outline-accent.dropdown-toggle {
-            background-color: {{$web_config['secondary_color']}};
-            border-color: {{$web_config['secondary_color']}};
-        }
-
-        .btn-outline-primary {
-            color: {{$web_config['primary_color']}};
-            border-color: {{$web_config['primary_color']}};
-        }
-
-        .btn-outline-primary:hover {
-            background-color: {{$web_config['secondary_color']}};
-            border-color: {{$web_config['secondary_color']}};
-        }
-
-        .btn-outline-primary:focus, .btn-outline-primary.focus {
-            box-shadow: 0 0 0 0{{$web_config['secondary_color']}};
-        }
-
-        .btn-outline-primary:not(:disabled):not(.disabled):active, .btn-outline-primary:not(:disabled):not(.disabled).active, .show > .btn-outline-primary.dropdown-toggle {
-            background-color: {{$web_config['primary_color']}};
-            border-color: {{$web_config['primary_color']}};
-        }
-
-        .btn-outline-primary:not(:disabled):not(.disabled):active:focus, .btn-outline-primary:not(:disabled):not(.disabled).active:focus, .show > .btn-outline-primary.dropdown-toggle:focus {
-            box-shadow: 0 0 0 0{{$web_config['primary_color']}};
-        }
-
-        .for-discoutn-value {
-            background: #ed165f;
-        }
-
-        .dropdown-menu {
-            margin- {{Session::get('direction') === "rtl" ? 'right' : 'left'}}: -8px !important;
-        }
+    .rtl { direction: {{ Session::get('direction') }}; } .password-toggle-btn .password-toggle-indicator:hover { color: {{$web_config['primary_color']}}; } .password-toggle-btn .custom-control-input:checked ~ .password-toggle-indicator { color: {{$web_config['secondary_color']}}; } .dropdown-item:hover, .dropdown-item:focus { color: {{$web_config['primary_color']}}; } .dropdown-item.active, .dropdown-item:active { color: {{$web_config['secondary_color']}}; } .navbar-light .navbar-tool-icon-box { color: {{$web_config['primary_color']}}; } .search_button { background-color: {{$web_config['primary_color']}}; } .first_banner_item_details { position: absolute; width: 62%; top: 21%; {{session('direction') == 'rtl' ? 'right: 19%;text-align: right;' : 'left: 13%;text-align: left;'}} } .sorting_div { {{session('direction') == 'ltr' ? 'right: 4%;left:auto;' : ''}} } .item_details { width: 70% !important; {{session('direction') == 'ltr' ? 'margin-left: 10px;text-align: left' : 'margin-right: 10px;text-align: right'}} } .footer-web-logo a img { {{session('direction') == 'ltr' ? 'object-position: left center;' : 'object-position: right center;'}} } .large-featured-product { padding: {{session('direction') == 'ltr' ? '0 14px 0 5px!important' : '0 0 0 19px!important;'}} } .navbar-stuck-menu { background-color: {{$web_config['primary_color']}}; } .mega-nav .nav-item .nav-link { color: {{$web_config['primary_color']}} !important; } .checkbox-alphanumeric label:hover { border-color: {{$web_config['primary_color']}}; } ::-webkit-scrollbar-thumb:hover { background: {{$web_config['secondary_color']}} !important; } [type="radio"] { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; } [type="radio"] + span:after { box-shadow: 0 0 0 0.10em{{$web_config['secondary_color']}}; } [type="radio"]:checked + span:after { background: {{$web_config['secondary_color']}}; box-shadow: 0 0 0 0.10em{{$web_config['secondary_color']}}; } .navbar-tool .navbar-tool-label { background-color: {{$web_config['secondary_color']}} !important; } .btn--primary { color: #fff; background-color: {{$web_config['primary_color']}} !important; border-color: {{$web_config['primary_color']}} !important; } .btn--primary:hover { color: #fff; background-color: {{$web_config['primary_color']}} !important; border-color: {{$web_config['primary_color']}} !important; } .btn-secondary { background-color: {{$web_config['secondary_color']}} !important; border-color: {{$web_config['secondary_color']}} !important; } .btn-outline-accent:hover { color: #fff; background-color: {{$web_config['primary_color']}}; border-color: {{$web_config['primary_color']}}; } .btn-outline-accent { color: {{$web_config['primary_color']}}; border-color: {{$web_config['primary_color']}}; } .text-accent { color: {{$web_config['primary_color']}}; } a:hover { color: {{$web_config['secondary_color']}}; } .active-menu { color: {{$web_config['secondary_color']}} !important; } .page-item.active > .page-link { box-shadow: 0 0.5rem 1.125rem -0.425rem{{$web_config['primary_color']}} } .page-item.active .page-link { background-color: {{$web_config['primary_color']}}; } .btn-outline-accent:not(:disabled):not(.disabled):active, .btn-outline-accent:not(:disabled):not(.disabled).active, .show > .btn-outline-accent.dropdown-toggle { background-color: {{$web_config['secondary_color']}}; border-color: {{$web_config['secondary_color']}}; } .btn-outline-primary { color: {{$web_config['primary_color']}}; border-color: {{$web_config['primary_color']}}; } .btn-outline-primary:hover { background-color: {{$web_config['secondary_color']}}; border-color: {{$web_config['secondary_color']}}; } .btn-outline-primary:focus, .btn-outline-primary.focus { box-shadow: 0 0 0 0{{$web_config['secondary_color']}}; } .btn-outline-primary:not(:disabled):not(.disabled):active, .btn-outline-primary:not(:disabled):not(.disabled).active, .show > .btn-outline-primary.dropdown-toggle { background-color: {{$web_config['primary_color']}}; border-color: {{$web_config['primary_color']}}; } .btn-outline-primary:not(:disabled):not(.disabled):active:focus, .btn-outline-primary:not(:disabled):not(.disabled).active:focus, .show > .btn-outline-primary.dropdown-toggle:focus { box-shadow: 0 0 0 0{{$web_config['primary_color']}}; } .for-discoutn-value { background: #ed165f; } .dropdown-menu { margin- {{Session::get('direction') === "rtl" ? 'right' : 'left'}}: -8px !important; }
+        /* */
     </style>
-
 
     @php($google_tag_manager_id = \App\CPU\Helpers::get_business_settings('google_tag_manager_id'))
     @if($google_tag_manager_id )
@@ -271,7 +64,6 @@
                 f.parentNode.insertBefore(j, f);
             })(window, document, 'script', 'dataLayer', '{{$google_tag_manager_id}}');</script>
         <!-- End Google Tag Manager -->
-
     @endif
 
     @php($pixel_analytices_user_code =\App\CPU\Helpers::get_business_settings('pixel_analytics'))
@@ -300,8 +92,7 @@
             fbq('track', 'PageView');
         </script>
         <noscript>
-            <img height="1" width="1" style="display:none"
-                 src="https://www.facebook.com/tr?id={your-pixel-id-goes-here}&ev=PageView&noscript=1"/>
+            <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id={your-pixel-id-goes-here}&ev=PageView&noscript=1"/>
         </noscript>
         <!-- End Facebook Pixel Code -->
     @endif
@@ -326,14 +117,11 @@
 <!-- Navbar Electronics Store-->
 
 {{--loader--}}
-<div class="row"
-     style="width: 100%;height: 100vh;z-index: 100000;position: fixed;top:0;background: #fff;padding: 0!important;margin: 0!important;">
+<div class="row" style="width: 100%;height: 100vh;z-index: 100000;position: fixed;top:0;background: #fff;padding: 0!important;margin: 0!important;">
     <div class="col-12" style="margin-top:13rem;position: fixed;z-index: 9999;">
         <div id="loading" style="">
             <center>
-                <img width="200"
-                     src="{{asset('storage/company')}}/{{\App\CPU\Helpers::get_business_settings('loader_gif')}}"
-                     onerror="this.src='{{asset('assets/front-end/img/loader.gif')}}'">
+                <img width="200" src="{{asset('storage/company')}}/{{\App\CPU\Helpers::get_business_settings('loader_gif')}}" onerror="this.src='{{asset('assets/front-end/img/loader.gif')}}'">
             </center>
         </div>
     </div>
@@ -363,25 +151,17 @@
     @if(isset($whatsapp['status']) && $whatsapp['status'] == 1 )
         <div class="wa-widget-send-button">
             <a href="https://web.whatsapp.com/send/?phone={{ $whatsapp['phone'] }}?text=Hello%20there!" target="_blank">
-                <img src="{{asset('assets/front-end/img/whatsapp.svg')}}" class="wa-messenger-svg-whatsapp wh-svg-icon"
-                     alt="Chat with us on WhatsApp">
+                <img src="{{asset('assets/front-end/img/whatsapp.svg')}}" class="wa-messenger-svg-whatsapp wh-svg-icon" alt="Chat with us on WhatsApp">
             </a>
         </div>
 @endif
 
-{{--    @php($messenger = \App\CPU\Helpers::get_business_settings('messenger'))--}}
-{{--    @if(isset($messenger['status']) && $messenger['status']==1)--}}
-{{--        {!! $messenger['script'] !!}--}}
-{{--    @endif--}}
-
-<!-- Vendor scrits: js libraries and plugins-->
 </div>
 
 {{--<script src="{{asset('assets/front-end')}}/vendor/jquery/dist/jquery.slim.min.js"></script>--}}
 <script src="{{asset('assets/front-end')}}/vendor/jquery/dist/jquery-2.2.4.min.js"></script>
 <script src="{{asset('assets/front-end')}}/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script
-    src="{{asset('assets/front-end')}}/vendor/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+<script src="{{asset('assets/front-end')}}/vendor/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
 <script src="{{asset('assets/front-end')}}/vendor/simplebar/dist/simplebar.min.js"></script>
 <script src="{{asset('assets/front-end')}}/vendor/tiny-slider/dist/min/tiny-slider.js"></script>
 <script src="{{asset('assets/front-end')}}/vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script>
@@ -406,7 +186,6 @@
 {!! Toastr::message() !!}
 
 <script>
-
     $(document).ready(function () {
         $('#loading').parent().parent().css({
             'width': 'auto',
@@ -418,7 +197,6 @@
         });
         $('#loading').hide();
     });
-
 
     function addWishlist(product_id) {
         $.ajaxSetup({
@@ -956,7 +734,7 @@
         }
     });
 
-    const img = document.getElementsByTagName("img");
+    const img = document.getElementsByTagName("img")[0];
     img.addEventListener("error", function (event) {
         event.target.src = '{{asset('assets/front-end/img/image-place-holder.png')}}';
         event.onerror = null
@@ -1054,5 +832,6 @@
     })();
 </script>
 <!--End of Tawk.to Script-->
+
 </body>
 </html>
