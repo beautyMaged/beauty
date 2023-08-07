@@ -3,7 +3,8 @@
 
 <style>
 .for-count-value { color: {{$web_config['primary_color']}};}
-.count-value {color: {{$web_config['primary_color']}};}
+.count-value {color: {{$web_config['primary_color']}};} 
+.all_cats_list { {{session('direction') == 'rtl' ? 'right:-20px!important' : ''}} }
 .owl-carousel.owl-rtl .owl-item { {{session('direction') == 'rtl' ? 'float:right!important' : 'float:left!important'}} }
 #categories_list .owl-nav button.owl-prev { {{session('direction') == 'rtl' ? '' : 'right:auto!important;left: 0!important'}}}
 #categories_list .owl-nav button.owl-next { {{session('direction') == 'rtl' ? '' : 'left:auto!important;right: 0!important;'}}}
@@ -108,7 +109,7 @@
                     <div class="d-inline-block pc_hide mob_inline" style="padding-right: 11px;">
                         @foreach(json_decode($lang['value'],true) as $data)
                             @if($data['code']!=$local)
-                                <a href="{{route('lang', $data['code'])}}"><span class="bold" style="font-size:12px;margin-right: 0px;cursor: pointer">{{\App\CPU\translate($data['name'])}}</span></a>
+                                <a href="{{route('lang', $data['code'])}}"><span class="bold" style="font-size:12px;margin-right: 0px;cursor: pointer">{{\App\CPU\translate($data['name'])}}</span> </a>
                             @endif
                         @endforeach
                     </div>
@@ -311,7 +312,7 @@
                     <div class="d-inline-block">
                         @foreach(json_decode($lang['value'],true) as $data)
                             @if($data['code']!=$local)
-                                <a href="{{route('lang', $data['code'])}}"><span class="s_19 bold " style="margin-right: 0px;cursor: pointer">{{\App\CPU\translate($data['name'])}}</span></a>
+                                <a href="{{route('lang', $data['code'])}}"><span class="s_19 bold " style="margin-right: 0px;cursor: pointer">{{\App\CPU\translate($data['name'])}}</span> <i class="fa-solid fa-globe" style="font-size: 16px"></i></a>
                             @endif
                         @endforeach
                     </div>
@@ -342,7 +343,7 @@
                     @if($currency_model=='multi_currency')
                         <div class="topbar-text dropdown disable-autohide d-inline-block position-relative">
                             <a class="topbar-link dropdown-toggle" href="#" data-toggle="dropdown">
-                                <span> {{session('currency_symbol')}} <i class="fa-solid fa-globe" style="font-size: 21px"></i></span>
+                                <span> {{session('currency_symbol')}} </span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}" style="min-width: 160px!important;text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
                                 @foreach (\App\Model\Currency::where('status', 1)->get() as $key => $currency)
@@ -381,14 +382,14 @@
             </div>
             @include('layouts.front-end.partials._login_modal')
         </div>
-        <div class="row cats_pc" style="background: #f14061; background: #a20042;">
+        <div class="row cats_pc" style="background: #f14061; background: #f44972;">
             <div class="m-auto col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="row pb-0 categories_container position-relative" dir="rtl">
                     @if(session('direction') == "rtl")
                         <div class="col-lg-2 col-md-2 col-sm-2 col-2 {{session('direction') == 'rtl' ? 'text-right' : 'text-left'}}  all_cats_div" style="padding: 7px">
                             <a class="all_cats_btn s_16 bold " href="#" style="{{session('direction') == 'rtl' ? '' : 'padding: 7px 0 7px 18px;'}}">
                                 {{\App\CPU\translate('All Categories_')}}
-                                <i class="fa fa-caret-down position-absolute" style="top: 16px; {{session('direction') == 'rtl' ? 'left:20px;' : 'right:20px;'}} color: #f14061" aria-hidden="true"></i>
+                                <i class="fa fa-caret-down position-absolute" style="top: 16px; {{session('direction') == 'rtl' ? 'left:50px;' : 'right:50px;'}} color: #fff" aria-hidden="true"></i>
                             </a>
                         </div>
                     @endif
@@ -557,7 +558,7 @@
                                     @php($special_main_cats=\App\CPU\CategoryManager::parents())
                                     @foreach($special_main_cats as $cat)
                                         <li class="single-main-item" data-target="{{$cat->id}}">
-                                            <a href="{{route('home')}}/products?id={{$cat->id}}&data_from=category&page=1" class="s_14">{{$cat->name}}</a>
+                                            <a href="{{route('home')}}/products?id={{$cat->id}}&data_from=category&page=1" class="s_18">{{$cat->name}}</a>
                                         </li>
                                     @endforeach
                                 </ul>
@@ -728,7 +729,7 @@
             });
             let category_item_1 = $('.category-item_1');
             category_item_1.hover(function () {
-                $(this).parent().css('background', '#fe7a85');
+                $(this).parent().css('background', '#F66D8E');
             }, function () {
                 $(this).parent().css('background', 'transparent');
             });
