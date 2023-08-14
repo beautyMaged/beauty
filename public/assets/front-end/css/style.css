@@ -5679,7 +5679,8 @@ a {
 .small-offer .offer-title {border-radius:5px;width: 96.5%;height: 100%;background: rgba(0, 0, 0, 0.5);position: absolute;top: 0;z-index: 100;}
 .large-offer .offer-title {border-radius:5px;width: 98.2%;height: 100%;background: rgba(0, 0, 0, 0.5);position: absolute;top: 0;z-index: 100;}
 
-.sorting_div {padding: 9px;border: 1px solid #FF7C86;position: absolute; z-index: 300;background: #fff;top: 42px;left: 4%}
+.sorting_div2 {padding: 9px;border: 1px solid #FF7C86;position: absolute; z-index: 300;background: #fff;top: 42px;left: 4%}
+.sorting_div {padding: 9px;border: 1px solid #FF7C86;background: #fff;}
 .sorting_list {display:none;margin-top: 7px; z-index: 300;}
 .sort-span {border-bottom: 1px solid #0000004d;cursor: pointer}
 .sort-item {padding-top: 2px;padding-bottom: 1px;cursor: pointer}

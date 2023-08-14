@@ -3173,4 +3173,12 @@
   'We are sorry  server is not responding' => 'We are sorry  server is not responding',
   'Error   Something went wrong' => 'Error   Something went wrong',
   'update_feature_deal' => 'Update feature deal',
+  'Dresses' => 'Dresses',
+  'Electronics' => 'Electronics',
+  'Fashion' => 'Fashion',
+  'Mobile Accessories' => 'Mobile Accessories',
+  'Cars Accessories' => 'Cars Accessories',
+  'Watches Collection' => 'Watches Collection',
+  'Women Sunglasses' => 'Women Sunglasses',
+  'Makeup' => 'Makeup',
 );

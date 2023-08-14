@@ -63,7 +63,8 @@
 
         {{-- Start Sell by budget --}}
         @php($budget_filter = \App\Model\BudgetFilter::first())
-        <section class="mt-1 px-2 py-2" >
+
+        {{-- <section class="mt-1 px-2 py-2" >
             <div class="row">
                 <div class="col-lg-9 col-md-9 col-12 m-auto p-4">
                     <div class="row text-center">
@@ -121,8 +122,8 @@
                     </div>
                 </div>
             </div>
-        </section>
-            {{--  @include('web-views.partials._new_single-product',['product'=>$product,'decimal_point_settings'=>$decimal_point_settings])--}}
+        </section> --}}
+
         {{-- End Sell by budget --}}
 
         {{-- Start flash deal--}}
@@ -246,16 +247,19 @@
 
         {{-- Start latest Products--}}
         @if(isset($latest_products) && $latest_products->count() > 0)
-            <section class="featured_subs_with_products" dir="rtl">
+            <section class="featured_subs_with_products mt-5" dir="rtl">
                 <div class="container" style="">
-                    <div class="row" dir="{{session('direction')}}">
-                        <div class="col-xxl-6 col-xl-6 col-md-6 col-sm-12 col-12">
-                            <h4 class="main_title s_25 bold mb-3 mt-5 {{session('direction') == 'rtl' ? 'mr-1' : 'ml-1'}} mb-0">
+                    <div class="row d-flex justify-content-center" dir="{{session('direction')}}">
+                        <div class="col-md-2 col-12">
+                            <h4 class="main_title s_25 bold mb-1 mt-5 {{session('direction') == 'rtl' ? 'mr-1' : 'ml-1'}} mb-0">
                                 {{\App\CPU\translate('recent_pro')}}
                             </h4>
                         </div>
-                        <div class="col-xxl-6 col-xl-6 col-md-6 col-sm-12 col-12">
-                            <div class="sorting_div s_12 bold" dir="ltr">
+                        <div class="col-md-8 col-12">
+                            <img src="{{asset('assets/front-end/img/aaa.webp')}}" alt="" class="img-fluid" style="margin-top: 10px;">
+                        </div>
+                        <div class="col-md-2 col-12">
+                            <div class="sorting_div s_12 bold mb-1 mt-5" dir="ltr">
                                 <div class="w-100 text-right">
                                     <span class="bold sort-span"
                                         dir="rtl">{{\App\CPU\translate('sort_by')}} : <span>{{\App\CPU\translate('Most Favourit')}}</span> &nbsp;&nbsp;<i class="fa-solid fa-chevron-down s_12"></i></span>
@@ -490,7 +494,7 @@
                                                 <h4 class="main_title  bold s_25 mt-5 mr-5"> {{$main->name}} </h4>
                                             </div>
                                             <div class="col-xxl-6 col-xl-6 col-md-6 col-sm-12 col-12">
-                                                <div class="sorting_div s_12 bold" dir="ltr">
+                                                <div class="sorting_div2 s_12 bold" dir="ltr">
                                                     <div class="w-100 text-right">
                                                         <span class="bold sort-span" dir="rtl">{{\App\CPU\translate('sort_by')}} : <span>{{\App\CPU\translate('Most Favourit')}}</span> &nbsp;&nbsp;<i class="fa-solid fa-chevron-down s_12"></i></span>
                                                     </div>
@@ -761,7 +765,7 @@
                                         <h4 class="main_title  bold s_25 mt-5 mr-5"> {{$main->name}} </h4>
                                     </div>
                                     <div class="col-xxl-6 col-xl-6 col-md-6 col-sm-12 col-12">
-                                        <div class="sorting_div s_12 bold" dir="ltr">
+                                        <div class="sorting_div2 s_12 bold" dir="ltr">
                                             <div class="w-100 text-right">
                                                 <span class="bold sort-span" dir="rtl">{{\App\CPU\translate('sort_by')}} : <span>{{\App\CPU\translate('Most Favourit')}}</span> &nbsp;&nbsp;<i class="fa-solid fa-chevron-down s_12"></i></span>
                                             </div>
@@ -1056,7 +1060,7 @@
                                         <h4 class="main_title  bold s_25 mt-5 {{session('direction') == 'rtl' ? 'mr-5' : 'ml-5'}}"> {{$main->name}} </h4>
                                     </div>
                                     <div class="col-xxl-6 col-xl-6 col-md-6 col-sm-12 col-12">
-                                        <div class="sorting_div s_12 bold" dir="ltr">
+                                        <div class="sorting_div2 s_12 bold" dir="ltr">
                                             <div class="w-100 text-right">
                                                 <span class="bold sort-span" dir="rtl">{{\App\CPU\translate('sort_by')}} : <span>{{\App\CPU\translate('Most Favourit')}}</span> &nbsp;&nbsp;<i class="fa-solid fa-chevron-down s_12"></i></span>
                                             </div>

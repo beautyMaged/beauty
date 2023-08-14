@@ -88,7 +88,7 @@
                         </div>
                     </div>
                     <div class="list-ship position-relative pc_hide mob_inline" data-toggle="modal" data-target="#location_modal" style="padding: 5px 0;">
-                        <i class="fa-solid fa-location-dot px-1 primary_color heartbeat" style="margin-top:-15px; font-size:22px;color:#48a212!important;;"></i>
+                        <i class="fa-solid fa-location-dot px-1 primary_color heartbeat" style="margin-top:-15px; font-size:22px;"></i>
                         {{-- <img class="px-1 mr-2" src="{{asset('assets/front-end/img/flag.png')}}" alt="flag" style="width: 33px;border-radius: 6px; margin-top: 5px;  margin-left: 0!important;margin-right: 1px!important;"> --}}
                         <div class="d-inline-block">
                             {{-- <span class="px-1">توصيل إلي</span>--}}
@@ -158,12 +158,12 @@
                 </div>
             @else
                 <div class="col-xxl-3 col-xl-3 col-md-3 col-sm-6 col-6 pt-4 position-relative {{session('direction') == 'rtl' ? 'text-right pr-3 ' : 'text-left  pl-4 '}} deliverly_to">
-                    <span type="button" data-toggle="modal" data-target="#register_modal" class="mobile_hide" style="cursor: pointer">
+                    <span type="button" data-toggle="modal" data-target="#register_modal" class="mobile_hide reg_aa" style="cursor: pointer">
                         <i class="fa-regular fa-user px-1 s_19 primary_color"></i>
                         <span class="s_18 bold"><span class="mobile_hide">{{\App\CPU\translate('You are a Guest / ')}}</span> {{\App\CPU\translate('Sign in')}}</span>
                     </span>
                     <div class="list-ship position-relative pc_hide mob_inline" data-toggle="modal" data-target="#location_modal" style="padding: 5px 0;">
-                        <i class="fa-solid fa-location-dot px-1 primary_color heartbeat" style="margin-top:-15px; font-size:22px;color:#48a212!important;;"></i>
+                        <i class="fa-solid fa-location-dot px-1 primary_color heartbeat" style="margin-top:-15px; font-size:22px;"></i>
                         {{-- <img class="px-1 mr-2" src="{{asset('assets/front-end/img/flag.png')}}" alt="flag" style="width: 33px;border-radius: 6px; margin-top: 5px;  margin-left: 0!important;margin-right: 1px!important;"> --}}
                         <div class="d-inline-block">
                             {{-- <span class="px-1">توصيل إلي</span>--}}
@@ -273,7 +273,7 @@
                 <div class="col-lg-4 col-md-4 mobile_hide pr-0">
                     {{--  data-toggle="modal" data-target="#location_modal"--}}
                     <div class="list-ship position-relative " data-toggle="modal" data-target="#location_modal" style="width: auto;padding: 5px 0 0 5px;">
-                        <i class="fa-solid fa-location-dot pl-1 pr-0 primary_color heartbeat" style="margin-top:-15px; font-size:22px;color:#48a212!important;;"></i>
+                        <i class="fa-solid fa-location-dot pl-1 pr-0 primary_color heartbeat" style="margin-top:-15px; font-size:22px;"></i>
                         {{-- <img class="px-1 mr-2" src="{{asset('assets/front-end/img/flag.png')}}" alt="flag" style="width: 33px;border-radius: 6px; margin-top: 2px;  margin-left: 0!important;margin-right: 1px!important;"> --}}
                         <div class="d-inline-block">
                             {{-- <span class="px-1">توصيل إلي</span>--}}
@@ -411,12 +411,12 @@
                                 <div style="" class="category-item_1">
                                     <a href="{{route('products',['data_from'=>'featured_deal','page'=>1])}}"><span class="boldy">{{\App\CPU\translate('special_offers')}}</span></a>
                                 </div>
-                                @php($cats = \App\Model\Category::orderBy('priority')->get())
+                                @php($cats = \App\Model\Category::where('position', 0)->where('home_status', true)->orderBy('priority')->get())
                                 @foreach($cats as $cat)
                                     <div style="" class="category-item" data-value="menu_cat_{{$cat->id}}" data-id="{{$cat->id}}">
                                         <a href="{{route('home')}}/products?id={{$cat->id}}&data_from=category&page=1"><span class="boldy">{{$cat->name}}</span></a>
                                     </div>
-                                @endforeach
+                                @endforeach 
                             </div>
                         </div>
                     </div>
