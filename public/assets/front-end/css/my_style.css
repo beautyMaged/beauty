@@ -30,10 +30,10 @@ a.bg-secondary:hover, a.bg-secondary:focus, button.bg-secondary:hover, button.bg
 .close_pop_up {position: absolute;left: 34px;top: 17px;cursor: pointer}
 .s_pop_txt {margin-right: 30px}
 
-#pac-input-billing {z-index:1500;font-family: 'Droid-Arabic-Kufi', sans-serif;height: 3.5em;width: 250px!important;top: 11px!important;}
-#pac-input-main {z-index:1500;font-family: 'Droid-Arabic-Kufi', sans-serif;height: 3.5em;width: 250px!important;top: 11px!important;}
-#pac-input {z-index:1500;font-family: 'Droid-Arabic-Kufi', sans-serif;height: 3.5em;width: 250px!important;padding-right: 10px!important;top: 13px!important;}
-#pac-input-new-main {z-index:1500;font-family: 'Droid-Arabic-Kufi', sans-serif;height: 3.5em;width: 250px!important;top: 11px!important; display: none}
+#pac-input-billing {z-index:1500;font-family: 'Cairo', sans-serif;height: 3.5em;width: 250px!important;top: 11px!important;}
+#pac-input-main {z-index:1500;font-family: 'Cairo', sans-serif;height: 3.5em;width: 250px!important;top: 11px!important;}
+#pac-input {z-index:1500;font-family: 'Cairo', sans-serif;height: 3.5em;width: 250px!important;padding-right: 10px!important;top: 13px!important;}
+#pac-input-new-main {z-index:1500;font-family: 'Cairo', sans-serif;height: 3.5em;width: 250px!important;top: 11px!important; display: none}
 .line_through {position: absolute;top: -48px;right: 25%;z-index: 100;}
 .login_with h4 {font-size: 16px!important;}
 

@@ -555,7 +555,8 @@
                         <div class="row all_cats_row">
                             <div class="all_main_cats col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 col-4" style="border: 1px solid #ddd;">
                                 <ul class="all_main_cats_list">
-                                    @php($special_main_cats=\App\CPU\CategoryManager::parents())
+                                    {{-- @php($special_main_cats=\App\CPU\CategoryManager::parents()) --}}
+                                    @php($special_main_cats = \App\Model\Category::where('position', 0)->where('home_status', true)->orderBy('priority')->get())
                                     @foreach($special_main_cats as $cat)
                                         <li class="single-main-item" data-target="{{$cat->id}}">
                                             <a href="{{route('home')}}/products?id={{$cat->id}}&data_from=category&page=1" class="s_18">{{$cat->name}}</a>

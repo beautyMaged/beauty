@@ -1,8 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&family=Changa:wght@500;600;700&family=Tajawal:wght@400;500;700&display=swap');
+
 .heartbeat{-webkit-animation:heartbeat 1.5s ease-in-out infinite both;animation:heartbeat 1.5s ease-in-out infinite both}
 @-webkit-keyframes heartbeat{from{-webkit-transform:scale(1);transform:scale(1);-webkit-transform-origin:center center;transform-origin:center center;-webkit-animation-timing-function:ease-out;animation-timing-function:ease-out}10%{-webkit-transform:scale(.91);transform:scale(.91);-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in}17%{-webkit-transform:scale(.98);transform:scale(.98);-webkit-animation-timing-function:ease-out;animation-timing-function:ease-out}33%{-webkit-transform:scale(.87);transform:scale(.87);-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in}45%{-webkit-transform:scale(1);transform:scale(1);-webkit-animation-timing-function:ease-out;animation-timing-function:ease-out}}@keyframes heartbeat{from{-webkit-transform:scale(1);transform:scale(1);-webkit-transform-origin:center center;transform-origin:center center;-webkit-animation-timing-function:ease-out;animation-timing-function:ease-out}10%{-webkit-transform:scale(.91);transform:scale(.91);-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in}17%{-webkit-transform:scale(.98);transform:scale(.98);-webkit-animation-timing-function:ease-out;animation-timing-function:ease-out}33%{-webkit-transform:scale(.87);transform:scale(.87);-webkit-animation-timing-function:ease-in;animation-timing-function:ease-in}45%{-webkit-transform:scale(1);transform:scale(1);-webkit-animation-timing-function:ease-out;animation-timing-function:ease-out}}
+
+body {
+    font-family: 'Cairo', sans-serif;
+}
 .boldy{
-    font-weight: 800;
-    font-size: 14px;
+    font-size: 13px;
+    font-family: 'Changa', sans-serif;
+    text-shadow: 1px 1px 2px rgb(43 3 3 / 98%);
 }
 .home_carousel_item {
     height: 250px!important;
@@ -12,6 +19,8 @@
     padding: 0!important;
     bottom: -19px !important;
 }
+.small-bann{display: none;}
+.sorting_div{margin-top: 0px !important;}
 }
 .reg_aa:hover{
 color:#f44972;
@@ -24,11 +33,13 @@ color:#f44972;
     cursor: pointer;
     height: auto;
     padding: 7px 18px 7px 0;
-    font-size: 18px;
+    font-size: 14px;
+    font-family: 'Changa', sans-serif;
+    text-shadow: 1px 1px 2px rgb(43 3 3 / 98%);
 }
 
 .pricingTable{
-    font-family: 'Droid-Arabic-Kufi', sans-serif;
+    font-family: 'Cairo', sans-serif;
     text-align: center;
     padding: 10px 20px;
     border-radius: 25%;
@@ -101,7 +112,7 @@ color:#f44972;
 :root{ --main-color: #a20042; }
 .counter{
     color: var(--main-color);
-    font-family: 'Droid-Arabic-Kufi', sans-serif;
+    font-family: 'Cairo', sans-serif;
     text-align: center;
     width: 200px;
     padding: 15px 15px 25px;

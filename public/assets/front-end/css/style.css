@@ -5592,7 +5592,7 @@ a {
 
 
 /* Start Font Size */
-.s_18 {font-size: 13.5px}
+.s_18 {font-size: 11.5px}
 .s_15 {font-size: 12px}
 .s_19 {font-size: 14.5px}
 .s_20 {font-size: 15.5px}
@@ -5661,12 +5661,12 @@ a {
 
 /* Start Featured Sub Category  */
 .featured_sub_cat {}
-.featured_sub_cat .sub_cat_head {}
+.featured_sub_cat .sub_cat_head {font-size: 12px;font-family: 'Changa', sans-serif;}
 .product_container {border: solid 1px rgba(0, 0, 0, 0.063); border-radius: 10px;box-shadow: 1px 2px 4px rgba(0,0,0,0.1);min-height:100%;max-height:100%;background: linear-gradient(45deg,#fff,#eba52114,#fff,#eba52100);}
 .pre_price {position: relative;white-space: nowrap;}
 .pre_price:after {border-top: 2px solid #f14061;position: absolute;content: "";right: 0;top:50%;left: 0;}
 .real_price {color: #1A3945;}
-.num_fam {font-family: 'Droid-Arabic-Kufi', sans-serif}
+.num_fam {font-family: 'Cairo', sans-serif;}
 .discount_div {background: #f14061; height: 24px;width:38px;color: #fff;position: absolute;top: 9px;left: 15px;font-size: 13.5px;text-align: center; }
 .discount {}
 .featured-product-title {position: absolute;bottom: 38px;color: #fff;right: 0;}
@@ -5734,7 +5734,7 @@ a {
 /* End Clients Reviews */
 
 /* Start Shipping & Support */
-.item_img img {width: 62px; margin-top: -31px}
+.item_img img {width: 30px; margin-top: -31px}
 @media (min-width: 1099px) {
     .support_item {max-width: 20%;width: 20%}
 }
@@ -5904,7 +5904,7 @@ a {
 }
 .featured_sub_cat img {
     border-radius: 5px;
-    min-height: 150px;
+    min-height: 120px;
     box-shadow: 1px 2px 4px rgba(0,0,0,0.1);
     border: 2px solid #ddd;
     padding: 2px;

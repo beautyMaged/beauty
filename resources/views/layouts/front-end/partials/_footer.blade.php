@@ -13,17 +13,17 @@
 @php($return_policy = \App\CPU\Helpers::get_business_settings('return-policy'))
 @php($cancellation_policy = \App\CPU\Helpers::get_business_settings('cancellation-policy'))
 <div class="__inline-9 rtl mt-5 ">
-    <div class="row bold text-center mx-0 {{Session::get('direction') === "rtl" ? 'text-md-right' : 'text-md-left'}} mt-3" style="background: {{$web_config['primary_color']}}10;padding:20px;" dir="{{session('direction')}}">
-        <div class="col-xxl-6 col-xl-6 col-md-6 col-md-6 col-sm-6 col-12 pb-3 d-none d-lg-inline-block">
+    {{-- <div class="row bold d-flex justify-content-center text-center mx-0 {{Session::get('direction') === "rtl" ? 'text-md-right' : 'text-md-left'}} mt-3" style="background: {{$web_config['primary_color']}}10;padding:20px;" dir="{{session('direction')}}">
+        <div class="col-6  pb-3 d-none d-lg-inline-block">
             <div class="text-center">
-                <h4 class="s_27 always mb-0 bold">{{\App\CPU\translate('We Are Always Here For ')}} <span class="second_color">{{\App\CPU\translate('Your Service')}}</span></h4>
-                <span class="s_19 always_span">{{\App\CPU\translate('Contact With us Through The Next Support Channels')}}</span>
+                <h4 class="s_18 always mb-0 bold">{{\App\CPU\translate('We Are Always Here For ')}} <span class="second_color">{{\App\CPU\translate('Your Service')}}</span></h4>
+                <span class="s_18 always_span">{{\App\CPU\translate('Contact With us Through The Next Support Channels')}}</span>
             </div>
         </div>
-        <div class="col-xxl-3 col-xl-3 col-md-3 col-md-3 col-sm-3 col-12 pb-3 help_desk {{session('direction') == 'rtl' ? 'text-right' : 'text-left'}}">
-            <div> <span class="s_16"> {{\App\CPU\translate('Help Center')}} </span> <br>
+        <div class="col-6 pb-3 help_desk {{session('direction') == 'rtl' ? 'text-right' : 'text-left'}}">
+            <div class="text-center"> <span class="s_18"> {{\App\CPU\translate('Help Center')}} </span> <br>
                 <a href="mailto:help@beauty-centeer.com" class="mt-1">
-                    <span dir="ltr"> <i class="fa fa-envelope-o mx-1" aria-hidden="true"></i> help@beauty-centeer.com </span>
+                    <span dir="ltr" class="s_18"> <i class="fa fa-envelope-o mx-1" aria-hidden="true"></i> help@beauty-centeer.com </span>
                 </a>
             </div>
         </div>
@@ -31,11 +31,11 @@
             <div>
                 <span> {{\App\CPU\translate('Support & Contact Through Our Email')}} </span> <br>
                 <a href="mailto:care@beauty-centeer.com" class="mt-1">
-                    <span dir="ltr"> <i class="fa fa-chevron-down bordered_chevron mx-1" aria-hidden="true"></i> care@beauty-centeer.com </span>
+                    <span dir="ltr" class="s_18"> <i class="fa fa-chevron-down bordered_chevron mx-1" aria-hidden="true"></i> care@beauty-centeer.com </span>
                 </a>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <footer class="page-footer font-small mdb-color rtl" style="background: #F6F6F6!important;">
         <div class="pt-4" style="background:#F6F6F6">

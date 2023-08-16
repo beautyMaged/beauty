@@ -213,7 +213,7 @@
             ->first())
             @if(isset($featured_deals))
                 <section class="featured_deal rtl mt-5">
-                    <div class="container">
+                    <div class="container-fluid ">
                         <div class="row __featured-deal-wrap" style="background: {{$web_config['primary_color']}};">
                             <div class="col-12 pb-2">
                                 @if (count($featured_deals->products)>0)
@@ -250,15 +250,15 @@
             <section class="featured_subs_with_products mt-5" dir="rtl">
                 <div class="container" style="">
                     <div class="row d-flex justify-content-center" dir="{{session('direction')}}">
-                        <div class="col-md-2 col-12">
+                        <div class="col-md-2 col-6">
                             <h4 class="main_title s_25 bold mb-1 mt-5 {{session('direction') == 'rtl' ? 'mr-1' : 'ml-1'}} mb-0">
-                                {{\App\CPU\translate('recent_pro')}}
+                                <a href="{{route('home')}}/products?data_from=latest&page=1"><span class="">{{\App\CPU\translate('recent_pro')}}</span></a>
                             </h4>
                         </div>
-                        <div class="col-md-8 col-12">
+                        <div class="col-md-8 col-12 small-bann">
                             <img src="{{asset('assets/front-end/img/aaa.webp')}}" alt="" class="img-fluid" style="margin-top: 10px;">
                         </div>
-                        <div class="col-md-2 col-12">
+                        <div class="col-md-2 col-6">
                             <div class="sorting_div s_12 bold mb-1 mt-5" dir="ltr">
                                 <div class="w-100 text-right">
                                     <span class="bold sort-span"
@@ -490,11 +490,14 @@
                                 <section class="featured_subs" dir="rtl">
                                     <div class="container" style="">
                                         <div class="row" dir="{{session('direction')}}">
-                                            <div class="col-xxl-6 col-xl-6 col-md-6 col-sm-12 col-12">
+                                            <div class="col-md-2 col-6">
                                                 <h4 class="main_title  bold s_25 mt-5 mr-5"> {{$main->name}} </h4>
                                             </div>
-                                            <div class="col-xxl-6 col-xl-6 col-md-6 col-sm-12 col-12">
-                                                <div class="sorting_div2 s_12 bold" dir="ltr">
+                                            <div class="col-md-8 col-12 small-bann">
+                                                <img src="{{asset('assets/front-end/img/aaa.webp')}}" alt="" class="img-fluid" style="margin-top: 10px;">
+                                            </div>
+                                            <div class="col-md-2 col-6">
+                                                <div class="sorting_div s_12 bold mb-1 mt-5" dir="ltr">
                                                     <div class="w-100 text-right">
                                                         <span class="bold sort-span" dir="rtl">{{\App\CPU\translate('sort_by')}} : <span>{{\App\CPU\translate('Most Favourit')}}</span> &nbsp;&nbsp;<i class="fa-solid fa-chevron-down s_12"></i></span>
                                                     </div>
@@ -761,11 +764,14 @@
                         <section class="featured_subs" dir="rtl">
                             <div class="container" style="">
                                 <div class="row" dir="{{session('direction')}}">
-                                    <div class="col-xxl-6 col-xl-6 col-md-6 col-sm-12 col-12">
+                                    <div class="col-md-2 col-6">
                                         <h4 class="main_title  bold s_25 mt-5 mr-5"> {{$main->name}} </h4>
                                     </div>
-                                    <div class="col-xxl-6 col-xl-6 col-md-6 col-sm-12 col-12">
-                                        <div class="sorting_div2 s_12 bold" dir="ltr">
+                                    <div class="col-md-8 col-12 small-bann">
+                                        <img src="{{asset('assets/front-end/img/aaa.webp')}}" alt="" class="img-fluid" style="margin-top: 10px;">
+                                    </div>
+                                    <div class="col-md-2 col-6">
+                                        <div class="sorting_div s_12 bold mb-1 mt-5" dir="ltr">
                                             <div class="w-100 text-right">
                                                 <span class="bold sort-span" dir="rtl">{{\App\CPU\translate('sort_by')}} : <span>{{\App\CPU\translate('Most Favourit')}}</span> &nbsp;&nbsp;<i class="fa-solid fa-chevron-down s_12"></i></span>
                                             </div>
@@ -1025,7 +1031,7 @@
                                                 @foreach($main_products_banners as $main_products_banner)
                                                     <div class="item custom-product-banner_div position-relative">
                                                         <div style="width: 100%;height: 100%;position: absolute;z-index: 100;top: 0;right: 0;background: rgba(0,0,0,0.1);border-radius: 5px;"></div>
-                                                        <img src="{{asset('storage/banner/'. $main_products_banner->photo)}}" alt="" style="border-radius: 5px;max-height: 340px">
+                                                        <img src="{{asset('storage/banner/'. $main_products_banner->photo)}}" alt="" style="border-radius: 5px;max-height: 250px">
                                                         <div class="banner-details" dir="rtl">
                                                             <h4 class="bold s_30"> {{$main_products_banner->title}} </h4>
                                                                 <span class="bold"> {{$main_products_banner->description}} </span>
@@ -1056,11 +1062,14 @@
                         <section class="featured_subs" dir="rtl">
                             <div class="container" style="">
                                 <div class="row" dir="{{session('direction')}}">
-                                    <div class="col-xxl-6 col-xl-6 col-md-6 col-sm-12 col-12">
+                                    <div class="col-md-2 col-6">
                                         <h4 class="main_title  bold s_25 mt-5 {{session('direction') == 'rtl' ? 'mr-5' : 'ml-5'}}"> {{$main->name}} </h4>
                                     </div>
-                                    <div class="col-xxl-6 col-xl-6 col-md-6 col-sm-12 col-12">
-                                        <div class="sorting_div2 s_12 bold" dir="ltr">
+                                    <div class="col-md-8 col-12 small-bann">
+                                        <img src="{{asset('assets/front-end/img/aaa.webp')}}" alt="" class="img-fluid" style="margin-top: 10px;">
+                                    </div>
+                                    <div class="col-md-2 col-6">
+                                        <div class="sorting_div s_12 bold mb-1 mt-5" dir="ltr">
                                             <div class="w-100 text-right">
                                                 <span class="bold sort-span" dir="rtl">{{\App\CPU\translate('sort_by')}} : <span>{{\App\CPU\translate('Most Favourit')}}</span> &nbsp;&nbsp;<i class="fa-solid fa-chevron-down s_12"></i></span>
                                             </div>
@@ -1324,7 +1333,7 @@
 
 
     {{-- Start Small Banner--}}
-    <section class="small_banner_section mt-5" dir="rtl">
+    <section class="small_banner_section mt-2" dir="rtl">
         <div class="container">
             <div class="row s_16">
                 <div
@@ -1379,14 +1388,14 @@
 
     {{-- Start Custom Banner--}}
     @if(isset($footer_products_banners) && $footer_products_banners->count() > 0)
-        <section class="custom-product-banner container mt-5 pt-5">
+        <section class="custom-product-banner container mt-2 pt-2">
             <div class="row">
-                <div class="col-xxl-12 col-xl-12 col-md-12 col-sm-12 col-12 mt-5  pt-3">
+                <div class="col-xxl-12 col-xl-12 col-md-12 col-sm-12 col-12 mt-3  pt-3">
                     <div class="owl-carousel owl-theme main_products_banners" dir="ltr">
                         @foreach($footer_products_banners as $footer_products_banner)
                             <div class="item custom-product-banner_div position-relative">
                                 <div style="width: 100%;height: 100%;position: absolute;z-index: 100;top: 0;right: 0;background: rgba(0,0,0,0.1);border-radius: 5px;"></div>
-                                <img src="{{asset('storage/banner/'. $footer_products_banner->photo)}}" alt="" style="border-radius: 5px;max-height: 340px">
+                                <img src="{{asset('storage/banner/'. $footer_products_banner->photo)}}" alt="" style="border-radius: 5px;max-height: 250px">
                                 <div class="banner-details" dir="rtl">
                                     <h4 class="bold s_30"> {{$footer_products_banner->title}} </h4>
                                     <span class="bold"> {{$footer_products_banner->description}}</span>
@@ -1413,7 +1422,7 @@
 
     {{--   Start Brands Carousel --}}
     @if($brands && $brands->count() > 0)
-        <section class="partners pt-5 mt-5">
+        <section class="partners pt-2 mt-2">
             <div class="row text-center">
                 <div class="col-xxl-10 col-xl-10 col-lg-10 col-md-10 col-sm-12 col-12 m-auto">
                     <div class="row partners_slider" dir="rtl">
@@ -1434,7 +1443,7 @@
     {{-- End Brands Carousel --}}
 
     {{-- Start All Cats With Counts --}}
-        <section class="cats_counts mt-5" style="max-width: 1450px; margin:auto;">
+        <section class="cats_counts mt-2" style="max-width: 1450px; margin:auto;">
             <div class="row text-center list_of_counts p-4" style="background: #fff;">
                 <div class="col-lg-12 col-md-12 col-12">
                     <h4 class="bold s_30 mb-3" style="color: #000"> {{\App\CPU\translate('All Products')}} </h4>
@@ -1471,84 +1480,29 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="row mt-3">
-                            <div class="col-md-2 col-6">
-                                <div class="counter green">
-                                    <span class="counter-value"> {{$bestSellProduct->count()}}</span> 
-                                    <h3>{{\App\CPU\translate('top sell')}}</h3>
+                    </div>
+                    {{-- <div class="row mt-3 d-flex justify-content-center">
+                        <div class="col-md-2 col-6">
+                            <div class="pricingTable yellow" style="padding: 8px 4px">
+                                <div class="pricingTable-header">
+                                    <div class="price-value"><span class="duration" style="font-size: 10px;"> {{\App\CPU\translate('top sell')}} </span> </div>
                                 </div>
+                                <ul class="pricing-content">
+                                    <li> <div class="single_price_item position-relative">
+                                        <h4 class="num_fam bold s_14"> {{$bestSellProduct->count()}}</h4>
+                                    </div> </li>
+                                </ul>
                             </div>
                         </div>
-                    
-                    
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </section>
         {{-- End All Cats With Counts --}}
 
 
-
-
-
-        {{--Start Client Reviews--}}
-        {{--        <section class="client_reviews mt-5 pt-5">--}}
-        {{--            <div class="container">--}}
-        {{--                <div class="row">--}}
-        {{--                    <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 m-auto text-center">--}}
-        {{--                        <h3 class="bold mb-0">عملاء سعداء</h3>--}}
-        {{--                        <span class="bold" style="color: #616060">اغتنم الفرصة وكن منهم اليوم</span>--}}
-        {{--                    </div>--}}
-
-        {{--                    <div class="col-xxl-12 col-xl-9 col-lg-9 col-md-7 col-sm-12 col-12 m-auto text-center" dir="ltr">--}}
-        {{--                        <div class="mt-sm-3 mb-3 brand-slider">--}}
-        {{--                            <div class="owl-carousel owl-theme p-2" id="clients_reviews">--}}
-
-        {{--                                @foreach($reviews_of_all_products as $single_review)--}}
-        {{--                                    <div class="text-right review-item ">--}}
-        {{--                                        <div class="p-4">--}}
-        {{--                                            <div class="review-head" dir="rtl">--}}
-        {{--                                                <div class="person-img d-inline-block">--}}
-        {{--                                                    @if($single_review->user->image != null)--}}
-        {{--                                                        <img--}}
-        {{--                                                            src="{{asset('storage/profile/'. $single_review->user->image)}}"--}}
-        {{--                                                            alt="avatar"--}}
-        {{--                                                            class="review-img ml-3">--}}
-        {{--                                                    @else--}}
-        {{--                                                        <img src="{{asset('assets/front-end/img/avatar.png')}}"--}}
-        {{--                                                             alt="avatar"--}}
-        {{--                                                             class="review-img ml-3">--}}
-        {{--                                                    @endif--}}
-
-
-        {{--                                                </div>--}}
-        {{--                                                <div class="review-person d-inline-block">--}}
-        {{--                                            <span class="review-name s_24 bold">--}}
-        {{--                                            {{$single_review->user->f_name . ' ' . $single_review->user->l_name}}--}}
-        {{--                                        </span>--}}
-        {{--                                                </div>--}}
-        {{--                                            </div>--}}
-        {{--                                            <div class="review-body">--}}
-        {{--                                                <div class="review-details pt-3">--}}
-        {{--                                                    <h4 class="s_21 px-2" style="text-align: justify; text-justify: inter-word">--}}
-        {{--                                                        {{$single_review->comment}}--}}
-        {{--                                                    </h4>--}}
-        {{--                                                </div>--}}
-        {{--                                            </div>--}}
-        {{--                                        </div>--}}
-        {{--                                    </div>--}}
-        {{--                                @endforeach--}}
-
-        {{--                            </div>--}}
-        {{--                        </div>--}}
-        {{--                    </div>--}}
-        {{--                </div>--}}
-        {{--            </div>--}}
-        {{--        </section>--}}
-        {{--End Client Reviews--}}
-
-
-        <section class="beauty_vendors container py-4 mt-5">
+        {{-- Strar beauty_vendors --}}
+        {{-- <section class="beauty_vendors container py-4 mt-5">
             <div class="text-center">
                 <h4 class="bold s_24">
                     {{\App\CPU\translate('Beauty Center Stores')}}
@@ -1580,89 +1534,53 @@
                     {{\App\CPU\translate('Products From China')}}
                 </a>
             </div>
-        </section>
+        </section> --}}
+        {{-- End beauty_vendors --}}
 
-
-        <section class="safe_support mt-5 pt-5" dir="{{session('direction')}}">
+        <section class="safe_support mt-2 pt-3" dir="{{session('direction')}}" style="background: #f1406110;padding:20px;">
             <div class="">
-                <div class="row mx-0 text-center">
+                <div class="row mx-0 text-center d-flex justify-content-center">
                     <div class=" col-xs-6 col-6 m-auto support_item">
                         <div class="d-inline-block item_img">
                             <img src="{{asset('assets/front-end/img/icon-4.png')}}" alt="">
                         </div>
-                        <div class="d-inline-block item_details">
-                        <span class="item_title s_21 bold">
-                             <span class="num_fam">100%</span> {{\App\CPU\translate('Secured Payment')}}
-                        </span>
-                            <br>
-                            <span class="item_desc s_12 bold">
+                        <div class="d-inline-block item_details" style="text-align: center;">
+                        <span class="item_title s_18 bold"> <span class="num_fam">100%</span> {{\App\CPU\translate('Secured Payment')}}
+                        </span> <br>
+                            <span class="item_desc s_18 bold">
                             {{\App\CPU\translate('Payment Methods in Store are Secured & Trusted')}}
                         </span>
                         </div>
                     </div>
-
-                    {{--                    <div class=" col-xs-6 col-6 m-auto support_item">--}}
-                    {{--                        <div class="d-inline-block item_img">--}}
-                    {{--                            <img src="{{asset('assets/front-end/img/icon-2.png')}}" alt="">--}}
-                    {{--                        </div>--}}
-                    {{--                        <div class="d-inline-block item_details">--}}
-                    {{--                        <span class="item_title s_21 bold">--}}
-                    {{--                             دعم على مدار <span class="num_fam">24/7</span>--}}
-                    {{--                        </span>--}}
-                    {{--                            <br>--}}
-                    {{--                            <span class="item_desc s_12 bold">--}}
-                    {{--                            تواصل معنا للدعم المباشر  على مدار الساعة.--}}
-                    {{--                        </span>--}}
-                    {{--                        </div>--}}
-                    {{--                    </div>--}}
-
-                    <div class=" col-xs-6 col-6 m-auto support_item">
+                    {{-- <div class=" col-xs-6 col-6 m-auto support_item">
                         <div class="d-inline-block item_img">
                             <img src="{{asset('assets/front-end/img/icon-5.png')}}" alt="">
                         </div>
-                        <div class="d-inline-block item_details">
-                        <span class="item_title s_19 bold">
-                             {{\App\CPU\translate('Free Phone Number')}}
-                        </span>
-                            <br>
-                            <span class="item_desc s_12 bold">
-                            <span class="num_fam" dir="ltr">+966 53 085 2675</span>
-                        </span>
+                        <div class="d-inline-block item_details" style="text-align: center;">
+                            <span class="item_title s_18 bold"> {{\App\CPU\translate('Free Phone Number')}} </span>
+                                <br>
+                                <span class="item_desc s_18 bold">
+                                <span class="num_fam" dir="ltr">+966 53 085 2675</span>
+                            </span>
+                        </div>
+                    </div> --}}
+                    <div class=" col-xs-6 col-6 m-auto support_item">
+                        <div class="d-inline-block item_img"> <img src="{{asset('assets/front-end/img/icon-3.png')}}" alt=""> </div>
+                        <div class="d-inline-block item_details" style="text-align: center;">
+                            <span class="item_title s_18 bold"> {{\App\CPU\translate('Order Return')}} </span> <br>
+                            <span class="item_desc s_18 bold"> {{\App\CPU\translate('Easy Return Policy in 24 Hours')}} </span>
                         </div>
                     </div>
-                    <div class=" col-xs-6 col-6 m-auto support_item">
-                        <div class="d-inline-block item_img">
-                            <img src="{{asset('assets/front-end/img/icon-3.png')}}" alt="">
-                        </div>
-                        <div class="d-inline-block item_details">
-                        <span class="item_title s_21 bold">
-                             {{\App\CPU\translate('Order Return')}}
-                        </span>
-                            <br>
-                            <span class="item_desc s_12 bold">
-                            {{\App\CPU\translate('Easy Return Policy in 24 Hours')}}
-                        </span>
-                        </div>
-                    </div>
-
-                    <div class=" col-xs-6 col-6 m-auto support_item">
+                    {{-- <div class=" col-xs-6 col-6 m-auto support_item">
                         <div class="d-inline-block item_img">
                             <img src="{{asset('assets/front-end/img/icon-1.png')}}" alt="">
                         </div>
-                        <div class="d-inline-block item_details">
-                        <span class="item_title s_21 bold">
-                            {{\App\CPU\translate('Free Shipping')}}
-                        </span>
-                            <br>
-                            <span class="item_desc s_12 bold">
-                            {{\App\CPU\translate('Free Shipping For All Orders')}}
-                        </span>
+                        <div class="d-inline-block item_details" style="text-align: center;">
+                            <span class="item_title s_18 bold"> {{\App\CPU\translate('Free Shipping')}} </span> <br>
+                            <span class="item_desc s_18 bold">{{\App\CPU\translate('Free Shipping For All Orders')}} </span>
                         </div>
-                    </div>
-
-
+                    </div> --}}
                 </div>
-
             </div>
         </section>
     </div>
@@ -1673,8 +1591,6 @@
     {{-- Owl Carousel --}}
 
     <script>
-
-
         let color_changer = $('.color-changer');
         color_changer.on('click', function () {
             let id = $(this).attr('data-target');
@@ -1772,11 +1688,11 @@
                 },
                 //Extra large
                 1200: {
-                    items: 2
+                    items: 3
                 },
                 //Extra extra large
                 1400: {
-                    items: 2
+                    items: 3
                 }
             }
         })
@@ -2024,7 +1940,7 @@
             autoplay: false,
             margin: 10,
             nav: false,
-            dots: true,
+            dots: false,
             autoplayHoverPause: true,
             // center: true,
             // navText: ["<i class='fa fa-arrow-left' aria-hidden='true'></i>", "<i class='fa fa-arrow-right' aria-hidden='true'></i>"],
@@ -2049,19 +1965,19 @@
                 },
                 //Medium
                 768: {
-                    items: 3
+                    items: 5
                 },
                 //Large
                 992: {
-                    items: 4
+                    items: 8
                 },
                 //Extra large
                 1200: {
-                    items: 5
+                    items: 8
                 },
                 //Extra extra large
                 1400: {
-                    items: 5
+                    items: 8
                 }
             }
         });
@@ -2229,7 +2145,7 @@
             autoplayTimeout: 2000,
             autoplayHoverPause: true,
             margin: 10,
-            dots: true,
+            dots: false,
             // center: true,
             navText: ["<img src='{{asset('assets/front-end/img/pink-chevron-left.png')}}'>", "<img src='{{asset('assets/front-end/img/pink-chevron-right.png')}}'>"],
 

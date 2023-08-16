@@ -1922,7 +1922,7 @@
   'Search products from this store' => 'البحث عن المنتجات من هذا المتجر',
   'default currency can not be deleted!' => 'العملة الافتراضية لا يمكن حذفها!',
   'default currency can not be deleted!to delete change the default currency first!' => 'العملة الافتراضية لا يمكن حذفها! للحذف قم بتغيير العملة الافتراضية أولاً!',
-  'See the latest deals and exciting new offers' => 'اطلع على أحدث الصفقات والعروض الجديدة المثيرة',
+  'See the latest deals and exciting new offers' => 'اطلع على أحدث الصفقات والعروض الجديدة',
   'view more' => 'عرض المزيد',
   'no more review ' => 'No more review ',
   'no more review remain to load' => 'لا مزيد من الاستعراضات المتبقية للتحميل',
@@ -3181,4 +3181,5 @@
   'Watches Collection' => 'Watches Collection',
   'Women Sunglasses' => 'Women Sunglasses',
   'Makeup' => 'Makeup',
+  'See the latest deals and new offers' => 'See the latest deals and new offers',
 );

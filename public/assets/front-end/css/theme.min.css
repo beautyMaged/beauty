@@ -53,7 +53,7 @@
     --breakpoint-md: 768px;
     --breakpoint-lg: 992px;
     --breakpoint-xl: 1280px;
-    --font-family-sans-serif: 'Droid-Arabic-Kufi', sans-serif;
+    --font-family-sans-serif: 'Cairo', sans-serif;
     --font-family-monospace: 'Open Sans', sans-serif;
 }
 
@@ -17714,7 +17714,7 @@ html[dir="rtl"] .feature_header span {
 }
 
 .text-accent {
-    font-family: 'Droid-Arabic-Kufi', sans-serif;
+    font-family: 'Cairo', sans-serif;
     font-weight: 700;
     font-size: 18px;
 }
