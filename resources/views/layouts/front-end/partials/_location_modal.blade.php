@@ -1,40 +1,27 @@
 <!-- Modal -->
 @php($default_location=\App\CPU\Helpers::get_business_settings('default_location'))
-
-<div class="modal fade" id="location_modal" tabindex="-1" aria-labelledby="location_modal" aria-hidden="true" style="z-index: 2000;"
-     dir="rtl">
+<div class="modal fade" id="location_modal" tabindex="-1" aria-labelledby="location_modal" aria-hidden="true" style="z-index: 2000;" dir="rtl">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-
             <div class="modal-body pt-3">
                 <div class="row" id="form_location" style="display: none">
                     <form action="{{route('confirm.location')}}" method="post" class="col-lg-12 col-12">
                         @csrf
                         <div class="row mb-3" style="">
                             <div class="col-lg-10 col-8">
-                                <input class="form-control" id="head_address" type="text" name="head_address">
-                                <input class="form-control" id="head_city" type="hidden" name="head_city">
-                                <input class="form-control" id="head_country" type="hidden" name="head_country">
-                                <input class="form-control" id="head_new_lat" type="hidden" name="head_new_lat">
-                                <input class="form-control" id="head_new_long" type="hidden" name="head_new_long">
+                                <input class="form-control" id="head_address" type="text" name="head_address"> <input class="form-control" id="head_city" type="hidden" name="head_city"> <input class="form-control" id="head_country" type="hidden" name="head_country"> <input class="form-control" id="head_new_lat" type="hidden" name="head_new_lat"> <input class="form-control" id="head_new_long" type="hidden" name="head_new_long">
                             </div>
                             <div class="col-lg-2 col-4">
-                                <button class="btn btn-danger w-100" id="confirm_btn"
-                                        type="submit">{{\App\CPU\translate('confirm')}}</button>
+                                <button class="btn btn-danger w-100" id="confirm_btn" type="submit">{{\App\CPU\translate('confirm')}}</button>
                             </div>
-
                         </div>
-
                     </form>
                 </div>
                 <div class="row pt-0">
-
                     <div class="col-lg-12 col-md-12 col-sm-12 col-12 text-center">
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-6 text-right">
-                                <h4 class="bold s_15">
-                                    {{\App\CPU\translate('Use New Address')}}
-                                </h4>
+                                <h4 class="bold s_15"> {{\App\CPU\translate('Use New Address')}} </h4>
                             </div>
                             <div class="col-lg-6 col-md-6 col-6 text-left">
                                 <h4 class="bold s_19" id="map_lister">
@@ -50,55 +37,22 @@
                                             @endif
                                         @endif
                                     </span>
-                                    {{--                                    <i class="fa-solid fa-chevron-down  px-1 mt-1"></i>--}}
-
                                 </h4>
-                                {{--                                <ul class="shipping-list-items_2 pr-0" id="list_of_countries">--}}
-                                {{--                                    <li class="shipping-item py-2 px-3 text-right">--}}
-                                {{--                                        <img src="{{asset('assets/front-end/img/ae.svg')}}" alt="egypt">--}}
-                                {{--                                        <span class="mr-2">الإمارات العربية المتحدة</span>--}}
-                                {{--                                    </li>--}}
-                                {{--                                    <li class="shipping-item py-2 px-3 text-right">--}}
-                                {{--                                        <img src="{{asset('assets/front-end/img/sa.svg')}}" alt="egypt">--}}
-                                {{--                                        <span class="mr-2">السعودية</span>--}}
-                                {{--                                    </li>--}}
-                                {{--                                    <li class="shipping-item py-2 px-3 text-right">--}}
-                                {{--                                        <img src="{{asset('assets/front-end/img/eg.svg')}}" alt="egypt">--}}
-                                {{--                                        <span class="mr-2">مصر</span>--}}
-                                {{--                                    </li>--}}
-
-                                {{--                                </ul>--}}
                             </div>
                         </div>
                     </div>
 
 
                     <div class="col-lg-12 col-md-12 col-sm-12 col-12 text-center" style="">
-                        <input id="pac-input-main" class="controls rounded __inline-46" title="{{\App\CPU\translate('Type Address Here')}}"
-                               type="text" placeholder="{{\App\CPU\translate('Type Address Here')}}" style="padding-right: 11px;"/>
-                        <input id="pac-input-new-main" class="controls rounded __inline-46" title="{{\App\CPU\translate('Type Address Here')}}"
-                               type="text" placeholder="{{\App\CPU\translate('Type Address Here')}}" style="padding-right: 11px;"/>
-
+                        <input id="pac-input-main" class="controls rounded __inline-46" title="{{\App\CPU\translate('Type Address Here')}}" type="text" placeholder="{{\App\CPU\translate('Type Address Here')}}" style="padding-right: 11px;"/>
+                        <input id="pac-input-new-main" class="controls rounded __inline-46" title="{{\App\CPU\translate('Type Address Here')}}" type="text" placeholder="{{\App\CPU\translate('Type Address Here')}}" style="padding-right: 11px;"/>
                         <div class="__h-400px" id="location_map_canvas_main"></div>
-
                     </div>
-                    <input type="hidden" id="main_latitude"
-                           name="main_latitude" class="form-control d-inline"
-                           placeholder="Ex : -94.22213"
-                           value="{{$default_location?$default_location['lat']:0}}" required
-                           readonly>
-                    <input type="hidden"
-                           name="main_longitude" class="form-control"
-                           placeholder="Ex : 103.344322" id="main_longitude"
-                           value="{{$default_location?$default_location['lng']:0}}" required
-                           readonly>
-
-                    <button type="submit" class="btn btn--primary" style="display: none"
-                            id="address_main_submit"></button>
-
+                    <input type="hidden" id="main_latitude" name="main_latitude" class="form-control d-inline" placeholder="Ex : -94.22213" value="{{$default_location?$default_location['lat']:0}}" required readonly>
+                    <input type="hidden" name="main_longitude" class="form-control" placeholder="Ex : 103.344322" id="main_longitude" value="{{$default_location?$default_location['lng']:0}}" required readonly>
+                    <button type="submit" class="btn btn--primary" style="display: none" id="address_main_submit"></button>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

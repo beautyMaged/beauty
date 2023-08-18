@@ -2,8 +2,7 @@
 @php($lang = \App\Model\BusinessSetting::where('type', 'language')->first())
 
 <style>
-.for-count-value { color: {{$web_config['primary_color']}};}
-.count-value {color: {{$web_config['primary_color']}};} 
+.for-count-value { color: {{$web_config['primary_color']}};} .count-value {color: {{$web_config['primary_color']}};} 
 .all_cats_list { {{session('direction') == 'rtl' ? 'right:-20px!important' : ''}} }
 .owl-carousel.owl-rtl .owl-item { {{session('direction') == 'rtl' ? 'float:right!important' : 'float:left!important'}} }
 #categories_list .owl-nav button.owl-prev { {{session('direction') == 'rtl' ? '' : 'right:auto!important;left: 0!important'}}}
@@ -158,10 +157,7 @@
                 </div>
             @else
                 <div class="col-xxl-3 col-xl-3 col-md-3 col-sm-6 col-6 pt-4 position-relative {{session('direction') == 'rtl' ? 'text-right pr-3 ' : 'text-left  pl-4 '}} deliverly_to">
-                    <span type="button" data-toggle="modal" data-target="#register_modal" class="mobile_hide reg_aa" style="cursor: pointer">
-                        <i class="fa-regular fa-user px-1 s_19 primary_color"></i>
-                        <span class="s_18 bold"><span class="mobile_hide">{{\App\CPU\translate('You are a Guest / ')}}</span> {{\App\CPU\translate('Sign in')}}</span>
-                    </span>
+                    <span type="button" data-toggle="modal" data-target="#register_modal" class="mobile_hide reg_aa" style="cursor: pointer"> <i class="fa-regular fa-user px-1 s_19 primary_color"></i> <span class="s_18 bold"><span class="mobile_hide">{{\App\CPU\translate('You are a Guest / ')}}</span> {{\App\CPU\translate('Sign in')}}</span> </span>
                     <div class="list-ship position-relative pc_hide mob_inline" data-toggle="modal" data-target="#location_modal" style="padding: 5px 0;">
                         <i class="fa-solid fa-location-dot px-1 primary_color heartbeat" style="margin-top:-15px; font-size:22px;"></i>
                         {{-- <img class="px-1 mr-2" src="{{asset('assets/front-end/img/flag.png')}}" alt="flag" style="width: 33px;border-radius: 6px; margin-top: 5px;  margin-left: 0!important;margin-right: 1px!important;"> --}}
@@ -191,76 +187,46 @@
                 </div>
                 <div class="col-sm-6 col-6 pt-2 text-left pc_hide">
                     <div class="navbar-toolbar shorthand_icons  text-center pc_hide" dir="rtl" style="margin-top:9px">
-                        <div class="d-inline-block position-relative" style="margin-right: 2px!important;">
-                        <span type="button" data-toggle="modal" data-target="#register_modal" style="cursor: pointer">
-                            <i class="fa-regular fa-user s_19 primary_color"></i>
-                            <span class="s_12 bold"><span class="mobile_hide">{{\App\CPU\translate('You are a Guest / ')}}</span> {{\App\CPU\translate('Sign in')}}</span>
-                        </span>
-                        </div>
+                        <div class="d-inline-block position-relative" style="margin-right: 2px!important;"><span type="button" data-toggle="modal" data-target="#register_modal" style="cursor: pointer"> <i class="fa-regular fa-user s_19 primary_color"></i> <span class="s_12 bold"><span class="mobile_hide">{{\App\CPU\translate('You are a Guest / ')}}</span> {{\App\CPU\translate('Sign in')}}</span> </span> </div>
                         <div id="cart_items_mobile" class="d-inline-block mr-lg-2 position-relative">
                             @include('layouts.front-end.partials.cart')
                         </div>
                         <div class="navbar-tool d-inline-block mr-lg-1 position-relative dropdown">
                             <a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="{{route('wishlists')}}">
-                            <span class="navbar-tool-label">
-                                @if(auth('customer')->check())
-                                    <span class="countWishlist">{{\App\Model\Wishlist::where('customer_id', auth('customer')->id())->count()}}</span>
-                                @else
-                                    <span class="countWishlist">{{session()->has('wish_list')?count(session('wish_list')):0}}</span>
-                                @endif
-                            </span>
-                                <i class="navbar-tool-icon czi-heart"></i>
+                                <span class="navbar-tool-label">
+                                    @if(auth('customer')->check())
+                                        <span class="countWishlist">{{\App\Model\Wishlist::where('customer_id', auth('customer')->id())->count()}}</span>
+                                    @else
+                                        <span class="countWishlist">{{session()->has('wish_list')?count(session('wish_list')):0}}</span>
+                                    @endif
+                                </span> <i class="navbar-tool-icon czi-heart"></i>
                             </a>
                         </div>
                         @php($cs_phone=\App\Model\BusinessSetting::where('type','customer_service')->first())
                         <div class="navbar-tool d-inline-block mr-lg-1 position-relative dropdown">
-                            <a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="tel:{{$cs_phone->value}}">
-                                <i class="fa-solid fa-headset px-1 s_19"></i>
-                                {{-- <span class="s_12 bold mobile_hide">خدمة العملاء</span>--}}
-                            </a>
+                            <a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="tel:{{$cs_phone->value}}"> <i class="fa-solid fa-headset px-1 s_19"></i> {{-- <span class="s_12 bold mobile_hide">خدمة العملاء</span>--}} </a>
                         </div>
                     </div>
                 </div>
             @endif
             @php($whatsapp = \App\CPU\Helpers::get_business_settings('whatsapp'))
             <div class=" col-sm-6 col-6 pt-2 text-left social_icons_mobile d-none" style="padding-left: 23px; display: none">
-                <a href="https://web.whatsapp.com/send/?phone={{ $whatsapp['phone'] }}?text=Hello%20there!" class="px-1">
-                    <img src="{{asset('assets/front-end/img/whatsapp.png')}}" alt="icon" style="width: 27px">
-                </a>
-                <a href="{{App\Model\SocialMedia::where('name', 'twitter')->first()->link}}" class="px-1">
-                    <i class="fa-brands fa-twitter"></i>
-                </a>
-                <a href="{{App\Model\SocialMedia::where('name', 'instagram')->first()->link}}" class="px-1">
-                    <i class="fa-brands fa-instagram"></i>
-                </a>
-                <a href="{{App\Model\SocialMedia::where('name', 'facebook')->first()->link}}" class="px-1">
-                    <i class="fa-brands fa-facebook"></i>
-                </a>
+                <a href="https://web.whatsapp.com/send/?phone={{ $whatsapp['phone'] }}?text=Hello%20there!" class="px-1"><img src="{{asset('assets/front-end/img/whatsapp.png')}}" alt="icon" style="width: 27px"> </a>
+                <a href="{{App\Model\SocialMedia::where('name', 'twitter')->first()->link}}" class="px-1"> <i class="fa-brands fa-twitter"></i> </a>
+                <a href="{{App\Model\SocialMedia::where('name', 'instagram')->first()->link}}" class="px-1"> <i class="fa-brands fa-instagram"></i></a>
+                <a href="{{App\Model\SocialMedia::where('name', 'facebook')->first()->link}}" class="px-1"> <i class="fa-brands fa-facebook"></i> </a>
             </div>
             <div class="col-xxl-6 col-xl-6 col-md-6 col-sm-12 col-12 bold pt-2 mobile_hide">
                 <a class="navbar-brand d-none d-sm-block {{Session::get('direction') === "rtl" ? 'mr-3' : 'mr-3'}} flex-shrink-0 __min-w-7rem" href="{{route('home')}}">
-                    <img class="__inline-11" src="{{asset("storage/company")."/".$web_config['web_logo']->value}}" style="height: 50px!important;"
-                        onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'" alt="{{$web_config['name']->value}}"/>
+                    <img class="__inline-11" src="{{asset("storage/company")."/".$web_config['web_logo']->value}}" style="height: 50px!important;" onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'" alt="{{$web_config['name']->value}}"/>
                 </a>
             </div>
-            <div
-                class="col-xxl-3 col-xl-3 col-md-3 col-sm-12 col-12 {{session('direction') == 'rtl' ? 'text-left' : 'text-right'}} social_icons mobile_hide"
-                style=" {{session('direction') == 'rtl' ? 'padding-left: 23px;' : 'padding-right: 23px;'}} padding-top: 20px">
-                <a href="https://web.whatsapp.com/send/?phone={{ $whatsapp['phone'] }}?text=Hello%20there!" target="_blank" class="px-1">
-                    <img src="{{asset('assets/front-end/img/whatsapp.png')}}" alt="icon" style="width: 27px">
-                </a>
-                <a href="{{App\Model\SocialMedia::where('name', 'facebook')->first()->link}}" class="px-1">
-                    <img src="{{asset('assets/front-end/img/fb.png')}}" alt="icon" style="width: 23px">
-                </a>
-                <a href="{{App\Model\SocialMedia::where('name', 'linkedin')->first()->link}}" class="px-1">
-                    <img src="{{asset('assets/front-end/img/linkedin.png')}}" alt="icon" style="width: 23px">
-                </a>
-                <a href="{{App\Model\SocialMedia::where('name', 'instagram')->first()->link}}" class="px-1">
-                    <img src="{{asset('assets/front-end/img/instagram.png')}}" alt="icon" style="width: 23px">
-                </a>
-                <a href="{{App\Model\SocialMedia::where('name', 'twitter')->first()->link}}" class="px-1">
-                    <img src="{{asset('assets/front-end/img/twitter.png')}}" alt="icon" style="width: 23px">
-                </a>
+            <div class="col-xxl-3 col-xl-3 col-md-3 col-sm-12 col-12 {{session('direction') == 'rtl' ? 'text-left' : 'text-right'}} social_icons mobile_hide" style=" {{session('direction') == 'rtl' ? 'padding-left: 23px;' : 'padding-right: 23px;'}} padding-top: 20px">
+                <a href="https://web.whatsapp.com/send/?phone={{ $whatsapp['phone'] }}?text=Hello%20there!" target="_blank" class="px-1"> <img src="{{asset('assets/front-end/img/whatsapp.png')}}" alt="icon" style="width: 27px"> </a>
+                <a href="{{App\Model\SocialMedia::where('name', 'facebook')->first()->link}}" class="px-1"> <img src="{{asset('assets/front-end/img/fb.png')}}" alt="icon" style="width: 23px"> </a>
+                <a href="{{App\Model\SocialMedia::where('name', 'linkedin')->first()->link}}" class="px-1"> <img src="{{asset('assets/front-end/img/linkedin.png')}}" alt="icon" style="width: 23px"> </a>
+                <a href="{{App\Model\SocialMedia::where('name', 'instagram')->first()->link}}" class="px-1"> <img src="{{asset('assets/front-end/img/instagram.png')}}" alt="icon" style="width: 23px"> </a>
+                <a href="{{App\Model\SocialMedia::where('name', 'twitter')->first()->link}}" class="px-1"> <img src="{{asset('assets/front-end/img/twitter.png')}}" alt="icon" style="width: 23px"> </a>
             </div>
         </div>
     </div>
@@ -301,9 +267,7 @@
                             </select>
                             <div class="input-group mt-2" dir="ltr">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1" style="padding: 4px" data-toggle="modal" data-target="#location_modal">
-                                        <img src="{{asset('assets/front-end/img/send.png')}}" alt="send" style="width: 21px">
-                                    </span>
+                                    <span class="input-group-text" id="basic-addon1" style="padding: 4px" data-toggle="modal" data-target="#location_modal"> <img src="{{asset('assets/front-end/img/send.png')}}" alt="send" style="width: 21px"> </span>
                                 </div>
                                 <input type="text" class="form-control" placeholder="اسم المنطقة" style="padding: 6px 7px 0 7px!important;height: 33px;text-align: right;">
                             </div>
@@ -317,24 +281,15 @@
                         @endforeach
                     </div>
                 </div>
-                <a class="navbar-brand mobile_logo d-sm-none {{Session::get('direction') === "rtl" ? 'mr-2' : 'mr-2'}}" href="{{route('home')}}">
-                    <img class="mobile-logo-img __inline-12" src="{{asset("storage/company")."/".$web_config['web_logo']->value}}"
-                        onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'" alt="{{$web_config['name']->value}}"/>
-                </a>
+                <a class="navbar-brand mobile_logo d-sm-none {{Session::get('direction') === "rtl" ? 'mr-2' : 'mr-2'}}" href="{{route('home')}}"> <img class="mobile-logo-img __inline-12" src="{{asset("storage/company")."/".$web_config['web_logo']->value}}" onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'" alt="{{$web_config['name']->value}}"/> </a>
                 <!-- Search-->
                 <div class="input-group-overlay d-none d-md-inline-block col-lg-4 col-md-4 mx-4" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
                     <form action="{{route('products')}}" type="submit" class="search_form">
                         <input class="form-control appended-form-control search-bar-input" type="text" autocomplete="off" dir="rtl" placeholder="{{\App\CPU\translate('Search in Store')}} ..." name="name">
-                        <button class="input-group-append-overlay search_button secondary_bg" type="submit" style="border-radius: 5px 0 0 5px!important; right: unset; left: -6px;top:0;">
-                                <span class="input-group-text __text-20px">
-                                    <i class="czi-search text-white"></i>
-                                </span>
-                        </button>
+                        <button class="input-group-append-overlay search_button secondary_bg" type="submit" style="border-radius: 5px 0 0 5px!important; right: unset; left: -6px;top:0;"> <span class="input-group-text __text-20px"> <i class="czi-search text-white"></i> </span> </button>
                         <input name="data_from" value="search" hidden>
                         <input name="page" value="1" hidden>
-                        <diV class="card search-card __inline-13">
-                            <div class="card-body search-result-box __h-400px overflow-x-hidden overflow-y-auto"></div>
-                        </diV>
+                        <diV class="card search-card __inline-13"> <div class="card-body search-result-box __h-400px overflow-x-hidden overflow-y-auto"></div> </diV>
                     </form>
                 </div>
                 <!-- Toolbar-->
@@ -342,15 +297,10 @@
                     @php($currency_model = \App\CPU\Helpers::get_business_settings('currency_model'))
                     @if($currency_model=='multi_currency')
                         <div class="topbar-text dropdown disable-autohide d-inline-block position-relative">
-                            <a class="topbar-link dropdown-toggle" href="#" data-toggle="dropdown">
-                                <span> {{session('currency_symbol')}} </span>
-                            </a>
+                            <a class="topbar-link dropdown-toggle" href="#" data-toggle="dropdown"> <span> {{session('currency_symbol')}} </span> </a>
                             <ul class="dropdown-menu dropdown-menu-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}" style="min-width: 160px!important;text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
                                 @foreach (\App\Model\Currency::where('status', 1)->get() as $key => $currency)
-                                    <li class="dropdown-item cursor-pointer"
-                                        onclick="currency_change('{{$currency['code']}}')">
-                                        {{ $currency->name }}
-                                    </li>
+                                    <li class="dropdown-item cursor-pointer" onclick="currency_change('{{$currency['code']}}')"> {{ $currency->name }} </li>
                                 @endforeach
                             </ul>
                         </div>
@@ -373,10 +323,7 @@
                     {{-- <div class="d-inline-block mr-1 position-relative"> <i class="fa-solid fa-globe px-1 s_19"></i> </div>--}}
                     @php($cs_phone=\App\Model\BusinessSetting::where('type','customer_service')->first())
                     <div class="navbar-tool d-inline-block mr-1 position-relative dropdown">
-                        <a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="tel:{{$cs_phone->value}}">
-                            <i class="fa-solid fa-headset px-1 " style="font-size: 20px!important;"></i>
-                            {{--<span class="s_12 bold mobile_hide">خدمة العملاء</span>--}}
-                        </a>
+                        <a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="tel:{{$cs_phone->value}}"> <i class="fa-solid fa-headset px-1 " style="font-size: 20px!important;"></i> {{--<span class="s_12 bold mobile_hide">خدمة العملاء</span>--}} </a>
                     </div>
                 </div>
             </div>
@@ -387,45 +334,27 @@
                 <div class="row pb-0 categories_container position-relative" dir="rtl">
                     @if(session('direction') == "rtl")
                         <div class="col-lg-2 col-md-2 col-sm-2 col-2 {{session('direction') == 'rtl' ? 'text-right' : 'text-left'}}  all_cats_div" style="padding: 7px">
-                            <a class="all_cats_btn s_16 bold " href="#" style="{{session('direction') == 'rtl' ? '' : 'padding: 7px 0 7px 18px;'}}">
-                                {{\App\CPU\translate('All Categories_')}}
-                                <i class="fa fa-caret-down position-absolute" style="top: 16px; {{session('direction') == 'rtl' ? 'left:50px;' : 'right:50px;'}} color: #fff" aria-hidden="true"></i>
-                            </a>
+                            <a class="all_cats_btn s_16 bold " href="#" style="{{session('direction') == 'rtl' ? '' : 'padding: 7px 0 7px 18px;'}}"> {{\App\CPU\translate('All Categories_')}} <i class="fa fa-caret-down position-absolute" style="top: 16px; {{session('direction') == 'rtl' ? 'left:50px;' : 'right:50px;'}} color: #fff" aria-hidden="true"></i> </a>
                         </div>
                     @endif
                     <div class="col-lg-10 col-md-10 col-sm-10 col-10">
                         <div class="categories_list pr-0 py-1 my-0 text-right" dir="ltr">
                             <div class="owl-carousel owl-theme " id="categories_list" style="padding-left: 2.5rem!important; padding-right: 2.5rem!important;">
-                                <div style="" class="category-item_1">
-                                    <a href="{{route('home')}}/products?data_from=best-selling&page=1"><span class="boldy">{{\App\CPU\translate('top_sell_pro')}}</span></a>
-                                </div>
-                                <div style="" class="category-item_1">
-                                    <a href="{{route('home')}}/products?data_from=top-rated&page=1"><span class="boldy">{{\App\CPU\translate('top_rate_pro')}}</span></a>
-                                </div>
-                                <div style="" class="category-item_1">
-                                    <a href="{{route('home')}}/flash-deals/1"><span class="boldy">{{\App\CPU\translate('daily_offers')}}</span></a>
-                                </div>
-                                <div style="" class="category-item_1">
-                                    <a href="{{route('home')}}/products?data_from=latest&page=1"><span class="boldy">{{\App\CPU\translate('recent_pro')}}</span></a>
-                                </div>
-                                <div style="" class="category-item_1">
-                                    <a href="{{route('products',['data_from'=>'featured_deal','page'=>1])}}"><span class="boldy">{{\App\CPU\translate('special_offers')}}</span></a>
-                                </div>
+                                <div style="" class="category-item_1"> <a href="{{route('home')}}/products?data_from=best-selling&page=1"><span class="boldy">{{\App\CPU\translate('top_sell_pro')}}</span></a> </div>
+                                <div style="" class="category-item_1"> <a href="{{route('home')}}/products?data_from=top-rated&page=1"><span class="boldy">{{\App\CPU\translate('top_rate_pro')}}</span></a> </div>
+                                <div style="" class="category-item_1"> <a href="{{route('home')}}/flash-deals/1"><span class="boldy">{{\App\CPU\translate('daily_offers')}}</span></a> </div>
+                                <div style="" class="category-item_1"> <a href="{{route('home')}}/products?data_from=latest&page=1"><span class="boldy">{{\App\CPU\translate('recent_pro')}}</span></a> </div>
+                                <div style="" class="category-item_1"> <a href="{{route('products',['data_from'=>'featured_deal','page'=>1])}}"><span class="boldy">{{\App\CPU\translate('special_offers')}}</span></a> </div>
                                 @php($cats = \App\Model\Category::where('position', 0)->where('home_status', true)->orderBy('priority')->get())
                                 @foreach($cats as $cat)
-                                    <div style="" class="category-item" data-value="menu_cat_{{$cat->id}}" data-id="{{$cat->id}}">
-                                        <a href="{{route('home')}}/products?id={{$cat->id}}&data_from=category&page=1"><span class="boldy">{{$cat->name}}</span></a>
-                                    </div>
+                                    <div style="" class="category-item" data-value="menu_cat_{{$cat->id}}" data-id="{{$cat->id}}"> <a href="{{route('home')}}/products?id={{$cat->id}}&data_from=category&page=1"><span class="boldy">{{$cat->name}}</span></a> </div>
                                 @endforeach 
                             </div>
                         </div>
                     </div>
                     @if(session('direction') == "ltr")
                         <div class="col-xxl-2 col-xl-2 col-md-2 col-sm-2 col-2 {{session('direction') == 'rtl' ? 'text-right' : 'text-left'}}  all_cats_div" style="padding: 7px">
-                            <a class="all_cats_btn s_16 bold " href="#" style="{{session('direction') == 'rtl' ? '' : 'padding: 7px 0 7px 18px;'}}">
-                                {{\App\CPU\translate('All Categories_')}}
-                                <i class="fa fa-caret-down position-absolute" style="top: 16px; {{session('direction') == 'rtl' ? 'left:20px;' : 'right:20px;'}} color: #f14061" aria-hidden="true"></i>
-                            </a>
+                            <a class="all_cats_btn s_16 bold " href="#" style="{{session('direction') == 'rtl' ? '' : 'padding: 7px 0 7px 18px;'}}"> {{\App\CPU\translate('All Categories_')}} <i class="fa fa-caret-down position-absolute" style="top: 16px; {{session('direction') == 'rtl' ? 'left:20px;' : 'right:20px;'}} color: #f14061" aria-hidden="true"></i> </a>
                         </div>
                     @endif
                     @foreach($cats as $cat)
@@ -487,9 +416,7 @@
                                                 <h3 class="bold s_14">{{\App\CPU\translate('Shop With Color')}}</h3>
                                                 <div>
                                                     @foreach($colors as $color)
-                                                        <a href="{{route('products',['id' => $cat->id,'data_from'=> 'category', 'color' => str_replace('#', '', $color->code), 'page'=>1])}}">
-                                                            <div class="color-item-nav" style="background: {{$color->code}}"></div>
-                                                        </a>
+                                                        <a href="{{route('products',['id' => $cat->id,'data_from'=> 'category', 'color' => str_replace('#', '', $color->code), 'page'=>1])}}"> <div class="color-item-nav" style="background: {{$color->code}}"></div> </a>
                                                     @endforeach
                                                 </div>
                                             </div>
@@ -504,10 +431,7 @@
                                         {{--   @php($most_pop = \App\Model\Product::)--}}
                                         @foreach ($brands as $brand)
                                             <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 col-4 text-center py-3">
-                                                <a href="#">
-                                                    <img src="{{asset('storage/brand/' . $brand->image)}}" class="most_pop_prod d-block" alt="" style="border-radius: 0;padding: 7px;width: 100%;height: 93px">
-                                                    <span class="s_14 bold d-block">{{$brand->name}}</span>
-                                                </a>
+                                                <a href="#"> <img src="{{asset('storage/brand/' . $brand->image)}}" class="most_pop_prod d-block" alt="" style="border-radius: 0;padding: 7px;width: 100%;height: 93px"> <span class="s_14 bold d-block">{{$brand->name}}</span> </a>
                                             </div>
                                         @endforeach
                                     </div>
@@ -532,17 +456,7 @@
                                         @endforeach
                                         @php($most_pop = $porduct_data->whereIn('id', $product_ids)->limit(4)->get())
                                         @foreach($most_pop as $single_pop)
-                                            <div
-                                                class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 col-6 text-center py-3">
-                                                <a href="{{route('product', $single_pop->slug)}}">
-                                                    <img
-                                                        src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$single_pop['thumbnail']}}"
-                                                        class="most_pop_prod d-block"
-                                                        alt=""
-                                                        style="border-radius: 50%;padding: 19px;width: 150px;height: 150px">
-                                                    <span class="s_14 bold d-block">{{$single_pop->name}}</span>
-                                                </a>
-                                            </div>
+                                            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 col-6 text-center py-3"> <a href="{{route('product', $single_pop->slug)}}"> <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$single_pop['thumbnail']}}" class="most_pop_prod d-block" alt="" style="border-radius: 50%;padding: 19px;width: 150px;height: 150px"> <span class="s_14 bold d-block">{{$single_pop->name}}</span> </a> </div>
                                         @endforeach
                                     </div>
                                 </div>
@@ -558,9 +472,7 @@
                                     {{-- @php($special_main_cats=\App\CPU\CategoryManager::parents()) --}}
                                     @php($special_main_cats = \App\Model\Category::where('position', 0)->where('home_status', true)->orderBy('priority')->get())
                                     @foreach($special_main_cats as $cat)
-                                        <li class="single-main-item" data-target="{{$cat->id}}">
-                                            <a href="{{route('home')}}/products?id={{$cat->id}}&data_from=category&page=1" class="s_18">{{$cat->name}}</a>
-                                        </li>
+                                        <li class="single-main-item" data-target="{{$cat->id}}"> <a href="{{route('home')}}/products?id={{$cat->id}}&data_from=category&page=1" class="s_18">{{$cat->name}}</a> </li>
                                     @endforeach
                                 </ul>
                             </div>
@@ -575,14 +487,12 @@
                                             <ul style="list-style: none; padding: 0px 13px;border-left: 1px solid #ddd;">
                                                 @if($cat->childes->count() > 0)
                                                     @foreach($cat->childes as $single_sub)
-                                                        <li class="" data-target="{{$single_sub->id}}">
-                                                            <a href="{{route('home')}}/products?id={{$single_sub->id}}&data_from=category&page=1" class="s_14">{{$single_sub->name}}</a>
-                                                        </li>
-                                                        @foreach($single_sub->childes as $sub_sub_single)
+                                                        <li class="" data-target="{{$single_sub->id}}"> <a href="{{route('home')}}/products?id={{$single_sub->id}}&data_from=category&page=1" class="s_14">{{$single_sub->name}}</a></li>
+                                                        {{-- @foreach($single_sub->childes as $sub_sub_single)
                                                             <li class="" data-target="{{$sub_sub_single->id}}">
                                                                 <a href="{{route('home')}}/products?id={{$sub_sub_single->id}}&data_from=category&page=1" class="s_14">{{$sub_sub_single->name}}</a>
                                                             </li>
-                                                        @endforeach
+                                                        @endforeach --}}
                                                     @endforeach
                                                 @endif
                                             </ul>
@@ -614,9 +524,7 @@
                                                 <ul style="list-style: none; padding: 0 13px;">
                                                     @foreach($selected_brands as $brand)
                                                         @php($brand = App\Model\Brand::find($brand))
-                                                        <li class="">
-                                                            <a href="{{route('home')}}/products?id={{$brand->id}}&data_from=brand&page=1" class="s_14">{{$brand->name}}</a>
-                                                        </li>
+                                                        <li class=""><a href="{{route('home')}}/products?id={{$brand->id}}&data_from=brand&page=1" class="s_14">{{$brand->name}}</a></li>
                                                     @endforeach
                                                 </ul>
                                             </div>
@@ -635,16 +543,10 @@
             <div class="col-md-12 col-sm-12 col-12">
                 <form action="{{route('products')}}" type="submit" class="search_form" dir="ltr">
                     <input class="form-control appended-form-control search-bar-input" type="text" autocomplete="off" dir="rtl" placeholder="ابحث ..." name="name">
-                    <button class="input-group-append-overlay search_button" type="submit" style="border-radius: {{Session::get('direction') === "rtl" ? '7px 0px 0px 7px; right: unset; left: 0' : '0px 0 7px 7px; right: unset; left: 0'}};top:0">
-                            <span class="input-group-text __text-20px">
-                                <i class="czi-search text-white"></i>
-                            </span>
-                    </button>
+                    <button class="input-group-append-overlay search_button" type="submit" style="border-radius: {{Session::get('direction') === "rtl" ? '7px 0px 0px 7px; right: unset; left: 0' : '0px 0 7px 7px; right: unset; left: 0'}};top:0"> <span class="input-group-text __text-20px"> <i class="czi-search text-white"></i> </span> </button>
                     <input name="data_from" value="search" hidden>
                     <input name="page" value="1" hidden>
-                    <diV class="card search-card __inline-13">
-                        <div class="card-body search-result-box __h-400px overflow-x-hidden overflow-y-auto"></div>
-                    </diV>
+                    <diV class="card search-card __inline-13"> <div class="card-body search-result-box __h-400px overflow-x-hidden overflow-y-auto"></div> </diV>
                 </form>
             </div>
             <div class="col-md-12 col-sm-12 col-12">
@@ -655,31 +557,17 @@
                             @php($categories=\App\CPU\CategoryManager::parents())
                             @foreach($categories as $category)
                                 <li class="dropdown">
-                                    <a href="{{route('products',['id'=> $category->id,'data_from'=>'category','page'=>1])}}">
-                                        <img src="{{asset("assets/front-end/img/sub-1.png")}}" onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'" class="__img-18" style="margin-left: 11px;">
-                                        <span
-                                            class="bold {{Session::get('direction') === "rtl" ? 'pr-3' : 'pl-3'}}">{{$category->name}}</span>
-                                    </a>
-                                    <a class='__ml-50px expanding_btn_sub'>
-                                        <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'right' : 'left'}} __inline-16 "></i>
-                                    </a>
+                                    <a href="{{route('products',['id'=> $category->id,'data_from'=>'category','page'=>1])}}"> <img src="{{asset("assets/front-end/img/sub-1.png")}}" onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'" class="__img-18" style="margin-left: 11px;"> <span class="bold {{Session::get('direction') === "rtl" ? 'pr-3' : 'pl-3'}}">{{$category->name}}</span> </a>
+                                    <a class='__ml-50px expanding_btn_sub'> <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'right' : 'left'}} __inline-16 "></i> </a>
                                     <ul class="dropdown-menu sub_dropdown-menu"
                                         style="text-align: {{Session::get('direction') === "rtl" ? 'left' : 'right'}};">
                                         @foreach($category->childes as $child)
                                             <li class="dropdown">
-                                                <a href="{{route('products',['id'=> $child->id,'data_from'=>'category','page'=>1])}}">
-                                                    <span class="bold {{Session::get('direction') === "rtl" ? 'pl-3' : 'pr-3'}}">{{$child->name}}</span>
-                                                </a>
-                                                <a style="font-family:  sans-serif !important;font-size: 1rem;font-weight: 300;line-height: 1.5;margin-left:50px;" class="expanding_btn_sub_sub">
-                                                    <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'right' : 'left'}} __inline-16"></i>
-                                                </a>
+                                                <a href="{{route('products',['id'=> $child->id,'data_from'=>'category','page'=>1])}}"> <span class="bold {{Session::get('direction') === "rtl" ? 'pl-3' : 'pr-3'}}">{{$child->name}}</span> </a>
+                                                <a style="font-family:  sans-serif !important;font-size: 1rem;font-weight: 300;line-height: 1.5;margin-left:50px;" class="expanding_btn_sub_sub"> <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'right' : 'left'}} __inline-16"></i> </a>
                                                 <ul class="dropdown-menu sub_sub_dropdown-menu">
                                                     @foreach($child->childes as $ch)
-                                                        <li>
-                                                            <a class="dropdown-item bold" href="{{route('products',['id'=> $ch->id,'data_from'=>'category','page'=>1])}}">
-                                                                {{$ch->name}}
-                                                            </a>
-                                                        </li>
+                                                        <li> <a class="dropdown-item bold" href="{{route('products',['id'=> $ch->id,'data_from'=>'category','page'=>1])}}"> {{$ch->name}} </a> </li>
                                                     @endforeach
                                                 </ul>
                                             </li>
