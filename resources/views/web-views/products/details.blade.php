@@ -122,7 +122,7 @@
     </style>
     <style>
         thead {
-            background: {{$web_config['primary_color']}}            !important;
+            background: {{$web_config['primary_color']}}                !important;
         }
 
         .simplebar-offset {
@@ -187,8 +187,8 @@
     $overallRating = \App\CPU\ProductManager::get_overall_rating($product->reviews);
     $rating = \App\CPU\ProductManager::get_rating($product->reviews);
     $decimal_point_settings = \App\CPU\Helpers::get_business_settings('decimal_point_settings');
-    ?>
-    <div class="__inline-23" dir="{{session('direction')}}">
+//    ?>
+    <div class="__inline-23" dir="{--><!--{session('direction')}}">
         <!-- Page Content-->
         <div class=" mt-4 rtl" style="max-width: 86%; margin: auto; text-align: right;">
             <!-- General info tab-->
@@ -201,7 +201,7 @@
                                 class="cz-product-gallery row {{session('direction') == 'rtl' ? 'text-right' : 'text-left'}}"
                                 dir="{{session('direction') == 'rtl' ? 'ltr' : 'rtl'}}">
                                 <div class="cz-preview col-lg-9 d-inline-block" dir="ltr">
-                                    @if($product->images!=null && json_decode($product->images)>0)
+                                    @if($product->images!=null  && json_decode($product->images)>0)
                                         @if(json_decode($product->colors) && $product->color_image)
                                             @foreach (json_decode($product->color_image) as $key => $photo)
                                                 @if($photo->color != null)
@@ -235,8 +235,8 @@
                                                     id="image{{$key}}">
                                                     <img class="cz-image-zoom img-responsive w-100 "
                                                          onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
-                                                         src="{{asset("storage/product/$photo")}}"
-                                                         data-zoom="{{asset("storage/product/$photo")}}"
+                                                         src="{{(is_string($photo)) ? asset("storage/product/$photo") : $photo->cdn}}"
+                                                         data-zoom="{{(is_string($photo)) ? asset("storage/product/$photo") : $photo->cdn}}"
                                                          alt="Product image" width="">
                                                     <div class="cz-image-zoom-pane"></div>
                                                 </div>
@@ -281,7 +281,7 @@
                                                                id="preview-img{{$key}}" href="#image{{$key}}">
                                                                 <img
                                                                     onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
-                                                                    src="{{asset("storage/product/$photo")}}"
+                                                                    src="{{(is_string($photo)) ? asset("storage/product/$photo") : $photo->cdn}}"
                                                                     alt="Product thumb">
                                                             </a>
                                                         </div>
@@ -343,7 +343,8 @@
                                     <div class="col-xxl-9 col-xl-9 col-lg-9 col-md-9 col-sm-8 col-9"
                                          dir="{{session('direction') == 'rtl' ? 'rtl' : 'ltr'}}">
                                         <span class="s_19 bold"> {{ \App\CPU\translate('Imported From China') }} </span>
-                                        <img src="{{asset('assets/front-end/img/china.png')}}" alt="" style="width: 30px;border-radius: 2px">
+                                        <img src="{{asset('assets/front-end/img/china.png')}}" alt=""
+                                             style="width: 30px;border-radius: 2px">
 
                                     </div>
                                 </div>
@@ -437,7 +438,7 @@
                                         </div>
                                     @endforeach
 
-                                <!-- Quantity + Add to cart -->
+                                    <!-- Quantity + Add to cart -->
                                     <div class="row tex-{{session('direction') == 'rtl' ? 'right' : 'left'}} mt-3"
                                          dir="{{session('direction')}}">
                                         <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-4 col-3">
@@ -546,10 +547,10 @@
                                                 <span class="bold s_17 " style="color: #FF7C86;"
                                                       id="choices_stock"></span>
                                             @endif
-{{--                                            <div class="d-inline-block"><strong id="set-tax-amount"--}}
-{{--                                                                                class="mx-2 primary_color"--}}
-{{--                                                                                dir="{{session('direction')}}"></strong>--}}
-{{--                                            </div>--}}
+                                            {{--                                            <div class="d-inline-block"><strong id="set-tax-amount"--}}
+                                            {{--                                                                                class="mx-2 primary_color"--}}
+                                            {{--                                                                                dir="{{session('direction')}}"></strong>--}}
+                                            {{--                                            </div>--}}
                                         </div>
                                     </div>
                                     <div class="row mt-4" dir="{{session('direction')}}">
@@ -593,8 +594,9 @@ position: relative;
                                     </div>
                                 </form>
 
-                                <div style="text-align:{{Session::get('direction') === "rtl" ? 'right ; margin-right: 105px' : 'left;margin-left: 105px'}};"
-                                     class="sharethis-inline-share-buttons">
+                                <div
+                                    style="text-align:{{Session::get('direction') === "rtl" ? 'right ; margin-right: 105px' : 'left;margin-left: 105px'}};"
+                                    class="sharethis-inline-share-buttons">
 
                                 </div>
                                 <div class="row mt-3" dir="{{session('direction')}}">
@@ -604,15 +606,29 @@ position: relative;
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6 col-6 ">
                                                 <div class="tabby text-center">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="103" height="41" fill="none" viewBox="0 0 103 41" class="installments-promo-widget_widget__icon-tabby__8apMt"><path fill="#000" d="m89.3 12.35-6.06 23.18-.02.05h4.72l6.08-23.23H89.3ZM14.35 25.54a5.1 5.1 0 0 1-2.28.53c-1.7 0-2.66-.27-2.76-1.65V12.45l-4.22.56c2.85-.55 4.49-2.81 4.49-5.07V6.56H4.84v6.49l-.26.07v12.02c.15 3.37 2.37 5.38 6.02 5.38 1.28 0 2.7-.3 3.79-.79h.02V25.5l-.06.03Z"></path><path fill="#000" d="M15.1 11.48 1.8 13.53v3.38l13.29-2.05v-3.38ZM15.1 16.42 1.8 18.47v3.23l13.29-2.06v-3.22ZM30 17.97c-.18-3.75-2.52-5.97-6.33-5.97-2.2 0-4 .85-5.22 2.45-1.23 1.6-1.87 3.96-1.87 6.8 0 2.86.65 5.22 1.87 6.82a6.31 6.31 0 0 0 5.22 2.45c3.81 0 6.15-2.23 6.34-6v5.65h4.72V12.39l-4.72.74v4.84Zm.25 3.3c0 3.32-1.74 5.46-4.43 5.46-2.77 0-4.43-2.04-4.43-5.47 0-3.44 1.65-5.5 4.43-5.5a4 4 0 0 1 3.26 1.52 6.37 6.37 0 0 1 1.17 3.98ZM48.55 12c-3.82 0-6.16 2.22-6.34 5.98V7.22l-4.73.73v22.22h4.73V24.5c.18 3.78 2.52 6.02 6.34 6.02 4.46 0 7.12-3.47 7.12-9.27 0-5.8-2.66-9.26-7.12-9.26ZM46.4 26.73c-2.7 0-4.44-2.15-4.44-5.47 0-1.63.4-3 1.17-3.98a4 4 0 0 1 3.27-1.52c2.77 0 4.43 2.06 4.43 5.5 0 3.42-1.66 5.47-4.43 5.47ZM68.56 12c-3.8 0-6.15 2.22-6.33 5.98V7.22l-4.74.73v22.22h4.74V24.5c.18 3.78 2.52 6.02 6.33 6.02 4.47 0 7.13-3.47 7.13-9.27 0-5.8-2.66-9.26-7.13-9.26Zm-2.15 14.73c-2.69 0-4.43-2.15-4.43-5.47 0-1.63.4-3 1.17-3.98a4 4 0 0 1 3.26-1.52c2.78 0 4.44 2.06 4.44 5.5 0 3.42-1.66 5.47-4.44 5.47ZM75.7 12.35h5.05l4.11 17.78h-4.53L75.7 12.35Z"></path></svg>
-                                                    <span class="d-block">{{\App\CPU\translate('Split over 4 payments with no extra fees starting from SAR 107')}}</span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="103" height="41"
+                                                         fill="none" viewBox="0 0 103 41"
+                                                         class="installments-promo-widget_widget__icon-tabby__8apMt">
+                                                        <path fill="#000"
+                                                              d="m89.3 12.35-6.06 23.18-.02.05h4.72l6.08-23.23H89.3ZM14.35 25.54a5.1 5.1 0 0 1-2.28.53c-1.7 0-2.66-.27-2.76-1.65V12.45l-4.22.56c2.85-.55 4.49-2.81 4.49-5.07V6.56H4.84v6.49l-.26.07v12.02c.15 3.37 2.37 5.38 6.02 5.38 1.28 0 2.7-.3 3.79-.79h.02V25.5l-.06.03Z"></path>
+                                                        <path fill="#000"
+                                                              d="M15.1 11.48 1.8 13.53v3.38l13.29-2.05v-3.38ZM15.1 16.42 1.8 18.47v3.23l13.29-2.06v-3.22ZM30 17.97c-.18-3.75-2.52-5.97-6.33-5.97-2.2 0-4 .85-5.22 2.45-1.23 1.6-1.87 3.96-1.87 6.8 0 2.86.65 5.22 1.87 6.82a6.31 6.31 0 0 0 5.22 2.45c3.81 0 6.15-2.23 6.34-6v5.65h4.72V12.39l-4.72.74v4.84Zm.25 3.3c0 3.32-1.74 5.46-4.43 5.46-2.77 0-4.43-2.04-4.43-5.47 0-3.44 1.65-5.5 4.43-5.5a4 4 0 0 1 3.26 1.52 6.37 6.37 0 0 1 1.17 3.98ZM48.55 12c-3.82 0-6.16 2.22-6.34 5.98V7.22l-4.73.73v22.22h4.73V24.5c.18 3.78 2.52 6.02 6.34 6.02 4.46 0 7.12-3.47 7.12-9.27 0-5.8-2.66-9.26-7.12-9.26ZM46.4 26.73c-2.7 0-4.44-2.15-4.44-5.47 0-1.63.4-3 1.17-3.98a4 4 0 0 1 3.27-1.52c2.77 0 4.43 2.06 4.43 5.5 0 3.42-1.66 5.47-4.43 5.47ZM68.56 12c-3.8 0-6.15 2.22-6.33 5.98V7.22l-4.74.73v22.22h4.74V24.5c.18 3.78 2.52 6.02 6.33 6.02 4.47 0 7.13-3.47 7.13-9.27 0-5.8-2.66-9.26-7.13-9.26Zm-2.15 14.73c-2.69 0-4.43-2.15-4.43-5.47 0-1.63.4-3 1.17-3.98a4 4 0 0 1 3.26-1.52c2.78 0 4.44 2.06 4.44 5.5 0 3.42-1.66 5.47-4.44 5.47ZM75.7 12.35h5.05l4.11 17.78h-4.53L75.7 12.35Z"></path>
+                                                    </svg>
+                                                    <span
+                                                        class="d-block">{{\App\CPU\translate('Split over 4 payments with no extra fees starting from SAR 107')}}</span>
 
                                                 </div>
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-6 ">
                                                 <div class="tamara text-center">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="129" height="25" fill="none" viewBox="0 0 129 25" class="installments-promo-widget_widget__icon-tamara__Paydr"><path fill="#000" d="M32.79 5.88a12.09 12.09 0 0 0-7.28-.67c-2.2.47-3.94 1.34-5.08 3.55.54.4.94.8 1.4 1.2.74.67 1.48 1.27 2.48 2.07.8-1.14 2.2-2.4 3.74-2.47 1.73-.07 3.4.93 3.67 2.34.13.6.2 3 .2 3l-.94.2c-.06 0-.26.07-.53 0-.07 0-.07-.06-.13-.06-.07 0-.07 0-.14-.07-2.07-.73-4-1.14-5.87-1.14-.67 0-1.34.07-2 .14-2.08.33-4.48 1.47-4.48 5.21 0 1.4.33 2.47.93 3.34A5.8 5.8 0 0 0 23.64 25c2.34 0 4.4-.6 6.4-2.2.08 0 .48-.41.61-.48l1.27-1V25h5.27V12.03a6.64 6.64 0 0 0-4.4-6.15Zm-1.67 12.03a5.74 5.74 0 0 1-5.08 3.14h-.26c-.4 0-.87-.06-1.34-.13-1.6-.4-2.47-1.67-2.4-3.4l.06-.74h9.69l-.67 1.13ZM87.68 5.88a12.09 12.09 0 0 0-7.28-.67c-2.2.47-3.94 1.34-5.08 3.55.54.4.94.8 1.4 1.2.74.67 1.47 1.27 2.48 2.07.8-1.14 2.2-2.4 3.74-2.47 1.73-.07 3.4.93 3.67 2.34.13.6.2 3 .2 3l-.94.2c-.06 0-.26.07-.53 0-.07 0-.07-.06-.13-.06-.07 0-.07 0-.14-.07-2.07-.73-4-1.14-5.87-1.14-.67 0-1.34.07-2 .14-2.08.33-4.48 1.47-4.48 5.21 0 1.4.33 2.47.93 3.34A5.8 5.8 0 0 0 78.53 25c2.34 0 4.4-.6 6.4-2.2.08 0 .48-.41.61-.48l1.27-1V25h5.27V12.03a6.55 6.55 0 0 0-4.4-6.15ZM86 17.91a5.73 5.73 0 0 1-5.08 3.14h-.27c-.4 0-.86-.06-1.33-.13-1.6-.4-2.47-1.67-2.4-3.4l.06-.74h9.68l-.66 1.13ZM123.6 5.88a12.08 12.08 0 0 0-7.28-.67c-2.2.47-3.94 1.34-5.07 3.55.53.4.93.8 1.4 1.2.73.67 1.47 1.27 2.47 2.07.8-1.14 2.2-2.4 3.74-2.47 1.74-.07 3.4.93 3.67 2.34.14.6.2 3 .2 3l-.93.2c-.07 0-.27.07-.54 0-.06 0-.06-.06-.13-.06s-.07 0-.13-.07c-2.07-.73-4.01-1.14-5.88-1.14-.67 0-1.34.07-2 .14-2.07.33-4.48 1.47-4.48 5.21 0 1.4.34 2.47.94 3.34a5.8 5.8 0 0 0 4.87 2.48c2.34 0 4.41-.6 6.41-2.2.07 0 .47-.41.6-.48l1.27-1V25h5.28V12.03a6.64 6.64 0 0 0-4.4-6.15Zm-1.67 12.03a5.74 5.74 0 0 1-5.07 3.14h-.27c-.4 0-.87-.06-1.34-.13-1.6-.4-2.47-1.67-2.4-3.4l.07-.74h9.68l-.67 1.13ZM106.37 6.55c-1.67.07-2.94.8-3.74 2.27-.06.14-.66 1.27-.66 1.27l-1.27-.26V6.82h-5.08v18.11h5.08v-7.08c0-.6-.07-1.2 0-1.88a4.65 4.65 0 0 1 4.14-4.34c.73-.07 2.47-.13 2.67-.13V6.55h-1.14ZM13.82 20.72c-.4 0-.87 0-1.33-.13-1.34-.2-2.2-.87-2.54-1.94-.13-.47-.27-.94-.27-1.4v-8.1h.8c1.67-.06 3.48-.2 5.21-.66L14.62 4.8l-4.87.74V0H4v5.41H0v3.75h3.87v9.69a6 6 0 0 0 1 3.4 5.43 5.43 0 0 0 3.54 2.35c1.8.46 3.54.4 5.48.4h.47v-4.28h-.54ZM57.96 14.7c0-1.8 1.2-3.27 2.87-3.4 2-.2 3.4.8 3.81 2.67.07.33.07.67.07 1v9.96h5.07V12.7c0-.74-.07-1.27-.13-1.74-.4-2.27-1.6-3.6-3.67-4.21-2.2-.6-5.88-.13-7.62 2.87l-.8 1.54c-.4-2.27-1.73-3.88-3.74-4.48-2.2-.6-5.54-.06-7.2 2.88l-.74 1.33V6.82h-5.35v18.11h5.28V15.1c0-.33 0-.66.07-1a3.15 3.15 0 0 1 2.33-2.67c1.47-.4 2.94.07 3.74 1.14.6.8.67 1.67.67 2.33v10.03h5.34"></path></svg>
-                                                    <span class="d-block">{{\App\CPU\translate('Split over 4 payments with no extra fees starting from SAR 107')}}</span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="129" height="25"
+                                                         fill="none" viewBox="0 0 129 25"
+                                                         class="installments-promo-widget_widget__icon-tamara__Paydr">
+                                                        <path fill="#000"
+                                                              d="M32.79 5.88a12.09 12.09 0 0 0-7.28-.67c-2.2.47-3.94 1.34-5.08 3.55.54.4.94.8 1.4 1.2.74.67 1.48 1.27 2.48 2.07.8-1.14 2.2-2.4 3.74-2.47 1.73-.07 3.4.93 3.67 2.34.13.6.2 3 .2 3l-.94.2c-.06 0-.26.07-.53 0-.07 0-.07-.06-.13-.06-.07 0-.07 0-.14-.07-2.07-.73-4-1.14-5.87-1.14-.67 0-1.34.07-2 .14-2.08.33-4.48 1.47-4.48 5.21 0 1.4.33 2.47.93 3.34A5.8 5.8 0 0 0 23.64 25c2.34 0 4.4-.6 6.4-2.2.08 0 .48-.41.61-.48l1.27-1V25h5.27V12.03a6.64 6.64 0 0 0-4.4-6.15Zm-1.67 12.03a5.74 5.74 0 0 1-5.08 3.14h-.26c-.4 0-.87-.06-1.34-.13-1.6-.4-2.47-1.67-2.4-3.4l.06-.74h9.69l-.67 1.13ZM87.68 5.88a12.09 12.09 0 0 0-7.28-.67c-2.2.47-3.94 1.34-5.08 3.55.54.4.94.8 1.4 1.2.74.67 1.47 1.27 2.48 2.07.8-1.14 2.2-2.4 3.74-2.47 1.73-.07 3.4.93 3.67 2.34.13.6.2 3 .2 3l-.94.2c-.06 0-.26.07-.53 0-.07 0-.07-.06-.13-.06-.07 0-.07 0-.14-.07-2.07-.73-4-1.14-5.87-1.14-.67 0-1.34.07-2 .14-2.08.33-4.48 1.47-4.48 5.21 0 1.4.33 2.47.93 3.34A5.8 5.8 0 0 0 78.53 25c2.34 0 4.4-.6 6.4-2.2.08 0 .48-.41.61-.48l1.27-1V25h5.27V12.03a6.55 6.55 0 0 0-4.4-6.15ZM86 17.91a5.73 5.73 0 0 1-5.08 3.14h-.27c-.4 0-.86-.06-1.33-.13-1.6-.4-2.47-1.67-2.4-3.4l.06-.74h9.68l-.66 1.13ZM123.6 5.88a12.08 12.08 0 0 0-7.28-.67c-2.2.47-3.94 1.34-5.07 3.55.53.4.93.8 1.4 1.2.73.67 1.47 1.27 2.47 2.07.8-1.14 2.2-2.4 3.74-2.47 1.74-.07 3.4.93 3.67 2.34.14.6.2 3 .2 3l-.93.2c-.07 0-.27.07-.54 0-.06 0-.06-.06-.13-.06s-.07 0-.13-.07c-2.07-.73-4.01-1.14-5.88-1.14-.67 0-1.34.07-2 .14-2.07.33-4.48 1.47-4.48 5.21 0 1.4.34 2.47.94 3.34a5.8 5.8 0 0 0 4.87 2.48c2.34 0 4.41-.6 6.41-2.2.07 0 .47-.41.6-.48l1.27-1V25h5.28V12.03a6.64 6.64 0 0 0-4.4-6.15Zm-1.67 12.03a5.74 5.74 0 0 1-5.07 3.14h-.27c-.4 0-.87-.06-1.34-.13-1.6-.4-2.47-1.67-2.4-3.4l.07-.74h9.68l-.67 1.13ZM106.37 6.55c-1.67.07-2.94.8-3.74 2.27-.06.14-.66 1.27-.66 1.27l-1.27-.26V6.82h-5.08v18.11h5.08v-7.08c0-.6-.07-1.2 0-1.88a4.65 4.65 0 0 1 4.14-4.34c.73-.07 2.47-.13 2.67-.13V6.55h-1.14ZM13.82 20.72c-.4 0-.87 0-1.33-.13-1.34-.2-2.2-.87-2.54-1.94-.13-.47-.27-.94-.27-1.4v-8.1h.8c1.67-.06 3.48-.2 5.21-.66L14.62 4.8l-4.87.74V0H4v5.41H0v3.75h3.87v9.69a6 6 0 0 0 1 3.4 5.43 5.43 0 0 0 3.54 2.35c1.8.46 3.54.4 5.48.4h.47v-4.28h-.54ZM57.96 14.7c0-1.8 1.2-3.27 2.87-3.4 2-.2 3.4.8 3.81 2.67.07.33.07.67.07 1v9.96h5.07V12.7c0-.74-.07-1.27-.13-1.74-.4-2.27-1.6-3.6-3.67-4.21-2.2-.6-5.88-.13-7.62 2.87l-.8 1.54c-.4-2.27-1.73-3.88-3.74-4.48-2.2-.6-5.54-.06-7.2 2.88l-.74 1.33V6.82h-5.35v18.11h5.28V15.1c0-.33 0-.66.07-1a3.15 3.15 0 0 1 2.33-2.67c1.47-.4 2.94.07 3.74 1.14.6.8.67 1.67.67 2.33v10.03h5.34"></path>
+                                                    </svg>
+                                                    <span
+                                                        class="d-block">{{\App\CPU\translate('Split over 4 payments with no extra fees starting from SAR 107')}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -852,8 +868,8 @@ position: relative;
                                                         </div>
                                                     </div>
                                                 </div>
-                                            @php($reviews_of_product = App\Model\Review::where('product_id',$product->id)->paginate(2))
-                                            <!-- Reviews tab-->
+                                                @php($reviews_of_product = App\Model\Review::where('product_id',$product->id)->paginate(2))
+                                                <!-- Reviews tab-->
                                                 <div class="tab-pane fade" id="reviews" role="tabpanel">
                                                     <div class="row pt-2 pb-3">
                                                         <div class="col-lg-4 col-md-5 ">
@@ -1069,9 +1085,9 @@ position: relative;
 
             </div>
         </div>
-    @if (count($relatedProducts)>0)
+        @if (count($relatedProducts)>0)
 
-        <!-- Product carousel (You may also like)-->
+            <!-- Product carousel (You may also like)-->
             <div class="container mt-5  mb-3 ltr"
                  style="text-align: {{Session::get('direction') === "ltr" ? 'right' : 'left'}};">
                 <div class="row flex-between">
@@ -1259,6 +1275,8 @@ position: relative;
         });
     </script>
 
-    <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=64c7a559c094360012b348a0&product=inline-share-buttons&source=platform" async="async"></script>
+    <script type="text/javascript"
+            src="https://platform-api.sharethis.com/js/sharethis.js#property=64c7a559c094360012b348a0&product=inline-share-buttons&source=platform"
+            async="async"></script>
 
 @endpush

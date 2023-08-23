@@ -36,7 +36,9 @@
                                    href="{{route('product',$cartItem['slug'])}}">
                                     <img width="64"
                                          onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
-                                         src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$cartItem['thumbnail']}}"
+{{--                                         src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$cartItem['thumbnail']}}"--}}
+                                         src="{{is_object(json_decode($cartItem['thumbnail'])) ? (json_decode($cartItem['thumbnail']))->cdn : \App\CPU\ProductManager::product_image_path('thumbnail').'/'.$cartItem['thumbnail']}}"
+
                                          alt="Product"/>
                                 </a>
                                 <div class="media-body">

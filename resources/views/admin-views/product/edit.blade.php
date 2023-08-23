@@ -439,9 +439,9 @@
                                                             <div class="card-body">
                                                                 <img class="w-100" height="auto"
                                                                      onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
-                                                                     src="{{asset("storage/product/$photo")}}"
+                                                                     src="{{is_string($photo) ? asset("storage/product/$photo") : $photo->cdn}}"
                                                                      alt="Product image">
-                                                                <a href="{{route('admin.product.remove-image',['id'=>$product['id'],'name'=>$photo])}}"
+                                                                <a href="{{is_string($photo) ?  route('admin.product.remove-image',['id'=>$product['id'],'type'=>'internal','name'=>$photo]) : route('admin.product.remove-image',['id'=>$product['id'],'type' => 'cdn','name'=>$photo->cdn])}}"
                                                                    class="btn btn-danger btn-block">{{\App\CPU\translate('Remove')}}</a>
                                                             </div>
                                                         </div>

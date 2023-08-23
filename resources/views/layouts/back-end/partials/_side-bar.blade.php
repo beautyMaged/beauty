@@ -772,6 +772,15 @@
                                     </span>
                                         </a>
                                     </li>
+                                    <li class="nav-item {{Request::is('admin/sellers/seller-commission-list')?'active':''}}">
+                                        <a class="nav-link" title="{{\App\CPU\translate('commission')}}"
+                                           href="{{route('admin.sellers.seller-commission')}}">
+                                            <span class="tio-circle nav-indicator-icon"></span>
+                                            <span class="text-truncate">
+                                        {{\App\CPU\translate('commission')}}
+                                    </span>
+                                        </a>
+                                    </li>
                                     {{--                                <li class="nav-item {{Request::is('admin/sellers/withdraw_list')?'active':''}}">--}}
                                     {{--                                    <a class="nav-link " href="{{route('admin.sellers.withdraw_list')}}"--}}
                                     {{--                                       title="{{\App\CPU\translate('withdraws')}}">--}}

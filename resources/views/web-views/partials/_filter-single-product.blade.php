@@ -1,6 +1,5 @@
 @php($overallRating = \App\CPU\ProductManager::get_overall_rating($product->reviews))
 
-
 <div class="product-single-hover">
     <div class="overflow-hidden position-relative">
         <div class=" inline_product clickable d-flex justify-content-center text-center"
@@ -27,8 +26,11 @@
             @endif
             <div class="d-flex d-block product_imge">
                 <a href="{{route('product',$product->slug)}}" style="width: 100%!important;">
-                    <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}"
-                         onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'">
+{{--                    @dd(is_string(json_decode($product['thumbnail'])))--}}
+                    <img
+{{--                        src="{{ \App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}"--}}
+                        src="{{is_object(json_decode($product['thumbnail'])) ? (json_decode($product['thumbnail']))->cdn : \App\CPU\ProductManager::product_image_path('thumbnail').'/'.$product['thumbnail']}}"
+                        onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'">
                 </a>
             </div>
         </div>
@@ -115,7 +117,8 @@
                             {{\App\CPU\Helpers::currency_converter($product['purchase_price']-(\App\CPU\Helpers::get_product_discount($product,$product['purchase_price'])))}}
                         </span>
                         @if($product['discount'] > 0)
-                            <span class="pre_price primary_color s_16 bold"> {{\App\CPU\Helpers::currency_converter($product['purchase_price'])}}</span>
+                            <span
+                                class="pre_price primary_color s_16 bold"> {{\App\CPU\Helpers::currency_converter($product['purchase_price'])}}</span>
                         @endif
                     </div>
 

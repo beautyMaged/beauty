@@ -76,6 +76,32 @@
 {{--                        <input type="email" class="form-control form-control-user" id="exampleInputEmail" name="email" value="{{old('email')}}" placeholder="{{\App\CPU\translate('Ex')}}: Jhone@company.com" required>--}}
                         <input type="email" class="form-control form-control-user" id="exampleInputEmail" name="email" value="{{old('email')}}" placeholder="{{\App\CPU\translate('Ex')}}: Jhone@company.com" required>
                     </div>
+                    <div class="col-lg-4  form-group">
+                        <label for="platform">Select Platform</label>
+                        <select class="form-control" id="platform" name="platform" value="{{old('platform')}}">
+                            <option>Shopify</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-4  form-group">
+                        <label for="api_access_token">Host</label>
+                        <input type="text" class="form-control" id="host" name="host" value="{{old('host')}}" placeholder="host_name" required>
+                    </div>
+                    <div class="col-lg-4  form-group">
+                        <label for="api_access_token">API Access_Token</label>
+                        <input type="text" class="form-control" id="api_access_token" name="api_access_token" value="{{old('api_access_token')}}">
+                    </div>
+                    <div class="col-lg-4  form-group">
+                        <label for="api_key">API Key</label>
+                        <input type="text" class="form-control" id="api_key" name="api_key" value="{{old('api_key')}}">
+                    </div>
+                    <div class="col-lg-4  form-group">
+                        <label for="api_secret">API Secret</label>
+                        <input type="text" class="form-control" id="api_secret" name="api_secret" value="{{old('api_secret')}}">
+                    </div>
                     <div class="col-lg-4 form-group d-none">
                         <label for="exampleInputPassword" class="title-color d-flex gap-1 align-items-center">{{\App\CPU\translate('password')}}</label>
 {{--                        <input type="password" class="form-control form-control-user" minlength="8" id="exampleInputPassword" name="password" placeholder="{{\App\CPU\translate('Ex: 8+ Character')}}" required>--}}

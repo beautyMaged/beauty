@@ -252,7 +252,8 @@
                                             <div class="card-body">
                                                 <img class="width-100"
                                                     onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
-                                                    src="{{asset("storage/product/$photo")}}" alt="Product image">
+{{--                                                    src="{{asset("storage/product/$photo")}}" alt="Product image"--}}
+                                                     src="{{(is_string($photo)) ? asset("storage/product/$photo") : $photo->cdn}}" alt="Product image">
 
                                             </div>
                                         </div>

@@ -10,6 +10,7 @@ use App\Model\Cart;
 use App\Model\Color;
 use App\Model\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use function App\CPU\translate;
 

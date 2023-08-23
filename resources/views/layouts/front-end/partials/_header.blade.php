@@ -2,7 +2,7 @@
 @php($lang = \App\Model\BusinessSetting::where('type', 'language')->first())
 
 <style>
-.for-count-value { color: {{$web_config['primary_color']}};} .count-value {color: {{$web_config['primary_color']}};} 
+.for-count-value { color: {{$web_config['primary_color']}};} .count-value {color: {{$web_config['primary_color']}};}
 .all_cats_list { {{session('direction') == 'rtl' ? 'right:-20px!important' : ''}} }
 .owl-carousel.owl-rtl .owl-item { {{session('direction') == 'rtl' ? 'float:right!important' : 'float:left!important'}} }
 #categories_list .owl-nav button.owl-prev { {{session('direction') == 'rtl' ? '' : 'right:auto!important;left: 0!important'}}}
@@ -348,7 +348,7 @@
                                 @php($cats = \App\Model\Category::where('position', 0)->where('home_status', true)->orderBy('priority')->get())
                                 @foreach($cats as $cat)
                                     <div style="" class="category-item" data-value="menu_cat_{{$cat->id}}" data-id="{{$cat->id}}"> <a href="{{route('home')}}/products?id={{$cat->id}}&data_from=category&page=1"><span class="boldy">{{$cat->name}}</span></a> </div>
-                                @endforeach 
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -456,7 +456,22 @@
                                         @endforeach
                                         @php($most_pop = $porduct_data->whereIn('id', $product_ids)->limit(4)->get())
                                         @foreach($most_pop as $single_pop)
+
                                             <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 col-6 text-center py-3"> <a href="{{route('product', $single_pop->slug)}}"> <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$single_pop['thumbnail']}}" class="most_pop_prod d-block" alt="" style="border-radius: 50%;padding: 19px;width: 150px;height: 150px"> <span class="s_14 bold d-block">{{$single_pop->name}}</span> </a> </div>
+
+                                            <div
+                                                class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 col-6 text-center py-3">
+                                                <a href="{{route('product', $single_pop->slug)}}">
+                                                    <img
+{{--                                                        src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$single_pop['thumbnail']}}"--}}
+                                                        src="{{is_object(json_decode($single_pop['thumbnail'])) ? (json_decode($single_pop['thumbnail']))->cdn : \App\CPU\ProductManager::product_image_path('thumbnail').'/'.$single_pop['thumbnail']}}"
+                                                        class="most_pop_prod d-block"
+                                                        alt=""
+                                                        style="border-radius: 50%;padding: 19px;width: 150px;height: 150px">
+                                                    <span class="s_14 bold d-block">{{$single_pop->name}}</span>
+                                                </a>
+                                            </div>
+
                                         @endforeach
                                     </div>
                                 </div>

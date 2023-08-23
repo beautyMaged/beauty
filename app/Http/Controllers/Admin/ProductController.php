@@ -6,6 +6,8 @@ use App\CPU\BackEndHelper;
 use App\CPU\Helpers;
 use App\CPU\ImageManager;
 use App\Http\Controllers\BaseController;
+use App\Jobs\products\DeleteJob;
+use App\Jobs\SyncProductsJob;
 use App\Model\Brand;
 use App\Model\BusinessSetting;
 use App\Model\Category;
@@ -69,7 +71,9 @@ class ProductController extends BaseController
     public function view($id)
     {
         $product = Product::with(['reviews'])->where(['id' => $id])->first();
-        $reviews = Review::where(['product_id' => $id])->whereNull('delivery_man_id')->paginate(Helpers::pagination_limit());
+        $reviews = Review::where(['product_id' => $id])->whereNull('delivery_man_id')->paginate(
+            Helpers::pagination_limit()
+        );
         return view('admin-views.product.view', compact('product', 'reviews'));
     }
 
@@ -111,7 +115,8 @@ class ProductController extends BaseController
         if (!$request->has('colors_active') && !$request->file('images')) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'images', 'Product images is required!'
+                    'images',
+                    'Product images is required!'
                 );
             });
         }
@@ -120,7 +125,8 @@ class ProductController extends BaseController
         if ($brand_setting && empty($request->brand_id)) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'brand_id', 'Brand is required!'
+                    'brand_id',
+                    'Brand is required!'
                 );
             });
         }
@@ -134,7 +140,8 @@ class ProductController extends BaseController
         if ($request['product_type'] == 'physical' && $request['unit_price'] <= $dis) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'unit_price', 'Discount can not be more or equal to the price!'
+                    'unit_price',
+                    'Discount can not be more or equal to the price!'
                 );
             });
         }
@@ -142,7 +149,8 @@ class ProductController extends BaseController
         if (is_null($request->name[array_search('en', $request->lang)])) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'name', 'Name field is required!'
+                    'name',
+                    'Name field is required!'
                 );
             });
         }
@@ -171,7 +179,8 @@ class ProductController extends BaseController
             if (count($product_images) != count($request->colors)) {
                 $validator->after(function ($validator) {
                     $validator->errors()->add(
-                        'images', 'Color images is required!'
+                        'images',
+                        'Color images is required!'
                     );
                 });
             }
@@ -289,15 +298,21 @@ class ProductController extends BaseController
         $p->tax = $request->tax_type == 'flat' ? BackEndHelper::currency_to_usd($request->tax) : $request->tax;
         $p->tax_type = $request->tax_type;
         $p->tax_model = $request->tax_model;
-        $p->discount = $request->discount_type == 'flat' ? BackEndHelper::currency_to_usd($request->discount) : $request->discount;
+        $p->discount = $request->discount_type == 'flat' ? BackEndHelper::currency_to_usd(
+            $request->discount
+        ) : $request->discount;
         $p->discount_type = $request->discount_type;
-        $p->attributes = $request->product_type == 'physical' ? json_encode($request->choice_attributes) : json_encode([]);
+        $p->attributes = $request->product_type == 'physical' ? json_encode($request->choice_attributes) : json_encode(
+            []
+        );
         $p->current_stock = $request->product_type == 'physical' ? abs($stock_count) : 0;
         $p->minimum_order_qty = $request->minimum_order_qty;
         $p->video_provider = 'youtube';
         $p->video_url = $request->video_link;
         $p->request_status = 1;
-        $p->shipping_cost = $request->product_type == 'physical' ? BackEndHelper::currency_to_usd($request->shipping_cost) : 0;
+        $p->shipping_cost = $request->product_type == 'physical' ? BackEndHelper::currency_to_usd(
+            $request->shipping_cost
+        ) : 0;
         $p->multiply_qty = ($request->product_type == 'physical') ? ($request->multiplyQTY == 'on' ? 1 : 0) : 0;
 
         if ($request->ajax()) {
@@ -322,7 +337,11 @@ class ProductController extends BaseController
             $p->thumbnail = ImageManager::upload('product/thumbnail/', 'png', $request->image);
 
             if ($request->product_type == 'digital' && $request->digital_product_type == 'ready_product') {
-                $p->digital_file_ready = ImageManager::upload('product/digital-product/', $request->digital_file_ready->getClientOriginalExtension(), $request->digital_file_ready);
+                $p->digital_file_ready = ImageManager::upload(
+                    'product/digital-product/',
+                    $request->digital_file_ready->getClientOriginalExtension(),
+                    $request->digital_file_ready
+                );
             }
 
             $p->meta_title = $request->meta_title;
@@ -394,7 +413,9 @@ class ProductController extends BaseController
         }
 
         $request_status = $request['status'];
-        $pro = $pro->orderBy('id', 'DESC')->paginate(Helpers::pagination_limit())->appends(['status' => $request['status']])->appends($query_param);
+        $pro = $pro->orderBy('id', 'DESC')->paginate(Helpers::pagination_limit())->appends(
+            ['status' => $request['status']]
+        )->appends($query_param);
         return view('admin-views.product.list', compact('pro', 'search', 'request_status', 'type'));
     }
 
@@ -419,10 +440,14 @@ class ProductController extends BaseController
             foreach (json_decode($item->category_ids, true) as $category) {
                 if ($category['position'] == 1) {
                     $category_id = $category['id'];
-                } else if ($category['position'] == 2) {
-                    $sub_category_id = $category['id'];
-                } else if ($category['position'] == 3) {
-                    $sub_sub_category_id = $category['id'];
+                } else {
+                    if ($category['position'] == 2) {
+                        $sub_category_id = $category['id'];
+                    } else {
+                        if ($category['position'] == 3) {
+                            $sub_sub_category_id = $category['id'];
+                        }
+                    }
                 }
             }
             $data[] = [
@@ -482,7 +507,10 @@ class ProductController extends BaseController
         if ($type == 'in_house') {
             $pro = Product::where(['added_by' => 'admin', 'product_type' => 'physical']);
         } else {
-            $pro = Product::where(['added_by' => 'seller', 'product_type' => 'physical'])->where('request_status', $request->status);
+            $pro = Product::where(['added_by' => 'seller', 'product_type' => 'physical'])->where(
+                'request_status',
+                $request->status
+            );
         }
 
         if ($request->has('search')) {
@@ -497,9 +525,12 @@ class ProductController extends BaseController
 
         $request_status = $request['status'];
 
-        $pro = $pro->withCount('order_details')->when($request->sort_oqrderQty == 'quantity_asc', function ($q) use ($request) {
-            return $q->orderBy('current_stock', 'asc');
-        })
+        $pro = $pro->withCount('order_details')->when(
+            $request->sort_oqrderQty == 'quantity_asc',
+            function ($q) use ($request) {
+                return $q->orderBy('current_stock', 'asc');
+            }
+        )
             ->when($request->sort_oqrderQty == 'quantity_desc', function ($q) use ($request) {
                 return $q->orderBy('current_stock', 'desc');
             })
@@ -513,8 +544,13 @@ class ProductController extends BaseController
                 return $q->orderBy('id');
             })->where('current_stock', '<', $stock_limit);
 
-        $pro = $pro->orderBy('id', 'DESC')->paginate(Helpers::pagination_limit())->appends(['status' => $request['status']])->appends($query_param);
-        return view('admin-views.product.stock-limit-list', compact('pro', 'search', 'request_status', 'sort_oqrderQty', 'stock_limit'));
+        $pro = $pro->orderBy('id', 'DESC')->paginate(Helpers::pagination_limit())->appends(
+            ['status' => $request['status']]
+        )->appends($query_param);
+        return view(
+            'admin-views.product.stock-limit-list',
+            compact('pro', 'search', 'request_status', 'sort_oqrderQty', 'stock_limit')
+        );
     }
 
     public function update_quantity(Request $request)
@@ -547,7 +583,6 @@ class ProductController extends BaseController
 
     public function status_update(Request $request)
     {
-
         $product = Product::where(['id' => $request['id']])->first();
         $success = 1;
 
@@ -568,7 +603,6 @@ class ProductController extends BaseController
 
     public function updated_shipping(Request $request)
     {
-
         $product = Product::where(['id' => $request['product_id']])->first();
         if ($request->status == 1) {
             $product->shipping_cost = $product->temp_shipping_cost;
@@ -622,7 +656,10 @@ class ProductController extends BaseController
 
         $combinations = Helpers::combinations($options);
         return response()->json([
-            'view' => view('admin-views.product.partials._sku_combinations', compact('combinations', 'unit_price', 'colors_active', 'product_name'))->render(),
+            'view' => view(
+                'admin-views.product.partials._sku_combinations',
+                compact('combinations', 'unit_price', 'colors_active', 'product_name')
+            )->render(),
         ]);
     }
 
@@ -644,7 +681,10 @@ class ProductController extends BaseController
         $brand_setting = BusinessSetting::where('type', 'product_brand')->first()->value;
         $digital_product_setting = BusinessSetting::where('type', 'digital_product')->first()->value;
 
-        return view('admin-views.product.edit', compact('categories', 'br', 'product', 'product_category', 'brand_setting', 'digital_product_setting'));
+        return view(
+            'admin-views.product.edit',
+            compact('categories', 'br', 'product', 'product_category', 'brand_setting', 'digital_product_setting')
+        );
     }
 
     public function update(Request $request, $id)
@@ -682,7 +722,8 @@ class ProductController extends BaseController
         if ($brand_setting && empty($request->brand_id)) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'brand_id', 'Brand is required!'
+                    'brand_id',
+                    'Brand is required!'
                 );
             });
         }
@@ -713,7 +754,8 @@ class ProductController extends BaseController
         if (is_null($request->name[array_search('en', $request->lang)])) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'name', 'Name field is required!'
+                    'name',
+                    'Name field is required!'
                 );
             });
         }
@@ -778,7 +820,8 @@ class ProductController extends BaseController
             if (count($color_image_required) != count($request->colors)) {
                 $validator->after(function ($validator) {
                     $validator->errors()->add(
-                        'images', 'Color images is required!'
+                        'images',
+                        'Color images is required!'
                     );
                 });
             }
@@ -831,7 +874,8 @@ class ProductController extends BaseController
                 array_push($choice_options, $item);
             }
         }
-        $product->choice_options = $request->product_type == 'physical' ? json_encode($choice_options) : json_encode([]);
+        $product->choice_options = $request->product_type == 'physical' ? json_encode($choice_options) : json_encode([]
+        );
         $variations = [];
         //combinations start
         $options = [];
@@ -890,8 +934,12 @@ class ProductController extends BaseController
         $product->tax = $request->tax == 'flat' ? BackEndHelper::currency_to_usd($request->tax) : $request->tax;
         $product->tax_type = $request->tax_type;
         $product->tax_model = $request->tax_model;
-        $product->discount = $request->discount_type == 'flat' ? BackEndHelper::currency_to_usd($request->discount) : $request->discount;
-        $product->attributes = $request->product_type == 'physical' ? json_encode($request->choice_attributes) : json_encode([]);
+        $product->discount = $request->discount_type == 'flat' ? BackEndHelper::currency_to_usd(
+            $request->discount
+        ) : $request->discount;
+        $product->attributes = $request->product_type == 'physical' ? json_encode(
+            $request->choice_attributes
+        ) : json_encode([]);
         $product->discount_type = $request->discount_type;
         $product->current_stock = $request->product_type == 'physical' ? abs($stock_count) : 0;
 
@@ -901,7 +949,9 @@ class ProductController extends BaseController
             $product->request_status = 1;
         }
 
-        $product->shipping_cost = $request->product_type == 'physical' ? BackEndHelper::currency_to_usd($request->shipping_cost) : 0;
+        $product->shipping_cost = $request->product_type == 'physical' ? BackEndHelper::currency_to_usd(
+            $request->shipping_cost
+        ) : 0;
         $product->multiply_qty = ($request->product_type == 'physical') ? ($request->multiplyQTY == 'on' ? 1 : 0) : 0;
         if ($request->ajax()) {
             return response()->json([], 200);
@@ -922,12 +972,22 @@ class ProductController extends BaseController
             $product->color_image = json_encode($color_image_array);
 
             if ($request->file('image')) {
-                $product->thumbnail = ImageManager::update('product/thumbnail/', $product->thumbnail, 'png', $request->file('image'));
+                $product->thumbnail = ImageManager::update(
+                    'product/thumbnail/',
+                    $product->thumbnail,
+                    'png',
+                    $request->file('image')
+                );
             }
 
             if ($request->product_type == 'digital') {
                 if ($request->digital_product_type == 'ready_product' && $request->hasFile('digital_file_ready')) {
-                    $product->digital_file_ready = ImageManager::update('product/digital-product/', $product->digital_file_ready, $request->digital_file_ready->getClientOriginalExtension(), $request->file('digital_file_ready'));
+                    $product->digital_file_ready = ImageManager::update(
+                        'product/digital-product/',
+                        $product->digital_file_ready,
+                        $request->digital_file_ready->getClientOriginalExtension(),
+                        $request->file('digital_file_ready')
+                    );
                 } elseif (($request->digital_product_type == 'ready_after_sell') && $product->digital_file_ready) {
                     ImageManager::delete('product/digital-product/' . $product->digital_file_ready);
                     $product->digital_file_ready = null;
@@ -940,7 +1000,12 @@ class ProductController extends BaseController
             $product->meta_title = $request->meta_title;
             $product->meta_description = $request->meta_description;
             if ($request->file('meta_image')) {
-                $product->meta_image = ImageManager::update('product/meta/', $product->meta_image, 'png', $request->file('meta_image'));
+                $product->meta_image = ImageManager::update(
+                    'product/meta/',
+                    $product->meta_image,
+                    'png',
+                    $request->file('meta_image')
+                );
             }
             $product->save();
 
@@ -962,19 +1027,23 @@ class ProductController extends BaseController
             foreach ($request->lang as $index => $key) {
                 if ($request->name[$index] && $key != 'en') {
                     Translation::updateOrInsert(
-                        ['translationable_type' => 'App\Model\Product',
+                        [
+                            'translationable_type' => 'App\Model\Product',
                             'translationable_id' => $product->id,
                             'locale' => $key,
-                            'key' => 'name'],
+                            'key' => 'name'
+                        ],
                         ['value' => $request->name[$index]]
                     );
                 }
                 if ($request->description[$index] && $key != 'en') {
                     Translation::updateOrInsert(
-                        ['translationable_type' => 'App\Model\Product',
+                        [
+                            'translationable_type' => 'App\Model\Product',
                             'translationable_id' => $product->id,
                             'locale' => $key,
-                            'key' => 'description'],
+                            'key' => 'description'
+                        ],
                         ['value' => $request->description[$index]]
                     );
                 }
@@ -986,30 +1055,39 @@ class ProductController extends BaseController
 
     public function remove_image(Request $request)
     {
-        ImageManager::delete('/product/' . $request['image']);
         $product = Product::find($request['id']);
         $array = [];
-        if (count(json_decode($product['images'])) < 2) {
-            Toastr::warning('You cannot delete all images!');
-            return back();
-        }
-        $colors = json_decode($product['colors']);
-        $color_image = json_decode($product['color_image']);
         $color_image_arr = [];
-        if ($colors && $color_image) {
-            foreach ($color_image as $img) {
-                if ($img->color != $request->color && $img->image_name != $request->name) {
-                    $color_image_arr[] = [
-                        'color' => $img->color != null ? $img->color : null,
-                        'image_name' => $img->image_name,
-                    ];
+        if ($request['type'] != 'cdn') {
+            ImageManager::delete('/product/' . $request['image']);
+            if (count(json_decode($product['images'])) < 2) {
+                Toastr::warning('You cannot delete all images!');
+                return back();
+            }
+            $colors = json_decode($product['colors']);
+            $color_image = json_decode($product['color_image']);
+            $color_image_arr = [];
+            if ($colors && $color_image) {
+                foreach ($color_image as $img) {
+                    if ($img->color != $request->color && $img->image_name != $request->name) {
+                        $color_image_arr[] = [
+                            'color' => $img->color != null ? $img->color : null,
+                            'image_name' => $img->image_name,
+                        ];
+                    }
                 }
             }
-        }
 
-        foreach (json_decode($product['images']) as $image) {
-            if ($image != $request['name']) {
-                array_push($array, $image);
+            foreach (json_decode($product['images']) as $image) {
+                if ($image != $request['name']) {
+                    array_push($array, $image);
+                }
+            }
+        } else {
+            foreach (json_decode($product['images']) as $image) {
+                if ($image->cdn != $request['name']) {
+                    array_push($array, ['cdn' => $image->cdn]);
+                }
             }
         }
         Product::where('id', $request['id'])->update([
@@ -1017,7 +1095,7 @@ class ProductController extends BaseController
             'color_image' => json_encode($color_image_arr),
         ]);
         Toastr::success('Product image removed successfully!');
-        return back();
+        return redirect()->back();
     }
 
     public function delete($id)
@@ -1060,7 +1138,25 @@ class ProductController extends BaseController
 
 
         $data = [];
-        $col_key = ['name', 'category_id', 'sub_category_id', 'sub_sub_category_id', 'brand_id', 'unit', 'min_qty', 'refundable', 'youtube_video_url', 'unit_price', 'purchase_price', 'tax', 'discount', 'discount_type', 'current_stock', 'details', 'thumbnail'];
+        $col_key = [
+            'name',
+            'category_id',
+            'sub_category_id',
+            'sub_sub_category_id',
+            'brand_id',
+            'unit',
+            'min_qty',
+            'refundable',
+            'youtube_video_url',
+            'unit_price',
+            'purchase_price',
+            'tax',
+            'discount',
+            'discount_type',
+            'current_stock',
+            'details',
+            'thumbnail'
+        ];
         $skip = ['youtube_video_url', 'details', 'thumbnail'];
 
         foreach ($collections as $collection) {
@@ -1081,7 +1177,13 @@ class ProductController extends BaseController
             array_push($data, [
                 'name' => $collection['name'],
                 'slug' => Str::slug($collection['name'], '-') . '-' . Str::random(6),
-                'category_ids' => json_encode([['id' => (string)$collection['category_id'], 'position' => 1], ['id' => (string)$collection['sub_category_id'], 'position' => 2], ['id' => (string)$collection['sub_sub_category_id'], 'position' => 3]]),
+                'category_ids' => json_encode(
+                    [
+                        ['id' => (string)$collection['category_id'], 'position' => 1],
+                        ['id' => (string)$collection['sub_category_id'], 'position' => 2],
+                        ['id' => (string)$collection['sub_sub_category_id'], 'position' => 3]
+                    ]
+                ),
                 'brand_id' => $collection['brand_id'],
                 'unit' => $collection['unit'],
                 'min_qty' => $collection['min_qty'],
@@ -1125,10 +1227,14 @@ class ProductController extends BaseController
             foreach (json_decode($item->category_ids, true) as $category) {
                 if ($category['position'] == 1) {
                     $category_id = $category['id'];
-                } else if ($category['position'] == 2) {
-                    $sub_category_id = $category['id'];
-                } else if ($category['position'] == 3) {
-                    $sub_sub_category_id = $category['id'];
+                } else {
+                    if ($category['position'] == 2) {
+                        $sub_category_id = $category['id'];
+                    } else {
+                        if ($category['position'] == 3) {
+                            $sub_sub_category_id = $category['id'];
+                        }
+                    }
                 }
             }
             $storage[] = [
@@ -1156,7 +1262,6 @@ class ProductController extends BaseController
 
     public function barcode(Request $request, $id)
     {
-
         if ($request->limit > 270) {
             Toastr::warning(translate('You can not generate more than 270 barcode'));
             return back();
@@ -1165,5 +1270,21 @@ class ProductController extends BaseController
         $limit = $request->limit ?? 4;
         return view('admin-views.product.barcode', compact('product', 'limit'));
     }
+
+//    public function dis()
+//    {
+//        $api = DB::table('shop_rest_api')->where('id', 2)->get();
+//        $api = $api->all()[0];
+//        $this->dispatch(
+//            new SyncProductsJob(
+//                $api->host,
+//                $api->access_token,
+//                $api->api_key,
+//                $api->api_secret,
+//                4
+//            )
+//        );
+//        return redirect()->route('admin.product.add-new');
+//    }
 
 }
