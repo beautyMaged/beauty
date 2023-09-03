@@ -18,7 +18,7 @@
                             <div class="text-center">
                                 <img class="avatar rounded-circle avatar-lg"
                                      onclick="location.href='{{route('admin.delivery-man.earning-statement-overview',[$item['delivery_man_id']])}}'"
-                                     onerror="this.src='{{asset('assets/back-end/img/160x160/img1.jpg')}}'"
+                                     onerror="this.onerror=null;this.src='{{asset('assets/back-end/img/160x160/img1.jpg')}}'"
                                      src="{{asset('storage/delivery-man/'.$item->delivery_man->image??'')}}">
                             </div>
 

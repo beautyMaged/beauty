@@ -82,7 +82,7 @@
                                         <td>{{$br->firstItem()+$k}}</td>
                                         <td>
                                             <img class="rounded avatar-60"
-                                                 onerror="this.src='{{asset('assets/back-end/img/160x160/img2.jpg')}}'"
+                                                 onerror="this.onerror=null;this.src='{{asset('assets/back-end/img/160x160/img2.jpg')}}'"
                                                  src="{{asset('storage/brand')}}/{{$b['image']}}">
                                         </td>
                                         <td>{{$b['name']}}</td>

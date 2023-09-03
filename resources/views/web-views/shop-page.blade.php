@@ -51,13 +51,13 @@
                     @if($shop['id'] != 0)
                         <img class="__shop-page-banner"
                              src="{{asset('storage/app/public/shop/banner')}}/{{$shop->banner}}"
-                             onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                             onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                              alt="">
                     @else
                         @php($banner=\App\CPU\Helpers::get_business_settings('shop_banner'))
                         <img class="__shop-page-banner"
                              src="{{asset("storage/app/public/shop")}}/{{$banner??""}}"
-                             onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                             onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                              alt="">
                     @endif
                 </div>
@@ -93,7 +93,7 @@
                                         @endif
                                         <img class="__inline-68"
                                              src="{{asset('storage/app/public/shop')}}/{{$shop->image}}"
-                                             onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                                             onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                                              alt="">
                                     </div>
                                 @else
@@ -110,7 +110,7 @@
                                         @endif
                                         <img class="__inline-68"
                                              src="{{asset('storage/app/public/company')}}/{{$web_config['fav_icon']->value}}"
-                                             onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                                             onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                                              alt="">
                                     </div>
                                 @endif
@@ -245,7 +245,7 @@
                                                 <div class="d-flex ">
                                                     <img
                                                         class="__inline-72 {{Session::get('direction') === "rtl" ? 'ml-2' : 'mr-2'}}"
-                                                        onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                                                        onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                                                         src="{{asset('storage/app/public/category')}}/{{$category['icon']}}">
                                                     <label class="for-hover-lable cursor-pointer"
                                                            onclick="location.href='{{route('shopView',['id'=> $seller_id,'category_id'=>$category['id']])}}'" {{--onclick="productSearch({{$seller_id}}, {{$category['id']}})"--}}>

@@ -64,7 +64,7 @@
                     <div class="row gy-2">
                         <div class="col-sm-4 col-md-4 col-lg-2">
                             <div >
-                                <img onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                <img onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                 src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$refund->product!=null?$refund->product->thumbnail:''}}"
                                 alt="VR Collection" >
                             </div>

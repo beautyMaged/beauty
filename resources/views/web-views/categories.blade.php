@@ -34,7 +34,7 @@
             <div class="col-lg-3 col-md-4">
                 @foreach(\App\CPU\CategoryManager::parents() as $category)
                     <div class="card-header mb-2 p-2 side-category-bar" onclick="get_categories('{{route('category-ajax',[$category['id']])}}')">
-                        <img src="{{asset("storage/app/public/category/$category->icon")}}" onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'" class="__img-18 mr-1">
+                        <img src="{{asset("storage/app/public/category/$category->icon")}}" onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'" class="__img-18 mr-1">
 
                             {{$category['name']}}
 

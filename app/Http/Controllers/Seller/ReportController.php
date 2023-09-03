@@ -17,7 +17,7 @@ class ReportController extends Controller
 
         $query_param = ['search' => $search, 'sort' => $sort];
 
-        $products = Product::where(['product_type'=>'physical','added_by'=>'seller','user_id'=>auth('seller')->id()])
+        $products = Product::where(['product_type'=>'physical','added_by'=>'seller','user_id'=>auth()->id()])
             ->when($search, function($q) use($search){
                 $q->where('name','Like','%'.$search.'%');
             })

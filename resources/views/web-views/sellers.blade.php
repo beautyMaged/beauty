@@ -65,7 +65,7 @@
                                 @endif
                                 <a href="{{route('shopView',['id'=>$shop['seller_id']])}}">
                                     <img class="__inline-66"
-                                         onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                                         onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                                          src="{{asset("storage/app/public/shop/$shop->image")}}"
                                          alt="{{$shop->name}}">
                                     <div class="text-center text-dark">

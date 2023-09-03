@@ -3,6 +3,7 @@
 /public/storage
 /storage/*.key
 /vendor
+/.vscode
 .idea
 .env
 .env.backup
@@ -13,3 +14,5 @@ npm-debug.log
 yarn-error.log
 composer-setup.php
 .zip
+composer.json
+.gitignore

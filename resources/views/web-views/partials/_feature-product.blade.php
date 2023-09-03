@@ -19,7 +19,7 @@
             @endif
                 <a href="{{route('product',$product->slug)}}">
                     <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}"
-                        onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'">
+                        onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'">
                 </a>
         </div>
         <div class="single-product-details">

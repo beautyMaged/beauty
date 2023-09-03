@@ -74,7 +74,7 @@
                                         <div class="d-flex align-items-center gap-10 w-max-content">
                                             <img width="50"
                                             class="aspect-1 rounded"
-                                                onerror="this.src='{{asset('assets/back-end/img/400x400/img2.jpg')}}'"
+                                                onerror="this.onerror=null;this.src='{{asset('assets/back-end/img/400x400/img2.jpg')}}'"
                                                 src="{{asset('storage/shop')}}/{{$seller->shop->image}}"
                                                 alt="">
                                             <div>

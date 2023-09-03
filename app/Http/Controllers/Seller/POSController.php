@@ -25,7 +25,7 @@ class POSController extends Controller
 {
     public function order_list(Request $request)
     {
-        $seller = auth('seller')->user();
+        $seller = auth()->user();
         $seller_pos = BusinessSetting::where('type','seller_pos')->first()->value;
         if($seller->pos_status == 0 || $seller_pos == 0)
         {
@@ -38,7 +38,7 @@ class POSController extends Controller
         $from = $request['from'];
         $to = $request['to'];
 
-        $orders = Order::with(['customer'])->where(['seller_is'=>'seller'])->where(['seller_id'=>\auth('seller')->id()])->where('order_status','delivered');
+        $orders = Order::with(['customer'])->where(['seller_is'=>'seller'])->where(['seller_id'=>\auth()->id()])->where('order_status','delivered');
 
         $key = $request['search'] ? explode(' ', $request['search']) : '';
         $orders = $orders->when($request->has('search') && $search!=null,function ($q) use ($key) {
@@ -65,7 +65,7 @@ class POSController extends Controller
 
         $orders = Order::with(['customer'])
             ->where('order_type','POS')
-            ->where(['seller_id'=>\auth('seller')->id()])
+            ->where(['seller_id'=>\auth()->id()])
             ->where(['seller_is'=>'seller'])
             ->where('order_status','delivered')
             ->when(!empty($from) && !empty($to) , function($query) use($from, $to) {
@@ -91,7 +91,7 @@ class POSController extends Controller
 
     public function order_details($id)
     {
-        $seller = auth('seller')->user();
+        $seller = auth()->user();
         $seller_pos = BusinessSetting::where('type','seller_pos')->first()->value;
         if($seller->pos_status == 0 || $seller_pos == 0)
         {
@@ -129,7 +129,7 @@ class POSController extends Controller
 
     public function index(Request $request)
     {
-        $seller = auth('seller')->user();
+        $seller = auth()->user();
         $seller_pos = BusinessSetting::where('type','seller_pos')->first()->value;
         if($seller->pos_status == 0 || $seller_pos == 0)
         {
@@ -184,7 +184,7 @@ class POSController extends Controller
         ]);
 
         $key = explode(' ', $request['name']);
-        $products = Product::where(['added_by' => 'seller', 'user_id' => \auth('seller')->id()])
+        $products = Product::where(['added_by' => 'seller', 'user_id' => \auth()->id()])
                                 ->where('status',1)
                                 ->when($request->has('category_id') && $request['category_id'] != 0, function ($query) use ($request) {
                                     $query->whereJsonContains('category_ids', [[['id' => (string)$request['category_id']]]]);
@@ -562,7 +562,7 @@ class POSController extends Controller
         $product_tax =0;
         $ext_discount = 0;
 
-        if(($coupon->seller_id=='0' || $coupon->seller_id==auth('seller')->id()) && ($coupon->customer_id == '0' || $coupon->customer_id == $user_id)) {
+        if(($coupon->seller_id=='0' || $coupon->seller_id==auth()->id()) && ($coupon->customer_id == '0' || $coupon->customer_id == $user_id)) {
             if ($carts != null) {
                 foreach ($carts as $cart) {
                     if (is_array($cart)) {
@@ -825,7 +825,7 @@ class POSController extends Controller
             'customer_type' => 'customer',
             'payment_status' => 'paid',
             'order_status' => 'delivered',
-            'seller_id' => auth('seller')->id(),
+            'seller_id' => auth()->id(),
             'seller_is' => 'seller',
             'payment_method' => $request->type,
             'order_type' => 'POS',

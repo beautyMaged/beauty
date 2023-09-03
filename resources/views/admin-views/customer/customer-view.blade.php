@@ -128,7 +128,7 @@
                                 <div class="mr-3">
                                     <img
                                         class="avatar rounded-circle avatar-70"
-                                        onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                        onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                         src="{{asset('storage/profile/'.$customer->image??'')}}"
                                         alt="Image">
                                 </div>

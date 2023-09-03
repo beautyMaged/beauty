@@ -102,7 +102,7 @@
                                         <div class="__w-30p">
                                             <a href="{{route('product',$cartItem['slug'])}}">
                                                 <img class="rounded __img-62"
-                                                     onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                                     onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                                      {{--                                                     src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$cartItem['thumbnail']}}"--}}
                                                      src="{{is_object(json_decode($cartItem['thumbnail'])) ? (json_decode($cartItem['thumbnail']))->cdn : \App\CPU\ProductManager::product_image_path('thumbnail').'/'.$cartItem['thumbnail']}}"
                                                      alt="Product">

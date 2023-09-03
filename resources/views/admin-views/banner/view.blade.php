@@ -238,7 +238,7 @@
                                     <td class="pl-xl-5">{{$banners->firstItem()+$key}}</td>
                                     <td>
                                         <img class="ratio-4:1" width="80"
-                                             onerror="this.src='{{asset('assets/front-end/img/placeholder.png')}}'"
+                                             onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/placeholder.png')}}'"
                                              src="{{asset('storage/banner')}}/{{$banner['photo']}}">
                                     </td>
                                     <td>{{\App\CPU\translate(str_replace('_',' ',$banner->banner_type))}}</td>

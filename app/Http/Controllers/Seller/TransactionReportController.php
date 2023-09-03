@@ -38,21 +38,21 @@ class TransactionReportController extends Controller
         $order_transaction_chart = self::order_transaction_chart_filter($request);
 
         $active_products = Product::where([
-            'user_id'=>auth('seller')->id(),
+            'user_id'=>auth()->id(),
             'added_by'=>'seller',
             'status'=>1,
             'request_status'=>1
         ])->count();
 
         $inactive_products = Product::where([
-            'user_id'=>auth('seller')->id(),
+            'user_id'=>auth()->id(),
             'added_by'=>'seller',
             'status'=>0,
             'request_status'=>1
         ])->count();
 
         $pending_products = Product::where([
-            'user_id'=>auth('seller')->id(),
+            'user_id'=>auth()->id(),
             'added_by'=>'seller',
             'status'=>0,
             'request_status'=>0
@@ -108,7 +108,7 @@ class TransactionReportController extends Controller
             ->when($customer_id != 'all', function ($query) use ($customer_id) {
                 $query->where('customer_id', $customer_id);
             })
-            ->where(['seller_is'=>'seller', 'seller_id'=>auth('seller')->id()]);
+            ->where(['seller_is'=>'seller', 'seller_id'=>auth()->id()]);
 
         return self::date_wise_common_filter($query_data, $date_type, $from, $to);
     }
@@ -137,7 +137,7 @@ class TransactionReportController extends Controller
             ->when($customer_id != 'all', function ($query) use ($customer_id) {
                 $query->where('customer_id', $customer_id);
             })
-            ->where(['seller_is'=>'seller', 'seller_id'=>auth('seller')->id()]);
+            ->where(['seller_is'=>'seller', 'seller_id'=>auth()->id()]);
         $transactions = self::date_wise_common_filter($transaction_query, $date_type, $from, $to);
 
         return $transactions;
@@ -318,7 +318,7 @@ class TransactionReportController extends Controller
             ->when($customer_id != 'all', function ($query) use ($customer_id) {
                 $query->where('customer_id', $customer_id);
             })
-            ->where(['seller_is'=>'seller', 'seller_id'=>auth('seller')->id()])
+            ->where(['seller_is'=>'seller', 'seller_id'=>auth()->id()])
             ->whereDate('updated_at', '>=', $start_date)
             ->whereDate('updated_at', '<=', $end_date);
 
@@ -341,7 +341,7 @@ class TransactionReportController extends Controller
             ->when($customer_id != 'all', function ($query) use ($customer_id) {
                 $query->where('customer_id', $customer_id);
             })
-            ->where(['seller_is'=>'seller', 'seller_id'=>auth('seller')->id()]);
+            ->where(['seller_is'=>'seller', 'seller_id'=>auth()->id()]);
 
         return self::date_wise_common_filter($query_data, $date_type, $from, $to);
     }
@@ -422,7 +422,7 @@ class TransactionReportController extends Controller
             $duration = 'From ' . $from . ' To ' . $to;
         }
 
-        $seller_info = Shop::where('seller_id', auth('seller')->id())->first()->name;
+        $seller_info = Shop::where('seller_id', auth()->id())->first()->name;
         $customer_info = 'all';
         if ($customer_id != 'all') {
             $customer = User::select()->find($customer_id);
@@ -478,15 +478,15 @@ class TransactionReportController extends Controller
         $total_orders = $in_house_orders + $seller_orders;
 
         $ongoing_order_query = Order::whereIn('order_status',['out_for_delivery','processing','confirmed', 'pending'])
-                    ->where(['seller_id' => auth('seller')->id(), 'seller_is' => 'seller']);
+                    ->where(['seller_id' => auth()->id(), 'seller_is' => 'seller']);
         $ongoing_order = self::date_wise_common_filter($ongoing_order_query, $date_type, $from, $to)->count();
 
         $cancel_order_query = Order::whereIn('order_status',['canceled','failed','returned'])
-            ->where(['seller_id' => auth('seller')->id(), 'seller_is' => 'seller']);
+            ->where(['seller_id' => auth()->id(), 'seller_is' => 'seller']);
         $canceled_order = self::date_wise_common_filter($cancel_order_query, $date_type, $from, $to)->count();
 
         $completed_order_query = Order::where('order_status','delivered')
-            ->where(['seller_id' => auth('seller')->id(), 'seller_is' => 'seller']);
+            ->where(['seller_id' => auth()->id(), 'seller_is' => 'seller']);
         $completed_order = self::date_wise_common_filter($completed_order_query, $date_type, $from, $to)->count();
 
         $total_order = $canceled_order+$ongoing_order+$completed_order;
@@ -527,7 +527,7 @@ class TransactionReportController extends Controller
         $transaction = OrderTransaction::with(['seller.shop', 'customer', 'order', 'order_details'])
             ->withSum('order_details', 'price')
             ->withSum('order_details', 'discount')
-            ->where(['order_id'=> $request->order_id, 'seller_is'=>'seller', 'seller_id'=>auth('seller')->id()])
+            ->where(['order_id'=> $request->order_id, 'seller_is'=>'seller', 'seller_id'=>auth()->id()])
             ->first();
 
         $mpdf_view = View::make('seller-views.transaction.order_wise_pdf', compact('company_phone', 'company_name', 'company_email', 'company_web_logo', 'transaction'));
@@ -546,7 +546,7 @@ class TransactionReportController extends Controller
         $expense_transaction_chart = self::expense_transaction_chart_filter($request);
 
         $expense_calculate_query = Order::with(['order_transaction', 'coupon'])
-            ->where(['coupon_discount_bearer'=> 'seller', 'order_status'=>'delivered', 'seller_is'=>'seller', 'seller_id'=>auth('seller')->id()])
+            ->where(['coupon_discount_bearer'=> 'seller', 'order_status'=>'delivered', 'seller_is'=>'seller', 'seller_id'=>auth()->id()])
             ->whereNotIn('coupon_code', ['0', 'NULL'])
             ->whereHas('order_transaction', function ($query) use($search){
                 $query->where(['status'=>'disburse']);
@@ -568,7 +568,7 @@ class TransactionReportController extends Controller
         }
 
         $expense_transaction_query = Order::with(['order_transaction', 'coupon'])
-            ->where(['coupon_discount_bearer'=> 'seller', 'order_status'=>'delivered', 'seller_is'=>'seller', 'seller_id'=>auth('seller')->id()])
+            ->where(['coupon_discount_bearer'=> 'seller', 'order_status'=>'delivered', 'seller_is'=>'seller', 'seller_id'=>auth()->id()])
             ->whereNotIn('coupon_code', ['0', 'NULL'])
             ->whereHas('order_transaction', function ($query) use($search){
                 $query->where(['status'=>'disburse'])
@@ -748,7 +748,7 @@ class TransactionReportController extends Controller
         $to = $request['to'];
         $date_type = $request['date_type'] ?? 'this_year';
 
-        $order_query = Order::where(['coupon_discount_bearer'=> 'seller', 'seller_is'=>'seller', 'seller_id'=>auth('seller')->id(), 'order_status'=>'delivered'])
+        $order_query = Order::where(['coupon_discount_bearer'=> 'seller', 'seller_is'=>'seller', 'seller_id'=>auth()->id(), 'order_status'=>'delivered'])
             ->whereNotIn('coupon_code', ['0', 'NULL'])
             ->whereHas('order_transaction', function ($query){
                 $query->where(['status'=>'disburse']);
@@ -783,7 +783,7 @@ class TransactionReportController extends Controller
         $company_web_logo = BusinessSetting::where('type', 'company_web_logo')->first()->value;
 
         $transaction = Order::with(['order_transaction', 'coupon'])
-            ->where(['id'=> $request->id, 'seller_is'=>'seller', 'seller_id'=>auth('seller')->id()])
+            ->where(['id'=> $request->id, 'seller_is'=>'seller', 'seller_id'=>auth()->id()])
             ->first();
 
         $mpdf_view = View::make('seller-views.transaction.order_wise_expense_pdf', compact('company_phone', 'company_name', 'company_email', 'company_web_logo', 'transaction'));
@@ -797,7 +797,7 @@ class TransactionReportController extends Controller
         $company_email = BusinessSetting::where('type', 'company_email')->first()->value;
         $company_name = BusinessSetting::where('type', 'company_name')->first()->value;
         $company_web_logo = BusinessSetting::where('type', 'company_web_logo')->first()->value;
-        $shop_name = Shop::where(['seller_id'=>auth('seller')->id()])->first()->name;
+        $shop_name = Shop::where(['seller_id'=>auth()->id()])->first()->name;
 
         $search = $request['search'];
         $from = $request['from'];
@@ -806,7 +806,7 @@ class TransactionReportController extends Controller
         $duration = $date_type == 'custom_date' ? 'From ' . $from . ' To ' . $to : str_replace('_', ' ', $date_type);
 
         $expense_transaction_query = Order::with(['order_transaction', 'coupon'])
-            ->where(['coupon_discount_bearer'=> 'seller', 'order_status'=>'delivered', 'seller_is'=>'seller', 'seller_id'=>auth('seller')->id()])
+            ->where(['coupon_discount_bearer'=> 'seller', 'order_status'=>'delivered', 'seller_is'=>'seller', 'seller_id'=>auth()->id()])
             ->whereNotIn('coupon_code', ['0', 'NULL'])
             ->whereHas('order_transaction', function ($query) use($search){
                 $query->where(['status'=>'disburse'])
@@ -854,7 +854,7 @@ class TransactionReportController extends Controller
         $to = $request['to'];
         $date_type = $request['date_type'] ?? 'this_year';
         $expense_transaction_query = Order::with(['order_transaction', 'coupon'])
-            ->where(['coupon_discount_bearer'=> 'seller', 'order_status'=>'delivered', 'seller_is'=>'seller', 'seller_id'=>auth('seller')->id()])
+            ->where(['coupon_discount_bearer'=> 'seller', 'order_status'=>'delivered', 'seller_is'=>'seller', 'seller_id'=>auth()->id()])
             ->whereNotIn('coupon_code', ['0', 'NULL'])
             ->whereHas('order_transaction', function ($query) use($search){
                 $query->where(['status'=>'disburse'])

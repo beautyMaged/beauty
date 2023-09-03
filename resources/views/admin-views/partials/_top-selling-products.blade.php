@@ -17,7 +17,7 @@
                          onclick="location.href='{{route('admin.product.view',[$item['product_id']])}}'">
                         <div class="grid-item px-0 bg-transparent">
                             <div class="d-flex gap-10">
-                                <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$item->product['thumbnail']}}" class="avatar avatar-lg rounded avatar-bordered" onerror="this.src='{{asset('assets/back-end/img/160x160/img2.jpg')}}'" alt="{{$item->product->name}} image">
+                                <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$item->product['thumbnail']}}" class="avatar avatar-lg rounded avatar-bordered" onerror="this.onerror=null;this.src='{{asset('assets/back-end/img/160x160/img2.jpg')}}'" alt="{{$item->product->name}} image">
                                 <div class="title-color">{{substr($item->product['name'],0,20)}} {{strlen($item->product['name'])>20?'...':''}}</div>
                             </div>
 

@@ -25,14 +25,14 @@ class DashboardController extends Controller
             ->whereHas('product', function ($query){
                 $query->where(['added_by'=>'seller']);
             })
-            ->where(['seller_id'=>auth('seller')->id()])
+            ->where(['seller_id'=>auth()->id()])
             ->select('product_id', DB::raw('SUM(qty) as count'))
             ->groupBy('product_id')
             ->orderBy("count", 'desc')
             ->take(6)
             ->get();
 
-        $most_rated_products = Product::where(['user_id'=>auth('seller')->id(), 'added_by'=>'seller'])
+        $most_rated_products = Product::where(['user_id'=>auth()->id(), 'added_by'=>'seller'])
             ->rightJoin('reviews', 'reviews.product_id', '=', 'products.id')
             ->groupBy('product_id')
             ->select(['product_id',
@@ -46,7 +46,7 @@ class DashboardController extends Controller
         $top_deliveryman = Order::with(['delivery_man'])
             ->select('delivery_man_id', DB::raw('COUNT(delivery_man_id) as count'))
             ->whereHas('delivery_man', function($query){
-                $query->where(['seller_id'=>auth('seller')->id()]);
+                $query->where(['seller_id'=>auth()->id()]);
             })
             ->where(['order_status'=>'delivered'])
             ->whereNotNull('delivery_man_id')
@@ -61,7 +61,7 @@ class DashboardController extends Controller
         $seller_data = [];
         $seller_earnings = OrderTransaction::where([
             'seller_is'=>'seller',
-            'seller_id'=>auth('seller')->id(),
+            'seller_id'=>auth()->id(),
             'status'=>'disburse'
         ])->select(
             DB::raw('IFNULL(sum(seller_amount),0) as sums'),
@@ -79,7 +79,7 @@ class DashboardController extends Controller
         $commission_data = [];
         $commission_given =OrderTransaction::where([
             'seller_is'=>'seller',
-            'seller_id'=>auth('seller')->id(),
+            'seller_id'=>auth()->id(),
             'status'=>'disburse'
         ])->select(
             DB::raw('IFNULL(sum(admin_commission),0) as sums'),
@@ -106,7 +106,7 @@ class DashboardController extends Controller
         $data['most_rated_products'] = $most_rated_products;
         $data['top_deliveryman'] = $top_deliveryman;
 
-        $admin_wallet = SellerWallet::where('seller_id', auth('seller')->id())->first();
+        $admin_wallet = SellerWallet::where('seller_id', auth()->id())->first();
         $data['total_earning'] = $admin_wallet->total_earning ?? 0;
         $data['withdrawn'] = $admin_wallet->withdrawn ?? 0;
         $data['commission_given'] = $admin_wallet->commission_given ?? 0;
@@ -140,7 +140,7 @@ class DashboardController extends Controller
 
             $seller_earnings = OrderTransaction::where([
                 'seller_is'=>'seller',
-                'seller_id'=>auth('seller')->id(),
+                'seller_id'=>auth()->id(),
                 'status'=>'disburse'
             ])->select(
                 DB::raw('IFNULL(sum(seller_amount),0) as sums'),
@@ -165,7 +165,7 @@ class DashboardController extends Controller
 
             $seller_earnings = OrderTransaction::where([
                 'seller_is' => 'seller',
-                'seller_id' => auth('seller')->id(),
+                'seller_id' => auth()->id(),
                 'status' => 'disburse'
             ])->select(
                 DB::raw('seller_amount'),
@@ -191,7 +191,7 @@ class DashboardController extends Controller
 
             $seller_earnings = OrderTransaction::where([
                 'seller_is' => 'seller',
-                'seller_id' => auth('seller')->id(),
+                'seller_id' => auth()->id(),
                 'status' => 'disburse'
             ])->select(
                 DB::raw('seller_amount'),
@@ -222,7 +222,7 @@ class DashboardController extends Controller
 
             $commission_earnings = OrderTransaction::where([
                 'seller_is'=>'seller',
-                'seller_id'=>auth('seller')->id(),
+                'seller_id'=>auth()->id(),
                 'status'=>'disburse'
             ])->select(
                 DB::raw('IFNULL(sum(admin_commission),0) as sums'),
@@ -248,7 +248,7 @@ class DashboardController extends Controller
 
             $commission_earnings = OrderTransaction::where([
                 'seller_is' => 'seller',
-                'seller_id' => auth('seller')->id(),
+                'seller_id' => auth()->id(),
                 'status' => 'disburse'
             ])->select(
                 DB::raw('admin_commission'),
@@ -274,7 +274,7 @@ class DashboardController extends Controller
 
             $commission_earnings = OrderTransaction::where([
                 'seller_is' => 'seller',
-                'seller_id' => auth('seller')->id(),
+                'seller_id' => auth()->id(),
                 'status' => 'disburse'
             ])->select(
                 DB::raw('admin_commission'),
@@ -311,7 +311,7 @@ class DashboardController extends Controller
         $today = session()->has('statistics_type') && session('statistics_type') == 'today' ? 1 : 0;
         $this_month = session()->has('statistics_type') && session('statistics_type') == 'this_month' ? 1 : 0;
 
-        $pending = Order::where(['seller_is' => 'seller'])->where(['seller_id' => auth('seller')->id()])->where(['order_status' => 'pending'])
+        $pending = Order::where(['seller_is' => 'seller'])->where(['seller_id' => auth()->id()])->where(['order_status' => 'pending'])
             ->when($today, function ($query) {
                 return $query->whereDate('created_at', Carbon::today());
             })
@@ -319,7 +319,7 @@ class DashboardController extends Controller
                 return $query->whereMonth('created_at', Carbon::now());
             })
             ->count();
-        $confirmed = Order::where(['seller_is' => 'seller'])->where(['seller_id' => auth('seller')->id()])->where(['order_status' => 'confirmed'])
+        $confirmed = Order::where(['seller_is' => 'seller'])->where(['seller_id' => auth()->id()])->where(['order_status' => 'confirmed'])
             ->when($today, function ($query) {
                 return $query->whereDate('created_at', Carbon::today());
             })
@@ -327,7 +327,7 @@ class DashboardController extends Controller
                 return $query->whereMonth('created_at', Carbon::now());
             })
             ->count();
-        $processing = Order::where(['seller_is' => 'seller'])->where(['seller_id' => auth('seller')->id()])->where(['order_status' => 'processing'])
+        $processing = Order::where(['seller_is' => 'seller'])->where(['seller_id' => auth()->id()])->where(['order_status' => 'processing'])
             ->when($today, function ($query) {
                 return $query->whereDate('created_at', Carbon::today());
             })
@@ -335,7 +335,7 @@ class DashboardController extends Controller
                 return $query->whereMonth('created_at', Carbon::now());
             })
             ->count();
-        $out_for_delivery = Order::where(['seller_is' => 'seller'])->where(['seller_id' => auth('seller')->id()])->where(['order_status' => 'out_for_delivery'])
+        $out_for_delivery = Order::where(['seller_is' => 'seller'])->where(['seller_id' => auth()->id()])->where(['order_status' => 'out_for_delivery'])
             ->when($today, function ($query) {
                 return $query->whereDate('created_at', Carbon::today());
             })
@@ -343,7 +343,7 @@ class DashboardController extends Controller
                 return $query->whereMonth('created_at', Carbon::now());
             })
             ->count();
-        $delivered = Order::where(['seller_is' => 'seller'])->where(['seller_id' => auth('seller')->id()])
+        $delivered = Order::where(['seller_is' => 'seller'])->where(['seller_id' => auth()->id()])
             ->where(['order_status' => 'delivered'])
             ->when($today, function ($query) {
                 return $query->whereDate('created_at', Carbon::today());
@@ -352,7 +352,7 @@ class DashboardController extends Controller
                 return $query->whereMonth('created_at', Carbon::now());
             })
             ->count();
-        $canceled = Order::where(['seller_is' => 'seller'])->where(['seller_id' => auth('seller')->id()])->where(['order_status' => 'canceled'])
+        $canceled = Order::where(['seller_is' => 'seller'])->where(['seller_id' => auth()->id()])->where(['order_status' => 'canceled'])
             ->when($today, function ($query) {
                 return $query->whereDate('created_at', Carbon::today());
             })
@@ -360,7 +360,7 @@ class DashboardController extends Controller
                 return $query->whereMonth('created_at', Carbon::now());
             })
             ->count();
-        $returned = Order::where(['seller_is' => 'seller'])->where(['seller_id' => auth('seller')->id()])->where(['order_status' => 'returned'])
+        $returned = Order::where(['seller_is' => 'seller'])->where(['seller_id' => auth()->id()])->where(['order_status' => 'returned'])
             ->when($today, function ($query) {
                 return $query->whereDate('created_at', Carbon::today());
             })
@@ -368,7 +368,7 @@ class DashboardController extends Controller
                 return $query->whereMonth('created_at', Carbon::now());
             })
             ->count();
-        $failed = Order::where(['seller_is' => 'seller'])->where(['seller_id' => auth('seller')->id()])->where(['order_status' => 'failed'])
+        $failed = Order::where(['seller_is' => 'seller'])->where(['seller_id' => auth()->id()])->where(['order_status' => 'failed'])
             ->when($today, function ($query) {
                 return $query->whereDate('created_at', Carbon::today());
             })

@@ -75,7 +75,7 @@
                             <div class="col-md-6 mb-3">
                                 <div class="text-center">
                                     <img class="upload-img-view" id="viewer"
-                                        onerror="this.src='{{asset('assets/back-end/img/160x160/img2.jpg')}}'"
+                                        onerror="this.onerror=null;this.src='{{asset('assets/back-end/img/160x160/img2.jpg')}}'"
                                         src="{{asset('storage/brand')}}/{{$b['image']}}" alt="banner image"/>
                                 </div>
                             </div>

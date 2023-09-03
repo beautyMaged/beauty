@@ -184,7 +184,7 @@
                                                     href="{{ asset('storage/app/public/review') }}/{{ $img }}"
                                                     data-lightbox="mygallery">
                                                     <img clsss="p-2" width="60" height="60"
-                                                        onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'"
+                                                        onerror="this.onerror=null;this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'"
                                                         src="{{ asset('storage/app/public/review') }}/{{ $img }}"
                                                         alt="Image">
                                                 </a>

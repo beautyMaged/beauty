@@ -30,7 +30,7 @@
                             <div class="row">
                                 <div class="col-6 col-sm-6 col-md-2">
                                     <div>
-                                        <img  class="__w-70px __h-70p" onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                                        <img  class="__w-70px __h-70p" onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                                         src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$refund->product!=null?$refund->product->thumbnail:''}}"
                                         alt="VR Collection">
                                     </div>

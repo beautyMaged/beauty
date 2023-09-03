@@ -16,7 +16,7 @@
                 @if(isset($shop))
                     <a href="{{route('admin.sellers.view',$item['seller_id'])}}" class="grid-item">
                         <div class="d-flex align-items-center gap-10">
-                            <img onerror="this.src='{{asset('assets/back-end/img/160x160/img1.jpg')}}'"
+                            <img onerror="this.onerror=null;this.src='{{asset('assets/back-end/img/160x160/img1.jpg')}}'"
                                  src="{{asset('storage/shop/'.$shop->image??'')}}" class="avatar rounded-circle avatar-sm">
 
                             <h5 class="shop-name">{{$shop['name']??'Not exist'}}</h5>

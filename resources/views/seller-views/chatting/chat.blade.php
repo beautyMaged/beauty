@@ -20,7 +20,7 @@
                     <div class="card card-body px-0 h-100">
                         <div class="media align-items-center px-3 gap-3 mb-4">
                             <div class="avatar avatar-sm avatar-circle">
-                                <img class="avatar-img" onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'" src="{{asset('storage/app/public/seller/')}}/{{auth('seller')->user()->image}}" alt="Image Description">
+                                <img class="avatar-img" onerror="this.onerror=null;this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'" src="{{asset('storage/app/public/seller/')}}/{{auth('seller')->user()->image}}" alt="Image Description">
                                 <span class="avatar-status avatar-sm-status avatar-status-success"></span>
                             </div>
                             <div class="media-body">
@@ -58,7 +58,7 @@
                                                         @else
                                                             src="{{ asset('storage/app/public/delivery-man/'.$chatting->image) }}"
                                                         @endif
-                                                        id="{{$chatting->user_id? $chatting->user_id : $chatting->delivery_man_id}}" onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'" class="avatar-img avatar-circle">
+                                                        id="{{$chatting->user_id? $chatting->user_id : $chatting->delivery_man_id}}" onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'" class="avatar-img avatar-circle">
                                                     <span class="avatar-satatus avatar-sm-status avatar-status-success"></span>
                                                 </div>
                                                 <div class="chat_ib media-body">
@@ -94,7 +94,7 @@
                                          @else
                                          src="{{ asset('storage/app/public/delivery-man/'.$chattings_user[0]->image) }}"
                                          @endif
-                                         onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'" alt="Image Description">
+                                         onerror="this.onerror=null;this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'" alt="Image Description">
                                     <span class="avatar-status avatar-sm-status avatar-status-success"></span>
                                 </div>
                                 <div class="media-body">

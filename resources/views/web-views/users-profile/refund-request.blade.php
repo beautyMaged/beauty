@@ -37,7 +37,7 @@
                             <div class="row">
                                 <div class="col-3 col-sm-2">
                                     <img class="d-block"
-                                        onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                                        onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                                         src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}"
                                         alt="VR Collection" width="60">
                                 </div>

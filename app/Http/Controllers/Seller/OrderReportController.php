@@ -44,11 +44,11 @@ class OrderReportController extends Controller
         );
 
         $due_amount_order_query = Order::whereNotIn('order_status', ['delivered', 'canceled', 'returned', 'failed'])
-            ->where(['seller_is'=>'seller', 'seller_id'=>auth('seller')->id()]);
+            ->where(['seller_is'=>'seller', 'seller_id'=>auth()->id()]);
         $due_amount = self::date_wise_common_filter($due_amount_order_query, $date_type, $from, $to)->sum('order_amount');
 
         $settled_amount_query = Order::where('order_status','delivered')
-            ->where(['seller_is'=>'seller', 'seller_id'=>auth('seller')->id()]);
+            ->where(['seller_is'=>'seller', 'seller_id'=>auth()->id()]);
         $settled_amount = self::date_wise_common_filter($settled_amount_query, $date_type, $from, $to)->sum('order_amount');
 
         $digital_payment_query = Order::where(['order_status' => 'delivered'])->whereNotIn('payment_method', ['cash', 'cash_on_delivery', 'pay_by_wallet', 'offline_payment']);
@@ -246,7 +246,7 @@ class OrderReportController extends Controller
             ->when($search, function ($q) use ($search) {
                 $q->orWhere('id', 'like', "%{$search}%");
             })
-            ->where(['seller_is'=>'seller', 'seller_id'=>auth('seller')->id()]);
+            ->where(['seller_is'=>'seller', 'seller_id'=>auth()->id()]);
         $orders = self::date_wise_common_filter($orders_query, $date_type, $from, $to);
 
         return $orders;
@@ -275,7 +275,7 @@ class OrderReportController extends Controller
         $to = $request['to'];
         $date_type = $request['date_type'] ?? 'this_year';
 
-        $query_f = $query->where(['seller_is'=>'seller', 'seller_id'=>auth('seller')->id()]);
+        $query_f = $query->where(['seller_is'=>'seller', 'seller_id'=>auth()->id()]);
         return self::date_wise_common_filter($query_f, $date_type, $from, $to);
     }
 
@@ -301,7 +301,7 @@ class OrderReportController extends Controller
 
     public function order_report_chart_common_query($start_date, $end_date)
     {
-        return Order::where(['seller_is'=>'seller', 'seller_id'=>auth('seller')->id(), 'order_status'=>'delivered'])
+        return Order::where(['seller_is'=>'seller', 'seller_id'=>auth()->id(), 'order_status'=>'delivered'])
             ->whereDate('updated_at', '>=', $start_date)
             ->whereDate('updated_at', '<=', $end_date);
     }

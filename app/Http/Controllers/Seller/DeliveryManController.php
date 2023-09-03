@@ -72,7 +72,7 @@ class DeliveryManController extends Controller
                             $q->where(['seller_is'=>'seller']);
                         }])
                         ->latest()
-                        ->where(['seller_id' => auth('seller')->id()])
+                        ->where(['seller_id' => auth()->id()])
                         ->paginate(25)
                         ->appends($query_param);
         return view('seller-views.delivery-man.list', compact('delivery_men', 'search'));
@@ -81,7 +81,7 @@ class DeliveryManController extends Controller
     public function search(Request $request)
     {
         $key = explode(' ', $request['search']);
-        $delivery_men = DeliveryMan::where(['seller_id' => auth('seller')->id()])->where(function ($q) use ($key) {
+        $delivery_men = DeliveryMan::where(['seller_id' => auth()->id()])->where(function ($q) use ($key) {
             foreach ($key as $value) {
                 $q->orWhere('f_name', 'like', "%{$value}%")
                     ->orWhere('l_name', 'like', "%{$value}%")
@@ -137,7 +137,7 @@ class DeliveryManController extends Controller
         }
 
         $dm                     = new DeliveryMan();
-        $dm->seller_id          = auth('seller')->id();
+        $dm->seller_id          = auth()->id();
         $dm->f_name             = $request->f_name;
         $dm->l_name             = $request->l_name;
         $dm->address            = $request->address;
@@ -162,13 +162,13 @@ class DeliveryManController extends Controller
             return redirect()->route('seller.auth.login');
         }
         $telephone_codes = TELEPHONE_CODES;
-        $delivery_man = DeliveryMan::where(['seller_id' => auth('seller')->id(), 'id' => $id])->first();
+        $delivery_man = DeliveryMan::where(['seller_id' => auth()->id(), 'id' => $id])->first();
         return view('seller-views.delivery-man.edit', compact('delivery_man', 'telephone_codes'));
     }
 
     public function status(Request $request)
     {
-        $delivery_man = DeliveryMan::where(['seller_id'=>auth('seller')->id()])->find($request->id);
+        $delivery_man = DeliveryMan::where(['seller_id'=>auth()->id()])->find($request->id);
         $delivery_man->is_active = $request->status;
         $delivery_man->save();
         return response()->json([], 200);
@@ -193,7 +193,7 @@ class DeliveryManController extends Controller
             ]);
         }
 
-        $delivery_man = DeliveryMan::where(['id' => $id, 'seller_id' => auth('seller')->id()])->first();
+        $delivery_man = DeliveryMan::where(['id' => $id, 'seller_id' => auth()->id()])->first();
 
         $phone_combo_exists =  DeliveryMan::where(['phone'=> $request->phone, 'country_code'=> $request->country_code])->first();
 
@@ -222,7 +222,7 @@ class DeliveryManController extends Controller
         } else {
             $identity_image = $delivery_man['identity_image'];
         }
-        $delivery_man->seller_id        = auth('seller')->id();
+        $delivery_man->seller_id        = auth()->id();
         $delivery_man->f_name           = $request->f_name;
         $delivery_man->l_name           = $request->l_name;
         $delivery_man->address          = $request->address;
@@ -247,7 +247,7 @@ class DeliveryManController extends Controller
             Toastr::warning(translate('access_denied!!'));
             return redirect()->route('seller.auth.login');
         }
-        $delivery_man = DeliveryMan::where(['seller_id' => auth('seller')->id(), 'id' => $id])->first();
+        $delivery_man = DeliveryMan::where(['seller_id' => auth()->id(), 'id' => $id])->first();
 
 
         if (Storage::disk('public')->exists('delivery-man/' . $delivery_man['image'])) {
@@ -271,7 +271,7 @@ class DeliveryManController extends Controller
             Toastr::warning(translate('access_denied!!'));
             return redirect()->route('seller.auth.login');
         }
-        $delivery_man = DeliveryMan::where(['seller_id' => auth('seller')->id()])->with('wallet')->find($id);
+        $delivery_man = DeliveryMan::where(['seller_id' => auth()->id()])->with('wallet')->find($id);
         if(!$delivery_man){
             Toastr::warning(translate('invalid_deliveryman!'));
             return redirect('seller/delivery-man/list');
@@ -299,7 +299,7 @@ class DeliveryManController extends Controller
         $orders = Order::select('id', 'deliveryman_charge', 'order_status', 'delivery_man_id')
             ->where(['delivery_man_id' => $id])
             ->whereHas('delivery_man', function($query){
-                $query->where('seller_id',auth('seller')->id());
+                $query->where('seller_id',auth()->id());
             })
             ->when($search, function ($q) use ($search) {
                 $q->where('id', 'like', "%$search%");
@@ -321,7 +321,7 @@ class DeliveryManController extends Controller
         $orders = Order::select('id', 'deliveryman_charge', 'order_status', 'delivery_man_id')
             ->where('delivery_man_id', $id)
             ->whereHas('delivery_man', function($query){
-                $query->where('seller_id',auth('seller')->id());
+                $query->where('seller_id',auth()->id());
             })
             ->when($search, function ($q) use ($search) {
                 $q->where('id', 'like', "%$search%");
@@ -353,7 +353,7 @@ class DeliveryManController extends Controller
         $search = $request->search;
         $rating = $request->rating;
 
-        $delivery_man = DeliveryMan::where(['seller_id' => auth('seller')->user()->id])->with(['review'])->find($id);
+        $delivery_man = DeliveryMan::where(['seller_id' => auth()->user()->id])->with(['review'])->find($id);
         if (!$delivery_man) {
             Toastr::warning(translate('Invaild_review!'));
             return redirect(route('seller.delivery-man.list'));

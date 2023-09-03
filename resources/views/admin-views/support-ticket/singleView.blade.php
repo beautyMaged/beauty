@@ -28,7 +28,7 @@
                 ?>
                 <div class="media d-flex gap-3">
                     <img class="rounded-circle avatar" src="{{asset('storage/profile')}}/{{isset($userDetails)?$userDetails['image']:''}}"
-                            onerror="this.src='{{asset('assets/back-end/img/160x160/img1.jpg')}}"
+                            onerror="this.onerror=null;this.src='{{asset('assets/back-end/img/160x160/img1.jpg')}}"
                             alt="{{isset($userDetails)?$userDetails['name']:'not found'}}"/>
                     <div class="media-body">
                         <h6 class="font-size-md mb-1">{{isset($userDetails)?$userDetails['f_name'].' '.$userDetails['l_name']:'not found'}}</h6>

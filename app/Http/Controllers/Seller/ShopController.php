@@ -15,18 +15,18 @@ class ShopController extends Controller
 {
     public function view()
     {
-        $shop = Shop::where(['seller_id' => auth('seller')->id()])->first();
+        $shop = Shop::where(['seller_id' => auth()->id()])->first();
         if (isset($shop) == false) {
             DB::table('shops')->insert([
-                'seller_id' => auth('seller')->id(),
-                'name' => auth('seller')->user()->f_name,
+                'seller_id' => auth()->id(),
+                'name' => auth()->user()->f_name,
                 'address' => '',
-                'contact' => auth('seller')->user()->phone,
+                'contact' => auth()->user()->phone,
                 'image' => 'def.png',
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
-            $shop = Shop::where(['seller_id' => auth('seller')->id()])->first();
+            $shop = Shop::where(['seller_id' => auth()->id()])->first();
         }
 
         return view('seller-views.shop.shopInfo', compact('shop'));
@@ -34,7 +34,7 @@ class ShopController extends Controller
 
     public function edit($id)
     {
-        $shop = Shop::where(['seller_id' =>  auth('seller')->id()])->first();
+        $shop = Shop::where(['seller_id' =>  auth()->id()])->first();
         return view('seller-views.shop.edit', compact('shop'));
     }
 

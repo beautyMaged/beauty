@@ -20,7 +20,7 @@
                     <div class="card card-body px-0 h-100">
                         <div class="media align-items-center px-3 gap-3 mb-4">
                             <div class="avatar avatar-sm avatar-circle">
-                                <img class="avatar-img" onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'" src="{{asset('storage/app/public/seller/')}}/{{auth('admin')->user()->image}}" alt="Image Description">
+                                <img class="avatar-img" onerror="this.onerror=null;this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'" src="{{asset('storage/app/public/seller/')}}/{{auth('admin')->user()->image}}" alt="Image Description">
                                 <span class="avatar-status avatar-sm-status avatar-status-success"></span>
                             </div>
                             <div class="media-body">
@@ -48,7 +48,7 @@
                                              id="{{$chatting->delivery_man_id}}" data-name="{{$chatting->f_name}} {{$chatting->l_name}}" data-phone="{{ $chatting->phone }}">
                                             <div class="chat_people media gap-10" id="chat_people">
                                                 <div class="chat_img avatar avatar-sm avatar-circle">
-                                                    <img src="{{ asset('storage/app/public/delivery-man/'.$chatting->image) }}" id="{{$chatting->delivery_man_id}}" onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'" class="avatar-img avatar-circle">
+                                                    <img src="{{ asset('storage/app/public/delivery-man/'.$chatting->image) }}" id="{{$chatting->delivery_man_id}}" onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'" class="avatar-img avatar-circle">
                                                     <span class="avatar-status avatar-sm-status avatar-status-success"></span>
                                                 </div>
                                                 <div class="chat_ib media-body">
@@ -78,7 +78,7 @@
                             <!-- Profile -->
                             <div class="media align-items-center gap-3">
                                 <div class="avatar avatar-sm avatar-circle">
-                                    <img class="avatar-img" id="profile_image" src="{{ asset('storage/app/public/delivery-man/'.$chattings_user[0]->image) }}" onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'" alt="Image Description">
+                                    <img class="avatar-img" id="profile_image" src="{{ asset('storage/app/public/delivery-man/'.$chattings_user[0]->image) }}" onerror="this.onerror=null;this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'" alt="Image Description">
                                     <span class="avatar-status avatar-sm-status avatar-status-success"></span>
                                 </div>
                                 <div class="media-body">

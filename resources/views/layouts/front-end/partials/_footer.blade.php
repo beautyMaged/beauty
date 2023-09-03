@@ -45,7 +45,7 @@
                     <!-- Grid column -->
                     <div class="col-md-3 footer-web-logo">
                         <a class="d-block" href="{{route('home')}}">
-                            <img class="" src="{{asset("storage/company/")}}/{{ $web_config['footer_logo']->value }}" onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'" alt="{{ $web_config['name']->value }}"/>
+                            <img class="" src="{{asset("storage/company/")}}/{{ $web_config['footer_logo']->value }}" onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'" alt="{{ $web_config['name']->value }}"/>
                         </a>
                         <div class="col-md-12 mt-2">
                             <a href="#" class=""> <i class="fa-solid fa-location-dot ml-1 second_color"></i> <span class="bold">{{\App\CPU\translate('Saudi Arabia')}}</span> </a>

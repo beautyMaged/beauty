@@ -14,7 +14,7 @@ class ShippingTypeController extends Controller
             'shippingType'    => 'required',
         ]);
 
-        $seller_id = auth('seller')->id();
+        $seller_id = auth()->id();
         $shipping_type = ShippingType::where('seller_id',$seller_id)->first();
         if(isset($shipping_type))
         {

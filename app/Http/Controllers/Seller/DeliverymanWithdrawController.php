@@ -32,7 +32,7 @@ class DeliverymanWithdrawController extends Controller
         $pending = session()->has('delivery_withdraw_status_filter') && session('delivery_withdraw_status_filter') == 'pending' ? 1 : 0;
 
         $withdraw_req = WithdrawRequest::with(['delivery_men'])
-            ->where('seller_id', auth('seller')->user()->id)
+            ->where('seller_id', auth()->user()->id)
             ->whereNotNull('delivery_man_id')
             ->when($all, function ($query) {
                 return $query;
@@ -54,7 +54,7 @@ class DeliverymanWithdrawController extends Controller
 
     public function withdraw_view($withdraw_id)
     {
-        $details = WithdrawRequest::with(['delivery_men'])->where('delivery_man_id', '<>', null)->where(['seller_id'=>auth('seller')->user()->id])->find($withdraw_id);
+        $details = WithdrawRequest::with(['delivery_men'])->where('delivery_man_id', '<>', null)->where(['seller_id'=>auth()->user()->id])->find($withdraw_id);
         return view('seller-views.delivery-man.withdraw.withdraw-view', compact('details'));
     }
 
@@ -66,7 +66,7 @@ class DeliverymanWithdrawController extends Controller
 
     public function withdrawStatus(Request $request, $id)
     {
-        $withdraw = WithdrawRequest::where(['seller_id' => auth('seller')->user()->id])->find($id);
+        $withdraw = WithdrawRequest::where(['seller_id' => auth()->user()->id])->find($id);
         if(!$withdraw){
             Toastr::warning('Invalid withdraw!');
             return redirect()->route('seller.delivery-man.withdraw-list');
@@ -108,7 +108,7 @@ class DeliverymanWithdrawController extends Controller
         $pending = session()->has('delivery_withdraw_status_filter') && session('delivery_withdraw_status_filter') == 'pending' ? 1 : 0;
 
         $withdraw_req = WithdrawRequest::with(['delivery_men'])
-            ->where('seller_id', auth('seller')->user()->id)
+            ->where('seller_id', auth()->user()->id)
             ->whereNotNull('delivery_man_id')
             ->when($all, function ($query) {
                 return $query;

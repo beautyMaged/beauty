@@ -7,10 +7,10 @@
                 @php($e_commerce_logo=\App\Model\BusinessSetting::where(['type'=>'company_web_logo'])->first()->value)
                 <a class="navbar-brand" href="{{route('admin.dashboard.index')}}" aria-label="">
                     <img class="navbar-brand-logo"
-                         onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                         onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                          src="{{asset("storage/company/$e_commerce_logo")}}" alt="Logo">
                     <img class="navbar-brand-logo-mini"
-                         onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                         onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                          src="{{asset("storage/company/$e_commerce_logo")}}"
                          alt="Logo">
                 </a>
@@ -148,7 +148,7 @@
                                 </div>
                                 <div class="avatar border avatar-circle">
                                     <img class="avatar-img"
-                                         onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                         onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                          src="{{asset('storage/admin')}}/{{auth('admin')->user()->image}}"
                                          alt="Image Description">
                                     <span class="d-none avatar-status avatar-sm-status avatar-status-success"></span>
@@ -161,7 +161,7 @@
                                     <div class="media align-items-center text-break">
                                         <div class="avatar avatar-sm avatar-circle mr-2">
                                             <img class="avatar-img"
-                                                 onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                                 onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                                  src="{{asset('storage/admin')}}/{{auth('admin')->user()->image}}"
                                                  alt="Image Description">
                                         </div>

@@ -57,7 +57,7 @@
                     <div class="__media-wrapper card-body">
                         <div class="media __incoming-msg">
                             <img class="rounded-circle __img-40" style="text-align: {{Session::get('direction') === "rtl" ? 'left' : 'right'}};"
-                                onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                                onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                                 src="{{asset('storage/app/public/profile')}}/{{auth('customer')->user()->image}}"
                                 alt="{{auth('customer')->user()->f_name}}"/>
                             <div class="media-body">
@@ -85,7 +85,7 @@
                             @if($conversation['admin_message'] == null)
                                 <div class="media __incoming-msg">
                                     <img class="rounded-circle" height="40" width="40"
-                                        onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                                        onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                                         src="{{asset('storage/app/public/profile')}}/{{auth('customer')->user()->image}}"
                                         alt="{{auth('customer')->user()->f_name}}"/>
                                     <div class="media-body">
