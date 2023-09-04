@@ -14,6 +14,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'], function () {
+    Route::get('/', fn () => redirect()->route('seller.auth.login'));
 
     /*authentication*/
     Route::group(['namespace' => 'Auth', 'prefix' => 'auth', 'as' => 'auth.'], function () {
@@ -31,7 +32,7 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
     });
 
     /*authenticated*/
-    Route::group(['middleware' => ['seller']], function () {
+    Route::middleware('seller')->group(function () {
         //dashboard routes
 
         Route::get('/get-order-data', 'SystemController@order_data')->name('get-order-data');
@@ -55,7 +56,7 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
             Route::get('get-variations', 'ProductController@get_variations')->name('get-variations');
             Route::post('update-quantity', 'ProductController@update_quantity')->name('update-quantity');
             Route::get('edit/{id}', 'ProductController@edit')->name('edit');
-            Route::post('update/{id}', 'ProductController@update')->name('update');
+            Route::post('update/{product}', 'ProductController@update')->name('update');
             Route::post('sku-combination', 'ProductController@sku_combination')->name('sku-combination');
             Route::get('get-categories', 'ProductController@get_categories')->name('get-categories');
             Route::get('barcode', 'ProductController@get_categories')->name('get-categories');
@@ -89,7 +90,6 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
             Route::get('quick-view-details', 'CouponController@quick_view_details')->name('quick-view-details');
             Route::get('status/{id}/{status}', 'CouponController@status_update')->name('status');
             Route::delete('delete/{id}', 'CouponController@delete')->name('delete');
-
         });
         Route::group(['prefix' => 'transaction', 'as' => 'transaction.'], function () {
             Route::get('order-list', 'TransactionReportController@order_transaction_list')->name('order-list');
@@ -107,7 +107,6 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
             Route::get('details/{id}', 'RefundController@details')->name('details');
             Route::get('inhouse-order-filter', 'RefundController@inhouse_order_filter')->name('inhouse-order-filter');
             Route::post('refund-status-update', 'RefundController@refund_status_update')->name('refund-status-update');
-
         });
         Route::group(['prefix' => 'orders', 'as' => 'orders.'], function () {
             Route::get('list/{status}', 'OrderController@list')->name('list');
@@ -119,7 +118,7 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
             Route::post('payment-status', 'OrderController@payment_status')->name('payment-status');
             Route::post('digital-file-upload-after-sell', 'OrderController@digital_file_upload_after_sell')->name('digital-file-upload-after-sell');
 
-            Route::post('update-deliver-info','OrderController@update_deliver_info')->name('update-deliver-info');
+            Route::post('update-deliver-info', 'OrderController@update_deliver_info')->name('update-deliver-info');
             Route::get('add-delivery-man/{order_id}/{d_man_id}', 'OrderController@add_delivery_man')->name('add-delivery-man');
             Route::get('export-order-data/{status}', 'OrderController@bulk_export_data')->name('order-bulk-export');
         });
@@ -142,16 +141,16 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
             Route::post('digital-file-upload-after-sell', 'POSController@digital_file_upload_after_sell')->name('digital-file-upload-after-sell');
             Route::get('invoice/{id}', 'POSController@generate_invoice');
             Route::any('store-keys', 'POSController@store_keys')->name('store-keys');
-            Route::get('search-products','POSController@search_product')->name('search-products');
-            Route::get('order-bulk-export','POSController@bulk_export_data')->name('order-bulk-export');
+            Route::get('search-products', 'POSController@search_product')->name('search-products');
+            Route::get('order-bulk-export', 'POSController@bulk_export_data')->name('order-bulk-export');
 
 
             Route::post('coupon-discount', 'POSController@coupon_discount')->name('coupon-discount');
-            Route::get('change-cart','POSController@change_cart')->name('change-cart');
-            Route::get('new-cart-id','POSController@new_cart_id')->name('new-cart-id');
-            Route::post('remove-discount','POSController@remove_discount')->name('remove-discount');
-            Route::get('clear-cart-ids','POSController@clear_cart_ids')->name('clear-cart-ids');
-            Route::get('get-cart-ids','POSController@get_cart_ids')->name('get-cart-ids');
+            Route::get('change-cart', 'POSController@change_cart')->name('change-cart');
+            Route::get('new-cart-id', 'POSController@new_cart_id')->name('new-cart-id');
+            Route::post('remove-discount', 'POSController@remove_discount')->name('remove-discount');
+            Route::get('clear-cart-ids', 'POSController@clear_cart_ids')->name('clear-cart-ids');
+            Route::get('get-cart-ids', 'POSController@get_cart_ids')->name('get-cart-ids');
 
             Route::post('customer-store', 'POSController@customer_store')->name('customer-store');
         });
@@ -161,7 +160,6 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
             Route::get('list', 'ReviewsController@list')->name('list');
             Route::get('export', 'ReviewsController@export')->name('export')->middleware('actch');
             Route::get('status/{id}/{status}', 'ReviewsController@status')->name('status');
-
         });
 
         // Messaging
@@ -180,7 +178,6 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
 
             Route::get('bank-edit/{id}', 'ProfileController@bank_edit')->name('bankInfo');
             Route::post('bank-update/{id}', 'ProfileController@bank_update')->name('bank_update');
-
         });
         Route::group(['prefix' => 'shop', 'as' => 'shop.'], function () {
             Route::get('view', 'ShopController@view')->name('view');
@@ -219,7 +216,6 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
                 Route::get('cancel/{id}', 'WithdrawController@close_request')->name('cancel');
                 Route::post('status-filter', 'WithdrawController@status_filter')->name('status-filter');
             });
-
         });
 
         Route::group(['prefix' => 'delivery-man', 'as' => 'delivery-man.'], function () {
@@ -245,7 +241,7 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
             Route::get('order-wise-earning/{id}', 'DeliveryManController@order_wise_earning')->name('order-wise-earning');
             Route::get('ajax-order-status-history/{order}', 'DeliveryManController@ajax_order_status_history')->name('ajax-order-status-history');
 
-            Route::group(['prefix' => 'emergency-contact', 'as' => 'emergency-contact.'], function (){
+            Route::group(['prefix' => 'emergency-contact', 'as' => 'emergency-contact.'], function () {
                 Route::get('/', 'EmergencyContactController@emergency_contact')->name('index');
                 Route::post('add', 'EmergencyContactController@add')->name('add');
                 Route::post('ajax-status-change', 'EmergencyContactController@ajax_status_change')->name('ajax-status-change');
@@ -255,5 +251,4 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
             Route::get('rating/{id}', 'DeliveryManController@rating')->name('rating');
         });
     });
-
 });

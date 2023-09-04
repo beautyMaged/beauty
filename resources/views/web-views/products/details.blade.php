@@ -209,7 +209,7 @@
                                                         class="cz-preview-item d-flex align-items-center justify-content-center {{$key==0?'active':''}}"
                                                         id="image{{$photo->color}}">
                                                         <img class="cz-image-zoom img-responsive w-100 "
-                                                             onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                                             onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                                              src="{{asset("storage/product/$photo->image_name")}}"
                                                              data-zoom="{{asset("storage/product/$photo->image_name")}}"
                                                              alt="Product image" width="">
@@ -220,7 +220,7 @@
                                                         class="cz-preview-item d-flex align-items-center justify-content-center {{$key==0?'active':''}}"
                                                         id="image{{$key}}">
                                                         <img class="cz-image-zoom img-responsive w-100 "
-                                                             onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                                             onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                                              src="{{asset("storage/product/$photo->image_name")}}"
                                                              data-zoom="{{asset("storage/product/$photo->image_name")}}"
                                                              alt="Product image" width="">
@@ -234,7 +234,7 @@
                                                     class="cz-preview-item d-flex align-items-center justify-content-center {{$key==0?'active':''}}"
                                                     id="image{{$key}}">
                                                     <img class="cz-image-zoom img-responsive w-100 "
-                                                         onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                                         onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                                          src="{{(is_string($photo)) ? asset("storage/product/$photo") : $photo->cdn}}"
                                                          data-zoom="{{(is_string($photo)) ? asset("storage/product/$photo") : $photo->cdn}}"
                                                          alt="Product image" width="">
@@ -257,7 +257,7 @@
                                                                    id="preview-img{{$photo->color}}"
                                                                    href="#image{{$photo->color}}">
                                                                     <img
-                                                                        onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                                                        onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                                                         src="{{asset("storage/product/$photo->image_name")}}"
                                                                         alt="Product thumb" style="border-radius: 3px">
                                                                 </a>
@@ -267,7 +267,7 @@
                                                                 <a class="cz-thumblist-item  {{$key==0?'active':''}} d-flex align-items-center justify-content-center"
                                                                    id="preview-img{{$key}}" href="#image{{$key}}">
                                                                     <img
-                                                                        onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                                                        onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                                                         src="{{asset("storage/product/$photo->image_name")}}"
                                                                         alt="Product thumb">
                                                                 </a>
@@ -280,7 +280,7 @@
                                                             <a class="cz-thumblist-item  {{$key==0?'active':''}} d-flex align-items-center justify-content-center"
                                                                id="preview-img{{$key}}" href="#image{{$key}}">
                                                                 <img
-                                                                    onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                                                    onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                                                     src="{{(is_string($photo)) ? asset("storage/product/$photo") : $photo->cdn}}"
                                                                     alt="Product thumb">
                                                             </a>

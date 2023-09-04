@@ -23,7 +23,7 @@ class ProductReportController extends Controller
         $from = $request['from'];
         $to = $request['to'];
         $date_type = $request['date_type'] ?? 'this_year';
-        $seller_id = auth('seller')->id();
+        $seller_id = auth()->id();
         $query_param = ['search' => $search, 'date_type' => $date_type, 'from' => $from, 'to' => $to];
 
         $chart_data = self::all_product_chart_filter($request);
@@ -267,7 +267,7 @@ class ProductReportController extends Controller
 
     public function all_product_date_common_query($start_date, $end_date)
     {
-        $seller_id = auth('seller')->id();
+        $seller_id = auth()->id();
         $query = Product::where(['user_id' => $seller_id, 'added_by' => 'seller'])
             ->whereDate('created_at', '>=', $start_date)
             ->whereDate('created_at', '<=', $end_date);
@@ -298,7 +298,7 @@ class ProductReportController extends Controller
         $from = $request['from'];
         $to = $request['to'];
         $date_type = $request['date_type'] ?? 'this_year';
-        $seller_id = auth('seller')->id();
+        $seller_id = auth()->id();
 
         $product_query = Product::with(['reviews'])
             ->with(['order_details' => function ($query) {
@@ -373,7 +373,7 @@ class ProductReportController extends Controller
     public function stock_product_common_query($request){
         $sort = $request['sort'] ?? 'ASC';
         $category_id = $request['category_id'] ?? 'all';
-        return Product::where(['product_type' => 'physical', 'added_by'=>'seller','user_id'=>auth('seller')->id()])
+        return Product::where(['product_type' => 'physical', 'added_by'=>'seller','user_id'=>auth()->id()])
             ->when($category_id && $category_id!='all', function($query) use($category_id) {
                 $query->whereJsonContains('category_ids', ["id" => $category_id]);
             })

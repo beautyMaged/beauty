@@ -14,7 +14,7 @@
                 <!-- Page Title -->
                 <div class="">
                     <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
-                        <img width="20" onerror="this.src='{{asset('assets/back-end/img/160x160/img2.jpg')}}'"
+                        <img width="20" onerror="this.onerror=null;this.src='{{asset('assets/back-end/img/160x160/img2.jpg')}}'"
                              src="{{asset('/public/assets/back-end/img/products.png')}}" alt="">
                         {{$product['name']}}
                     </h2>
@@ -49,7 +49,7 @@
                         <div class="d-flex align-items-center">
                             <img
                                 class="avatar avatar-xxl avatar-4by3 {{Session::get('direction') === "rtl" ? 'ml-4' : 'mr-4'}}"
-                                onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                 src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}"
                                 alt="Image Description">
 
@@ -215,7 +215,7 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <img class="w-100"
-                                                     onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                                     onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                                      src="{{asset("storage/app/public/product/$photo")}}"
                                                      alt="Product image">
 
@@ -256,7 +256,7 @@
                                         <div class="avatar avatar-circle">
                                             <img
                                                 class="avatar-img"
-                                                onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                                onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                                 src="{{asset('storage/app/public/profile/'.$review->customer->image??"")}}"
                                                 alt="Image Description">
                                         </div>
@@ -287,7 +287,7 @@
                                                    href="{{asset('storage/app/public/review')}}/{{$img}}"
                                                    data-lightbox="mygallery">
                                                     <img class="p-2" width="60" height="60"
-                                                         onerror="this.src='{{asset('assets/back-end/img/160x160/img2.jpg')}}'"
+                                                         onerror="this.onerror=null;this.src='{{asset('assets/back-end/img/160x160/img2.jpg')}}'"
                                                          src="{{asset('storage/app/public/review')}}/{{$img}}" alt="">
                                                 </a>
                                             @endforeach

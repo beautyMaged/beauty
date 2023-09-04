@@ -63,7 +63,7 @@
             <center>
                 <img width="200"
                      src="{{asset('storage/company')}}/{{\App\CPU\Helpers::get_business_settings('loader_gif')}}"
-                     onerror="this.src='{{asset('assets/front-end/img/loader.gif')}}'">
+                     onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/loader.gif')}}'">
             </center>
         </div>
     </div>

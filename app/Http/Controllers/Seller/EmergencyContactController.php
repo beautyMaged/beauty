@@ -20,7 +20,7 @@ class EmergencyContactController extends Controller
             return redirect()->route('seller.auth.login');
         }
 
-        $contacts = EmergencyContact::where('user_id', auth('seller')->user()->id)->latest()->paginate(Helpers::pagination_limit());
+        $contacts = EmergencyContact::where('user_id', auth()->user()->id)->latest()->paginate(Helpers::pagination_limit());
         return view('seller-views.delivery-man.emergency-contact', compact('contacts'));
     }
 
@@ -31,7 +31,7 @@ class EmergencyContactController extends Controller
             'phone' => 'required'
         ]);
         EmergencyContact::create([
-            'user_id' => auth('seller')->user()->id,
+            'user_id' => auth()->user()->id,
             'name' => $request->input('name'),
             'phone' => $request->input('phone'),
             'status' => 1
@@ -42,7 +42,7 @@ class EmergencyContactController extends Controller
 
     public function ajax_status_change(Request $request)
     {
-        $status = EmergencyContact::where(['user_id' => auth('seller')->user()->id, 'id' => $request->id])
+        $status = EmergencyContact::where(['user_id' => auth()->user()->id, 'id' => $request->id])
             ->update(['status' => $request->status]);
         if ($status == true) {
             return [ 'message' => translate('contact_status_changed_successfully!')];
@@ -55,7 +55,7 @@ class EmergencyContactController extends Controller
 
     public function destroy(Request $request)
     {
-        $delete = EmergencyContact::where(['user_id' => auth('seller')->user()->id, 'id' => $request->id])
+        $delete = EmergencyContact::where(['user_id' => auth()->user()->id, 'id' => $request->id])
             ->delete();
         if ($delete == true) {
             Toastr::success(translate('emergency_contact_deleted_successfully!'));

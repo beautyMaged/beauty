@@ -12,7 +12,7 @@ class ReviewsController extends Controller
 {
     public function list(Request $request) {
 //search
-        $sellerId = auth('seller')->id();
+        $sellerId = auth()->id();
 
         $query_param = [];
         $search = $request['search'];

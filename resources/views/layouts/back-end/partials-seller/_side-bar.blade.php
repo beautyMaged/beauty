@@ -8,7 +8,7 @@
                     @php($shop=\App\Model\Shop::where(['seller_id'=>auth('seller')->id()])->first())
                     <a class="navbar-brand" href="{{route('seller.dashboard.index')}}" aria-label="Front">
                         @if (isset($shop))
-                            <img onerror="this.src='{{asset('assets/back-end/img/900x400/img1.jpg')}}'"
+                            <img onerror="this.onerror=null;this.src='{{asset('assets/back-end/img/900x400/img1.jpg')}}'"
                                 class="navbar-brand-logo-mini for-seller-logo"
                                 src="{{asset("storage/shop/$shop->image")}}" alt="Logo">
                         @else

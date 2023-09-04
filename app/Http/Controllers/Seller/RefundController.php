@@ -22,7 +22,7 @@ class RefundController extends Controller
     public function list(Request $request, $status)
     {
         $refund_list = RefundRequest::whereHas('order', function ($query) {
-            $query->where('seller_is', 'seller')->where('seller_id',auth('seller')->id());
+            $query->where('seller_is', 'seller')->where('seller_id',auth()->id());
         });
         $search = $request->search;
         if ($request->has('search')) {
@@ -42,7 +42,7 @@ class RefundController extends Controller
     public function details($id)
     {
         $refund = RefundRequest::whereHas('order', function ($query) {
-            $query->where('seller_is', 'seller')->where('seller_id',auth('seller')->id());
+            $query->where('seller_is', 'seller')->where('seller_id',auth()->id());
         })->find($id);
 
         return view('seller-views.refund.details',compact('refund'));
@@ -50,7 +50,7 @@ class RefundController extends Controller
     public function refund_status_update(Request $request)
     {
         $refund = RefundRequest::whereHas('order', function ($query) {
-            $query->where('seller_is', 'seller')->where('seller_id',auth('seller')->id());
+            $query->where('seller_is', 'seller')->where('seller_id',auth()->id());
                 })->find($request->id);
 
         $user = User::find($refund->customer_id);
@@ -88,7 +88,7 @@ class RefundController extends Controller
             $refund_status = new RefundStatus;
             $refund_status->refund_request_id = $refund->id;
             $refund_status->change_by = 'seller';
-            $refund_status->change_by_id = auth('seller')->id();
+            $refund_status->change_by_id = auth()->id();
             $refund_status->status = $request->refund_status;
             if($request->refund_status == 'pending')
             {

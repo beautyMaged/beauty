@@ -16,7 +16,7 @@ class DeliveryManCashCollectController extends Controller
 {
     public function collect_cash($id)
     {
-        $delivery_man = DeliveryMan::with('wallet')->where('seller_id',auth('seller')->user()->id)->find($id);
+        $delivery_man = DeliveryMan::with('wallet')->where('seller_id',auth()->user()->id)->find($id);
         if(!$delivery_man){
             Toastr::warning(translate('invalid_deliveryman!'));
             return redirect('seller/delivery-man/list');
@@ -42,7 +42,7 @@ class DeliveryManCashCollectController extends Controller
         $wallet->cash_in_hand -= $request->input('amount');
         DeliveryManTransaction::create([
             'delivery_man_id' => $id,
-            'user_id'         => auth('seller')->user()->id,
+            'user_id'         => auth()->user()->id,
             'user_type'       => 'seller',
             'credit'           => BackEndHelper::currency_to_usd($request->input('amount')),
             'transaction_type' => 'cash_in_hand'

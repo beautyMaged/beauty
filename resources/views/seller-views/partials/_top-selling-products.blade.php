@@ -19,7 +19,7 @@
                             <div class="d-flex gap-10">
                                 <img class="avatar avatar-lg rounded avatar-bordered"
                                      src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$item->product['thumbnail']}}"
-                                     onerror="this.src='{{asset('assets/back-end/img/160x160/img2.jpg')}}'"
+                                     onerror="this.onerror=null;this.src='{{asset('assets/back-end/img/160x160/img2.jpg')}}'"
                                      alt="{{$item->product->name}} image">
                                 <span class="title-color">{{substr($item->product['name'],0,20)}} {{strlen($item->product['name'])>20?'...':''}}</span>
                             </div>

@@ -25,7 +25,6 @@
                 </a>
             </div>
         </div>
-
         @if($product['added_by'] == 'seller' && ($product['request_status'] == 0 || $product['request_status'] == 1))
         <div class="d-flex justify-content-sm-end flex-wrap gap-2 mb-3">
             <div>
@@ -90,7 +89,7 @@
                         <div class="d-flex align-items-center">
                             <img
                                 class="avatar avatar-xxl avatar-4by3 {{Session::get('direction') === "rtl" ? 'ml-4' : 'mr-4'}}"
-                                onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                 src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}"
                                 alt="Image Description">
 
@@ -251,7 +250,7 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <img class="width-100"
-                                                    onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                                    onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
 {{--                                                    src="{{asset("storage/product/$photo")}}" alt="Product image"--}}
                                                      src="{{(is_string($photo)) ? asset("storage/product/$photo") : $photo->cdn}}" alt="Product image">
 
@@ -292,7 +291,7 @@
                                     <div class="avatar avatar-circle">
                                         <img
                                             class="avatar-img"
-                                            onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                            onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                             src="{{asset('storage/profile/'.$review->customer->image)}}"
                                             alt="Image Description">
                                     </div>

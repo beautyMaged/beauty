@@ -131,7 +131,7 @@
                                             <td>1</td>
                                             <td>
                                                 <div class="media align-items-center gap-10">
-                                                    <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail->product_all_status['thumbnail']}}" onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt="">
+                                                    <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail->product_all_status['thumbnail']}}" onerror="this.onerror=null;this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" class="avatar avatar-60 rounded" alt="">
                                                     @if($detail->product_all_status->product_type == 'digital')
                                                         <button type="button" class="btn btn-sm btn--primary mt-1" title="File Upload" data-toggle="modal" data-target="#fileUploadModal-{{ $detail->id }}" onclick="modalFocus('fileUploadModal-{{ $detail->id }}')">
                                                             <i class="tio-file-outlined"></i> File
@@ -257,7 +257,7 @@
                             <div class="media flex-wrap gap-3">
                                 <div class="">
                                     <img class="avatar rounded-circle avatar-70"
-                                        onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                                        onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                                         src="{{asset('storage/app/public/profile/'.$order->customer->image)}}"
                                         alt="Image">
                                 </div>

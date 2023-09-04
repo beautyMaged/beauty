@@ -21,30 +21,30 @@ class ChattingController extends Controller
      */
     public function chat(Request $request, $type)
     {
-        $shop = Shop::where('seller_id', auth('seller')->id())->first();
+        $shop = Shop::where('seller_id', auth()->id())->first();
         $shop_id = $shop->id;
 
         if ($type == 'delivery-man') {
-            $last_chat = Chatting::where('seller_id', auth('seller')->id())
+            $last_chat = Chatting::where('seller_id', auth()->id())
                 ->whereNotNull(['delivery_man_id', 'seller_id'])
                 ->orderBy('created_at', 'DESC')
                 ->first();
 
             if (isset($last_chat)) {
-                Chatting::where(['seller_id'=> auth('seller')->id(), 'delivery_man_id'=> $last_chat->delivery_man_id])->update([
+                Chatting::where(['seller_id'=> auth()->id(), 'delivery_man_id'=> $last_chat->delivery_man_id])->update([
                     'seen_by_seller' => 1
                 ]);
 
                 $chattings = Chatting::join('delivery_men', 'delivery_men.id', '=', 'chattings.delivery_man_id')
                     ->select('chattings.*', 'delivery_men.f_name', 'delivery_men.l_name', 'delivery_men.image')
-                    ->where('chattings.seller_id', auth('seller')->id())
+                    ->where('chattings.seller_id', auth()->id())
                     ->where('delivery_man_id', $last_chat->delivery_man_id)
                     ->orderBy('chattings.created_at', 'desc')
                     ->get();
 
                 $chattings_user = Chatting::join('delivery_men', 'delivery_men.id', '=', 'chattings.delivery_man_id')
                     ->select('chattings.*', 'delivery_men.f_name', 'delivery_men.l_name', 'delivery_men.image', 'delivery_men.phone')
-                    ->where('chattings.seller_id', auth('seller')->id())
+                    ->where('chattings.seller_id', auth()->id())
                     ->orderBy('chattings.created_at', 'desc')
                     ->get()
                     ->unique('delivery_man_id');
@@ -90,23 +90,23 @@ class ChattingController extends Controller
     public function ajax_message_by_user(Request $request)
     {
         if ($request->has('delivery_man_id')) {
-            Chatting::where(['seller_id' => auth('seller')->id(), 'delivery_man_id' => $request->delivery_man_id])
+            Chatting::where(['seller_id' => auth()->id(), 'delivery_man_id' => $request->delivery_man_id])
                 ->update([
                     'seen_by_seller' => 1
                 ]);
 
             $sellers = Chatting::join('delivery_men', 'delivery_men.id', '=', 'chattings.delivery_man_id')
                 ->select('chattings.*', 'delivery_men.f_name', 'delivery_men.l_name', 'delivery_men.image')
-                ->where('chattings.seller_id', auth('seller')->id())
+                ->where('chattings.seller_id', auth()->id())
                 ->where('chattings.delivery_man_id', $request->delivery_man_id)
                 ->orderBy('created_at', 'ASC')
                 ->get();
 
         }
         elseif ($request->has('user_id')) {
-            $shop_id = Shop::where('seller_id', auth('seller')->id())->first()->id;
+            $shop_id = Shop::where('seller_id', auth()->id())->first()->id;
 
-            Chatting::where(['seller_id' => auth('seller')->id(), 'user_id' => $request->user_id])
+            Chatting::where(['seller_id' => auth()->id(), 'user_id' => $request->user_id])
                 ->update([
                     'seen_by_seller' => 1
                 ]);
@@ -132,7 +132,7 @@ class ChattingController extends Controller
             return response()->json(translate('type_something!'), 403);
         }
 
-        $shop_id = Shop::where('seller_id', auth('seller')->id())->first()->id;
+        $shop_id = Shop::where('seller_id', auth()->id())->first()->id;
 
         $message = $request->message;
         $time = now();
@@ -141,7 +141,7 @@ class ChattingController extends Controller
 
             Chatting::create([
                 'delivery_man_id' => $request->delivery_man_id,
-                'seller_id' => auth('seller')->id(),
+                'seller_id' => auth()->id(),
                 'shop_id' => $shop_id,
                 'message' => $request->message,
                 'sent_by_seller' => 1,
@@ -163,7 +163,7 @@ class ChattingController extends Controller
         }elseif ($request->has('user_id')) {
             Chatting::create([
                 'user_id' => $request->user_id,
-                'seller_id' => auth('seller')->id(),
+                'seller_id' => auth()->id(),
                 'shop_id' => $shop_id,
                 'message' => $request->message,
                 'sent_by_seller' => 1,

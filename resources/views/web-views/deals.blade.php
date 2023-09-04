@@ -67,7 +67,7 @@
     <div class="for-banner container">
 
         <img class="d-block for-image"
-             onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+             onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
              src="{{asset('storage/deal')}}/{{$deal['banner']}}"
              alt="Shop Converse">
 

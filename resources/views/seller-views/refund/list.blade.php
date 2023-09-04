@@ -85,7 +85,7 @@
                             @if ($refund->product!=null)
                                 <div class="d-flex flex-wrap gap-2">
                                     <a href="{{route('seller.product.view',[$refund->product->id])}}">
-                                        <img onerror="this.src='{{asset('/public/assets/back-end/img/brand-logo.png')}}'"
+                                        <img onerror="this.onerror=null;this.src='{{asset('/public/assets/back-end/img/brand-logo.png')}}'"
                                              src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{ $refund->product->thumbnail }}"
                                              class="avatar border" alt="">
                                     </a>

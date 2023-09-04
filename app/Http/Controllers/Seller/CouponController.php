@@ -21,7 +21,7 @@ class CouponController extends Controller
     {
         $query_param = [];
         $search = $request['search'];
-        $coupons = Coupon::whereIn('seller_id', [auth('seller')->user()->id, '0'])
+        $coupons = Coupon::whereIn('seller_id', [auth()->user()->id, '0'])
                 ->when(isset($request['search']) && !empty($request['search']), function($query) use($request){
                     $key = explode(' ', $request['search']);
                     foreach ($key as $value) {
@@ -75,7 +75,7 @@ class CouponController extends Controller
         $coupon->expire_date = $request->expire_date;
         $coupon->status = 1;
         $coupon->coupon_bearer = 'seller';
-        $coupon->seller_id = auth('seller')->user()->id;
+        $coupon->seller_id = auth()->user()->id;
         $coupon->customer_id = $request->customer_id;
         $coupon->limit = $request->limit;
         $coupon->min_purchase = Convert::usd($request->min_purchase);
@@ -94,7 +94,7 @@ class CouponController extends Controller
 
     public function edit($id)
     {
-        $coupon = Coupon::where('coupon_bearer','seller')->whereIn('seller_id', [auth('seller')->user()->id, '0'])->find($id);
+        $coupon = Coupon::where('coupon_bearer','seller')->whereIn('seller_id', [auth()->user()->id, '0'])->find($id);
 
         if(!$coupon){
             Toastr::error('Invalid Coupon!');
@@ -131,7 +131,7 @@ class CouponController extends Controller
             return redirect()->back();
         }
 
-        $coupon = Coupon::where('coupon_bearer','seller')->whereIn('seller_id', [auth('seller')->user()->id, '0'])->find($id);
+        $coupon = Coupon::where('coupon_bearer','seller')->whereIn('seller_id', [auth()->user()->id, '0'])->find($id);
         if(!$coupon){
             Toastr::warning(\App\CPU\translate('coupon_not_found'));
         }
@@ -162,7 +162,7 @@ class CouponController extends Controller
 
     public function status_update(Request $request)
     {
-        $coupon = Coupon::where('coupon_bearer','seller')->whereIn('seller_id', [auth('seller')->user()->id, '0'])->find($request->id);
+        $coupon = Coupon::where('coupon_bearer','seller')->whereIn('seller_id', [auth()->user()->id, '0'])->find($request->id);
         if(!$coupon){
             Toastr::warning(\App\CPU\translate('coupon_not_found'));
         }
@@ -174,7 +174,7 @@ class CouponController extends Controller
 
     public function quick_view_details(Request $request)
     {
-        $coupon = Coupon::whereIn('seller_id',[auth('seller')->user()->id, '0'])->find($request->id);
+        $coupon = Coupon::whereIn('seller_id',[auth()->user()->id, '0'])->find($request->id);
 
         return response()->json([
             'view' => view('seller-views.coupon.details-quick-view', compact('coupon'))->render(),
@@ -184,7 +184,7 @@ class CouponController extends Controller
     public function delete($id)
     {
         $coupon = Coupon::where(['added_by'=>'seller', 'coupon_bearer'=>'seller'])
-        ->whereIn('seller_id', [auth('seller')->user()->id, '0'])->find($id);
+        ->whereIn('seller_id', [auth()->user()->id, '0'])->find($id);
         if(!$coupon){
             Toastr::warning(\App\CPU\translate('coupon_not_found'));
         }

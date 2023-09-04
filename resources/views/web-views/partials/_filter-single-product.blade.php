@@ -30,7 +30,7 @@
                     <img
 {{--                        src="{{ \App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}"--}}
                         src="{{is_object(json_decode($product['thumbnail'])) ? (json_decode($product['thumbnail']))->cdn : \App\CPU\ProductManager::product_image_path('thumbnail').'/'.$product['thumbnail']}}"
-                        onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'">
+                        onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'">
                 </a>
             </div>
         </div>

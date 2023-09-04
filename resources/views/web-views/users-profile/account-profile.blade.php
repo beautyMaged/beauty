@@ -24,7 +24,7 @@
                                 <div class="d-flex mb-3 mb-md-0 align-items-center">
                                     <img id="blah"
                                         class="rounded-circle border __inline-48"
-                                        onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                        onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                         src="{{asset('storage/app/public/profile')}}/{{$customerDetail['image']}}">
 
                                     <div class="{{Session::get('direction') === "rtl" ? 'pr-2' : 'pl-2'}}">

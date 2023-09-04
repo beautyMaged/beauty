@@ -10,7 +10,7 @@
                             <div class="wishlist_product_img col-md-4 col-xl-2 col-lg-3 col-sm-4">
                                 <a href="{{route('product',$product->slug)}}" class="d-block h-100">
                                     <img class="__img-full" src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}"
-                                    onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'" alt="wishlist"
+                                    onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'" alt="wishlist"
                                         >
                                 </a>
                             </div>

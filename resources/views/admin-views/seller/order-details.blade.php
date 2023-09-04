@@ -210,7 +210,7 @@
                                 <div class="media">
                                     <div class="avatar avatar-xl {{Session::get('direction') === "rtl" ? 'ml-3' : 'mr-3'}}">
                                         <img class="img-fluid"
-                                             onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                             onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                              src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail->product['thumbnail']}}"
                                              alt="Image Description">
                                     </div>
@@ -385,7 +385,7 @@
                                 <div class="avatar avatar-circle {{Session::get('direction') === "rtl" ? 'ml-3' : 'mr-3'}}">
                                     <img
                                         class="avatar-img"
-                                        onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                        onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                         src="{{asset('storage/profile/'.$order->customer->image)}}"
                                         alt="Image Description">
                                 </div>

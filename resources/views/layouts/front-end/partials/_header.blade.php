@@ -72,7 +72,7 @@
                         <a class="navbar-tool ml-lg-3" type="button" data-toggle="dropdown" aria-haspopup="true"aria-expanded="false">
                             <div class="navbar-tool-icon-box bg-secondary">
                                 <div class="navbar-tool-icon-box bg-secondary">
-                                    <img src="{{asset('storage/profile/' . auth('customer')->user()->image)}}" onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'" class="img-profile rounded-circle __inline-14">
+                                    <img src="{{asset('storage/profile/' . auth('customer')->user()->image)}}" onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'" class="img-profile rounded-circle __inline-14">
                                 </div>
                             </div>
                             <div class="navbar-tool-text mr-3 pt-1" style="display: inline-block">
@@ -218,7 +218,7 @@
             </div>
             <div class="col-xxl-6 col-xl-6 col-md-6 col-sm-12 col-12 bold pt-2 mobile_hide">
                 <a class="navbar-brand d-none d-sm-block {{Session::get('direction') === "rtl" ? 'mr-3' : 'mr-3'}} flex-shrink-0 __min-w-7rem" href="{{route('home')}}">
-                    <img class="__inline-11" src="{{asset("storage/company")."/".$web_config['web_logo']->value}}" style="height: 50px!important;" onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'" alt="{{$web_config['name']->value}}"/>
+                    <img class="__inline-11" src="{{asset("storage/company")."/".$web_config['web_logo']->value}}" style="height: 50px!important;" onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'" alt="{{$web_config['name']->value}}"/>
                 </a>
             </div>
             <div class="col-xxl-3 col-xl-3 col-md-3 col-sm-12 col-12 {{session('direction') == 'rtl' ? 'text-left' : 'text-right'}} social_icons mobile_hide" style=" {{session('direction') == 'rtl' ? 'padding-left: 23px;' : 'padding-right: 23px;'}} padding-top: 20px">
@@ -281,7 +281,7 @@
                         @endforeach
                     </div>
                 </div>
-                <a class="navbar-brand mobile_logo d-sm-none {{Session::get('direction') === "rtl" ? 'mr-2' : 'mr-2'}}" href="{{route('home')}}"> <img class="mobile-logo-img __inline-12" src="{{asset("storage/company")."/".$web_config['web_logo']->value}}" onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'" alt="{{$web_config['name']->value}}"/> </a>
+                <a class="navbar-brand mobile_logo d-sm-none {{Session::get('direction') === "rtl" ? 'mr-2' : 'mr-2'}}" href="{{route('home')}}"> <img class="mobile-logo-img __inline-12" src="{{asset("storage/company")."/".$web_config['web_logo']->value}}" onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'" alt="{{$web_config['name']->value}}"/> </a>
                 <!-- Search-->
                 <div class="input-group-overlay d-none d-md-inline-block col-lg-4 col-md-4 mx-4" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
                     <form action="{{route('products')}}" type="submit" class="search_form">
@@ -572,7 +572,7 @@
                             @php($categories=\App\CPU\CategoryManager::parents())
                             @foreach($categories as $category)
                                 <li class="dropdown">
-                                    <a href="{{route('products',['id'=> $category->id,'data_from'=>'category','page'=>1])}}"> <img src="{{asset("assets/front-end/img/sub-1.png")}}" onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'" class="__img-18" style="margin-left: 11px;"> <span class="bold {{Session::get('direction') === "rtl" ? 'pr-3' : 'pl-3'}}">{{$category->name}}</span> </a>
+                                    <a href="{{route('products',['id'=> $category->id,'data_from'=>'category','page'=>1])}}"> <img src="{{asset("assets/front-end/img/sub-1.png")}}" onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'" class="__img-18" style="margin-left: 11px;"> <span class="bold {{Session::get('direction') === "rtl" ? 'pr-3' : 'pl-3'}}">{{$category->name}}</span> </a>
                                     <a class='__ml-50px expanding_btn_sub'> <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'right' : 'left'}} __inline-16 "></i> </a>
                                     <ul class="dropdown-menu sub_dropdown-menu"
                                         style="text-align: {{Session::get('direction') === "rtl" ? 'left' : 'right'}};">

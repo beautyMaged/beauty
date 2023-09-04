@@ -63,7 +63,7 @@
                     <td>
                         <div class="media align-items-center gap-10">
                             <img class="avatar avatar-sm" src="{{asset('storage/app/public/product/thumbnail')}}/{{$cartItem['image']}}"
-                                    onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" alt="{{$cartItem['name']}} image">
+                                    onerror="this.onerror=null;this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'" alt="{{$cartItem['name']}} image">
                             <div class="media-body">
                                 <h5 class="text-hover-primary mb-0">
                                     {{Str::limit($cartItem['name'], 12)}}

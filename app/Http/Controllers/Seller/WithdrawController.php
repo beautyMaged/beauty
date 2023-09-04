@@ -83,7 +83,7 @@ class WithdrawController extends Controller
         $pending = session()->has('withdraw_status_filter') && session('withdraw_status_filter') == 'pending' ? 1 : 0;
 
         $withdraw_requests = WithdrawRequest::with(['seller'])
-            ->where(['seller_id'=>auth('seller')->id()])
+            ->where(['seller_id'=>auth()->id()])
             ->when($all, function ($query) {
                 return $query;
             })

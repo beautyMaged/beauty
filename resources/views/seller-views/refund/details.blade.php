@@ -64,7 +64,7 @@
                 <div class="card-body">
                     <div class="row gy-2">
                         <div class="col-sm-4 col-lg-2">
-                            <img onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                            <img onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                                 src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$refund->product!=null?$refund->product->thumbnail:''}}"
                                 alt="VR Collection">
                         </div>

@@ -19,7 +19,7 @@ class ShippingMethodController extends Controller
     public function index()
     {
         $shippingMethod = Helpers::get_business_settings('shipping_method');
-        $seller_id = auth('seller')->id();
+        $seller_id = auth()->id();
 
         if($shippingMethod=='sellerwise_shipping')
         {
@@ -57,7 +57,7 @@ class ShippingMethodController extends Controller
         ]);
 
         DB::table('shipping_methods')->insert([
-            'creator_id' => auth('seller')->id(),
+            'creator_id' => auth()->id(),
             'creator_type' => 'seller',
             'title' => $request['title'],
             'duration' => $request['duration'],
@@ -103,7 +103,7 @@ class ShippingMethodController extends Controller
         ]);
 
         DB::table('shipping_methods')->where(['id' => $id])->update([
-            'creator_id' => auth('seller')->id(),
+            'creator_id' => auth()->id(),
             'creator_type' => 'seller',
             'title' => $request['title'],
             'duration' => $request['duration'],

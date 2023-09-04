@@ -46,7 +46,7 @@
                                     <div class="form-group">
                                         <center>
                                             <img class="upload-img-view mb-4" id="viewer"
-                                                 onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                                                 onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                                                  src="{{asset('public/assets/admin/img/900x400/img1.jpg')}}"
                                                  alt="image"/>
                                         </center>
@@ -133,7 +133,7 @@
                                     </td>
                                     <td>
                                         <img class="min-w-75" width="75" height="75"
-                                             onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'"
+                                             onerror="this.onerror=null;this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'"
                                              src="{{asset('storage/app/public/notification')}}/{{$notification['image']}}">
                                     </td>
                                     <td id="count-{{$notification->id}}">{{ $notification['notification_count'] }}</td>

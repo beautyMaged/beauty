@@ -98,7 +98,7 @@
     <div class="product_pic d-flex align-items-center justify-content-center" style=" text-align: center;">
         <a href="{{route('product',$product->slug)}}" class="image_center">
             <img class="inline_product_image"
-                 onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                 onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                  src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}"
                  width="100%" style="height: 100%;">
         </a>

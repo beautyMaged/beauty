@@ -40,7 +40,7 @@
                 <div style="position: fixed;z-index: 9999; left: 40%;top: 37% ;width: 100%">
                     <img width="200"
                          src="{{asset('storage/app/public/company')}}/{{\App\CPU\Helpers::get_business_settings('loader_gif')}}"
-                         onerror="this.src='{{asset('public/assets/front-end/img/loader.gif')}}'">
+                         onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/loader.gif')}}'">
                 </div>
             </div>
         </div>

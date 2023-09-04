@@ -8,10 +8,10 @@
                 <a class="navbar-brand" href="{{route('seller.dashboard.index')}}" aria-label="">
                     @if (isset($shop))
                         <img class="navbar-brand-logo"
-                             onerror="this.src='{{asset('assets/back-end/img/160x160/img1.jpg')}}'"
+                             onerror="this.onerror=null;this.src='{{asset('assets/back-end/img/160x160/img1.jpg')}}'"
                              src="{{asset("storage/shop/$shop->image")}}" alt="Logo" height="40">
                         <img class="navbar-brand-logo-mini"
-                             onerror="this.src='{{asset('assets/back-end/img/160x160/img1.jpg')}}'"
+                             onerror="this.onerror=null;this.src='{{asset('assets/back-end/img/160x160/img1.jpg')}}'"
                              src="{{asset("storage/shop/$shop->image")}}"
                              alt="Logo" height="40">
 
@@ -199,7 +199,7 @@
                                 </div>
                                 <div class="avatar avatar-sm avatar-circle">
                                     <img class="avatar-img"
-                                         onerror="this.src='{{asset('assets/back-end/img/160x160/img1.jpg')}}'"
+                                         onerror="this.onerror=null;this.src='{{asset('assets/back-end/img/160x160/img1.jpg')}}'"
                                          src="{{asset('storage/seller/')}}/{{auth('seller')->user()->image}}"
                                          alt="Image Description">
                                     <span class="avatar-status avatar-sm-status avatar-status-success"></span>
@@ -213,7 +213,7 @@
                                         <div class="avatar avatar-sm avatar-circle mr-2">
 
                                             <img class="avatar-img"
-                                                 onerror="this.src='{{asset('assets/back-end/img/160x160/img1.jpg')}}'"
+                                                 onerror="this.onerror=null;this.src='{{asset('assets/back-end/img/160x160/img1.jpg')}}'"
                                                  src="{{asset('storage/seller/')}}/{{auth('seller')->user()->image}}"
                                                  alt="Image Description">
                                         </div>

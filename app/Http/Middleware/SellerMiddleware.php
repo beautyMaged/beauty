@@ -16,10 +16,10 @@ class SellerMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (auth('seller')->check() && auth('seller')->user()->status == 'approved') {
+        auth()->shouldUse('seller');
+        if (auth()->check() && auth()->user()->status == 'approved')
             return $next($request);
-        }
-        auth()->guard('seller')->logout();
+        auth()->guard()->logout();
         return redirect()->route('seller.auth.login');
     }
 }

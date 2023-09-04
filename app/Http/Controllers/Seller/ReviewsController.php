@@ -17,7 +17,7 @@ class ReviewsController extends Controller
     public function list(Request $request)
     {
         //search
-        $sellerId = auth('seller')->id();
+        $sellerId = auth()->id();
         $query_param = [];
         $search = $request['search'];
         if ($request->has('search')) {
@@ -77,7 +77,7 @@ class ReviewsController extends Controller
 
     public function export(Request $request)
     {
-        $sellerId = auth('seller')->id();
+        $sellerId = auth()->id();
         $product_id = $request['product_id'];
         $customer_id = $request['customer_id'];
         $status = $request['status'];

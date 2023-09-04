@@ -19,7 +19,7 @@
     {{--                    <div class="carousel-item {{$key==0?'active':''}}">--}}
     {{--                        <a href="{{$banner['url']}}">--}}
     {{--                            <img class="d-block w-100 __slide-img"--}}
-    {{--                                 onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"--}}
+    {{--                                 onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"--}}
     {{--                                 src="{{asset('storage/app/public/banner')}}/{{$banner['photo']}}"--}}
     {{--                                 alt="">--}}
     {{--                        </a>--}}
@@ -90,7 +90,7 @@
                         <div class="carousel-item position-relative home_carousel_item {{$key==0?'active':''}}"
                              style=" overflow: hidden">
                             <img class="d-block w-100 __slide-img"
-                                 onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                 onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                  src="{{asset('storage/banner')}}/{{$banner['photo']}}"
                                  alt="">
                             <div class="first_banner_item_details">
@@ -141,7 +141,7 @@
     {{--                    <div class="carousel-item active">--}}
     {{--                        <a href="#">--}}
     {{--                            <img class="d-block w-100 __slide-img"--}}
-    {{--                                 onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"--}}
+    {{--                                 onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"--}}
     {{--                                 src="{{asset('assets/front-end/img/banner-1.png')}}"--}}
     {{--                                 alt="">--}}
     {{--                        </a>--}}
@@ -149,7 +149,7 @@
     {{--                    <div class="carousel-item">--}}
     {{--                        <a href="#">--}}
     {{--                            <img class="d-block w-100 __slide-img"--}}
-    {{--                                 onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"--}}
+    {{--                                 onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"--}}
     {{--                                 src="{{asset('assets/front-end/img/banner-1.png')}}"--}}
     {{--                                 alt="">--}}
     {{--                        </a>--}}
@@ -157,7 +157,7 @@
     {{--                    <div class="carousel-item">--}}
     {{--                        <a href="#">--}}
     {{--                            <img class="d-block w-100 __slide-img"--}}
-    {{--                                 onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"--}}
+    {{--                                 onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"--}}
     {{--                                 src="{{asset('assets/front-end/img/banner-1.png')}}"--}}
     {{--                                 alt="">--}}
     {{--                        </a>--}}

@@ -181,7 +181,7 @@
                                             <td>
                                                 <div class="media align-items-center gap-10">
                                                     <img class="avatar avatar-60 rounded"
-                                                         onerror="this.src='{{asset('assets/back-end/img/160x160/img2.jpg')}}'"
+                                                         onerror="this.onerror=null;this.src='{{asset('assets/back-end/img/160x160/img2.jpg')}}'"
                                                          src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$detail->product_all_status['thumbnail']}}"
                                                          alt="Image Description">
                                                     <div>
@@ -457,7 +457,7 @@
                             <div class="media flex-wrap gap-3">
                                 <div class="">
                                     <img class="avatar rounded-circle avatar-70"
-                                         onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                         onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                          src="{{asset('storage/profile/'.$order->customer->image)}}"
                                          alt="Image">
                                 </div>
@@ -637,7 +637,7 @@
                             @if($order->seller_is == 'admin')
                                 <div class="mr-3">
                                     <img class="avatar rounded avatar-70"
-                                         onerror="this.src='https://6valley.6amtech.com/assets/front-end/img/image-place-holder.png'"
+                                         onerror="this.onerror=null;this.src='https://6valley.6amtech.com/assets/front-end/img/image-place-holder.png'"
                                          src="{{asset("storage/company/$company_web_logo")}}" alt="">
                                 </div>
 
@@ -649,7 +649,7 @@
                                 @if(!empty($order->seller->shop))
                                     <div class="mr-3">
                                         <img class="avatar rounded avatar-70"
-                                             onerror="this.src='https://6valley.6amtech.com/assets/front-end/img/image-place-holder.png'"
+                                             onerror="this.onerror=null;this.src='https://6valley.6amtech.com/assets/front-end/img/image-place-holder.png'"
                                              src="{{asset('storage/shop')}}/{{$order->seller->shop->image}}" alt="">
                                     </div>
                                     <div class="media-body d-flex flex-column gap-2">

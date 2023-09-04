@@ -42,7 +42,7 @@
         @php($e_commerce_logo=\App\Model\BusinessSetting::where(['type'=>'company_web_logo'])->first()->value)
         <a class="d-flex justify-content-center mb-5" href="javascript:">
             <img class="z-index-2 __w-rem"  src="{{asset("storage/app/public/company/".$e_commerce_logo)}}" alt="Logo"
-                 onerror="this.src='{{asset('public/assets/back-end/img/400x400/img2.jpg')}}'">
+                 onerror="this.onerror=null;this.src='{{asset('public/assets/back-end/img/400x400/img2.jpg')}}'">
         </a>
 
         <div class="container py-4 py-lg-5 my-4">

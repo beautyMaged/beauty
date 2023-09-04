@@ -61,7 +61,7 @@
                                 </div>
                                 <div class="text-center">
                                     <img class="upload-img-view" id="viewer"
-                                    onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                                    onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                                     src="{{asset('storage/app/public/shop/'.$shop->image)}}" alt="Product thumbnail"/>
                                 </div>
                             </div>
@@ -81,7 +81,7 @@
                                 </div>
                                 <div class="text-center">
                                     <img class="upload-img-view" id="viewerBanner"
-                                         onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                                         onerror="this.onerror=null;this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                                          src="{{asset('storage/app/public/shop/banner/'.$shop->banner)}}" alt="Product thumbnail"/>
                                 </div>
                             </div>

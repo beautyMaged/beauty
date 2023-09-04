@@ -19,13 +19,15 @@ use App\Model\Tag;
 use App\Model\Translation;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Rap2hpoutre\FastExcel\FastExcel;
 use App\Model\Cart;
+use App\Model\Seller;
+use App\Services\ProductService;
+
 use function App\CPU\translate;
 
 class ProductController extends Controller
@@ -41,33 +43,34 @@ class ProductController extends Controller
 
     public function status_update(Request $request)
     {
+        $product = Product::find($request['id']);
+        $product ? $this->authorize('view', $product) : abort(404);
         if ($request['status'] == 0) {
-            Product::where(['id' => $request['id'], 'added_by' => 'seller', 'user_id' => \auth('seller')->id()])->update([
-                'status' => $request['status'],
-            ]);
-            return response()->json([
-                'success' => 1,
-            ], 200);
-        } elseif ($request['status'] == 1) {
-            if (Product::find($request['id'])->request_status == 1) {
-                Product::where(['id' => $request['id']])->update([
-                    'status' => $request['status'],
-                ]);
+            $product->status = 0;
+            if ($product->save())
                 return response()->json([
                     'success' => 1,
                 ], 200);
-            } else {
-                return response()->json([
-                    'success' => 0,
-                ], 200);
+        }
+        if ($request['status'] == 1) {
+            if ($product->request_status == 1) {
+                $product->status = 1;
+                if ($product->save())
+                    return response()->json([
+                        'success' => 1,
+                    ], 200);
             }
         }
+        return response()->json([
+            'success' => 0,
+        ], 406);
     }
 
     public function featured_status(Request $request)
     {
         if ($request->ajax()) {
             $product = Product::find($request->id);
+            $product ? $this->authorize('view', $product) : abort(404);
             $product->featured_status = $request->status;
             $product->save();
             $data = $request->status;
@@ -75,7 +78,7 @@ class ProductController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store(Request $request, ProductService $service)
     {
         $validator = Validator::make($request->all(), [
             'name'                  => 'required',
@@ -109,10 +112,11 @@ class ProductController extends Controller
             'shipping_cost.required_if'         => 'Shipping Cost is required!',
         ]);
 
-        if(!$request->has('colors_active') && !$request->file('images')) {
+        if (!$request->has('colors_active') && !$request->file('images')) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'images', 'Product images is required!'
+                    'images',
+                    'Product images is required!'
                 );
             });
         }
@@ -121,7 +125,8 @@ class ProductController extends Controller
         if ($brand_setting && empty($request->brand_id)) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'brand_id', 'Brand is required!'
+                    'brand_id',
+                    'Brand is required!'
                 );
             });
         }
@@ -135,7 +140,8 @@ class ProductController extends Controller
         if ($request['unit_price'] <= $dis) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'unit_price', 'Discount can not be more or equal to the price!'
+                    'unit_price',
+                    'Discount can not be more or equal to the price!'
                 );
             });
         }
@@ -143,13 +149,14 @@ class ProductController extends Controller
         if (is_null($request->name[array_search('en', $request->lang)])) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'name', 'Name field is required!'
+                    'name',
+                    'Name field is required!'
                 );
             });
         }
 
         $product = new Product();
-        $product->user_id = auth('seller')->id();
+        $product->user_id = auth()->id();
         $product->added_by = "seller";
         $product->name = $request->name[array_search('en', $request->lang)];
         $product->slug = Str::slug($request->name[array_search('en', $request->lang)], '-') . '-' . Str::random(6);
@@ -157,48 +164,28 @@ class ProductController extends Controller
         $product_images = [];
         if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
             foreach ($request->colors as $color) {
-                $color_ = str_replace('#','',$color);
-                $img = 'color_image_'.$color_;
-                if($request->file($img)){
+                $color_ = str_replace('#', '', $color);
+                $img = 'color_image_' . $color_;
+                if ($request->file($img)) {
                     $image_name = ImageManager::upload('product/', 'png', $request->file($img));
                     $product_images[] = $image_name;
                     $color_image_serial[] = [
-                        'color'=>$color_,
-                        'image_name'=>$image_name,
+                        'color' => $color_,
+                        'image_name' => $image_name,
                     ];
                 }
             }
-            if(count($product_images) != count($request->colors)) {
+            if (count($product_images) != count($request->colors)) {
                 $validator->after(function ($validator) {
                     $validator->errors()->add(
-                        'images', 'Color images is required!'
+                        'images',
+                        'Color images is required!'
                     );
                 });
             }
         }
 
-        $category = [];
-
-        if ($request->category_id != null) {
-            array_push($category, [
-                'id' => $request->category_id,
-                'position' => 1,
-            ]);
-        }
-        if ($request->sub_category_id != null) {
-            array_push($category, [
-                'id' => $request->sub_category_id,
-                'position' => 2,
-            ]);
-        }
-        if ($request->sub_sub_category_id != null) {
-            array_push($category, [
-                'id' => $request->sub_sub_category_id,
-                'position' => 3,
-            ]);
-        }
-
-        $product->category_ids          = json_encode($category);
+        $product->category_ids          = $service->update_categories($request->category_id, $request->sub_category_id, $request->sub_sub_category_id);
         $product->brand_id              = $request->brand_id;
         $product->unit                  = $request->product_type == 'physical' ? $request->unit : null;
         $product->digital_product_type  = $request->product_type == 'digital' ? $request->digital_product_type : null;
@@ -265,7 +252,7 @@ class ProductController extends Controller
                 $stock_count += $item['qty'];
             }
         } else {
-            $stock_count = (integer)$request['current_stock'];
+            $stock_count = (int)$request['current_stock'];
         }
 
         if ($validator->errors()->count() > 0) {
@@ -285,10 +272,10 @@ class ProductController extends Controller
         $product->current_stock  = $request->product_type == 'physical' ? abs($stock_count) : 0;
         $product->video_provider = 'youtube';
         $product->video_url      = $request->video_link;
-        $product->request_status = Helpers::get_business_settings('new_product_approval')==1?0:1;
+        $product->request_status = Helpers::get_business_settings('new_product_approval') == 1 ? 0 : 1;
         $product->status         = 0;
         $product->shipping_cost  = $request->product_type == 'physical' ? Convert::usd($request->shipping_cost) : 0;
-        $product->multiply_qty   = ($request->product_type == 'physical') ? ($request->multiplyQTY=='on'?1:0) : 0;
+        $product->multiply_qty   = ($request->product_type == 'physical') ? ($request->multiplyQTY == 'on' ? 1 : 0) : 0;
 
         if ($request->ajax()) {
             return response()->json([], 200);
@@ -297,12 +284,12 @@ class ProductController extends Controller
                 foreach ($request->file('images') as $img) {
                     $image_name = ImageManager::upload('product/', 'png', $img);
                     $product_images[] = $image_name;
-                    if($request->has('colors_active')){
+                    if ($request->has('colors_active')) {
                         $color_image_serial[] = [
-                            'color'=>null,
-                            'image_name'=>$image_name,
+                            'color' => null,
+                            'image_name' => $image_name,
                         ];
-                    }else{
+                    } else {
                         $color_image_serial = [];
                     }
                 }
@@ -311,7 +298,7 @@ class ProductController extends Controller
             $product->images = json_encode($product_images);
             $product->thumbnail = ImageManager::upload('product/thumbnail/', 'png', $request->file('image'));
 
-            if($request->product_type == 'digital' && $request->digital_product_type == 'ready_product') {
+            if ($request->product_type == 'digital' && $request->digital_product_type == 'ready_product') {
                 $product->digital_file_ready = ImageManager::upload('product/digital-product/', $request->digital_file_ready->getClientOriginalExtension(), $request->digital_file_ready);
             }
 
@@ -324,7 +311,7 @@ class ProductController extends Controller
             if ($request->tags != null) {
                 $tags = explode(",", $request->tags);
             }
-            if(isset($tags)){
+            if (isset($tags)) {
                 foreach ($tags as $key => $value) {
                     $tag = Tag::firstOrNew(
                         ['tag' => trim($value)]
@@ -368,16 +355,15 @@ class ProductController extends Controller
         $search = $request['search'];
         if ($request->has('search')) {
             $key = explode(' ', $request['search']);
-            $products = Product::where(['added_by' => 'seller', 'user_id' => \auth('seller')->id()])
+            $products = Product::where(['added_by' => 'seller', 'user_id' => auth()->id()])
                 ->where(function ($q) use ($key) {
                     foreach ($key as $value) {
                         $q->Where('name', 'like', "%{$value}%");
                     }
                 });
             $query_param = ['search' => $request['search']];
-        } else {
-            $products = Product::where(['added_by' => 'seller', 'user_id' => \auth('seller')->id()]);
-        }
+        } else
+            $products = Product::where(['added_by' => 'seller', 'user_id' => auth()->id()]);
         $products = $products->orderBy('id', 'DESC')->paginate(Helpers::pagination_limit())->appends($query_param);
 
         return view('seller-views.product.list', compact('products', 'search'));
@@ -389,8 +375,8 @@ class ProductController extends Controller
         $sort_oqrderQty = $request['sort_oqrderQty'];
         $query_param = $request->all();
         $search = $request['search'];
-        $pro = Product::where(['added_by' => 'seller', 'product_type'=>'physical', 'user_id' => auth('seller')->id()])
-            ->where('request_status',1)
+        $pro = Product::where(['added_by' => 'seller', 'product_type' => 'physical', 'user_id' => auth()->id()])
+            ->where('request_status', 1)
             ->when($request->has('status') && $request->status != null, function ($query) use ($request) {
                 $query->where('request_status', $request->status);
             });
@@ -437,26 +423,27 @@ class ProductController extends Controller
      * @throws \Box\Spout\Common\Exception\UnsupportedTypeException
      * @throws \Box\Spout\Writer\Exception\WriterNotOpenedException
      */
-    public function stock_limit_export(Request $request){
+    public function stock_limit_export(Request $request)
+    {
 
         $sort = $request['sort'] ?? 'ASC';
 
-        $products = Product::when(empty($request['seller_id']) || $request['seller_id'] == 'all',function ($query){
+        $products = Product::when(empty($request['seller_id']) || $request['seller_id'] == 'all', function ($query) {
             $query->whereIn('added_by', ['admin', 'seller']);
         })
-            ->when($request['seller_id'] == 'in_house',function ($query){
+            ->when($request['seller_id'] == 'in_house', function ($query) {
                 $query->where(['added_by' => 'admin']);
             })
-            ->when($request['seller_id'] != 'in_house' && isset($request['seller_id']) && $request['seller_id'] != 'all',function ($query) use($request){
+            ->when($request['seller_id'] != 'in_house' && isset($request['seller_id']) && $request['seller_id'] != 'all', function ($query) use ($request) {
                 $query->where(['added_by' => 'seller', 'user_id' => $request['seller_id']]);
             })
             ->orderBy('current_stock', $sort)->get();
 
         $data = array();
-        foreach($products as $product){
+        foreach ($products as $product) {
             $data[] = array(
                 'Product Name'   => $product->name,
-                'Date'           => date('d M Y',strtotime($product->created_at)),
+                'Date'           => date('d M Y', strtotime($product->created_at)),
                 'Total Stock'    => $product->current_stock,
             );
         }
@@ -466,6 +453,8 @@ class ProductController extends Controller
 
     public function update_quantity(Request $request)
     {
+        $product = Product::find($request['product_id']);
+        $product ? $this->authorize('view', $product) : abort(404);
         $variations = [];
         $stock_count = $request['current_stock'];
         if ($request->has('type')) {
@@ -479,7 +468,6 @@ class ProductController extends Controller
             }
         }
 
-        $product = Product::find($request['product_id']);
         if ($stock_count >= 0) {
             $product->current_stock = $stock_count;
             $product->variation = json_encode($variations);
@@ -492,17 +480,9 @@ class ProductController extends Controller
         }
     }
 
-    public function get_categories(Request $request)
+    public function get_categories(Request $request, ProductService $service)
     {
-        $cat = Category::where(['parent_id' => $request->parent_id])->get();
-        $res = '<option value="' . 0 . '" disabled selected>---Select---</option>';
-        foreach ($cat as $row) {
-            if ($row->id == $request->sub_category) {
-                $res .= '<option value="' . $row->id . '" selected >' . $row->name . '</option>';
-            } else {
-                $res .= '<option value="' . $row->id . '">' . $row->name . '</option>';
-            }
-        }
+        $res = $service->get_categories([[$request->parent_id, $request->sub_category]])[0];
         return response()->json([
             'select_tag' => $res,
         ]);
@@ -511,6 +491,7 @@ class ProductController extends Controller
     public function get_variations(Request $request)
     {
         $product = Product::find($request['id']);
+        $product ? $this->authorize('view', $product) : abort(404);
         return response()->json([
             'view' => view('seller-views.product.partials._update_stock', compact('product'))->render()
         ]);
@@ -546,6 +527,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::withoutGlobalScopes()->with('translations')->find($id);
+        $product ? $this->authorize('view', $product) : abort(404);
         $product_category = json_decode($product->category_ids);
         $product->colors = json_decode($product->colors);
         $categories = Category::where(['parent_id' => 0])->get();
@@ -554,12 +536,11 @@ class ProductController extends Controller
         $digital_product_setting = BusinessSetting::where('type', 'digital_product')->first()->value;
 
         return view('seller-views.product.edit', compact('categories', 'br', 'product', 'product_category', 'brand_setting', 'digital_product_setting'));
-
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Product $product, ProductService $service)
     {
-        $product = Product::find($id);
+        $product ? $this->authorize('view', $product) : abort(404);
         $validator = Validator::make($request->all(), [
             'name'                  => 'required',
             'category_id'           => 'required',
@@ -573,7 +554,7 @@ class ProductController extends Controller
             'purchase_price'        => 'required|numeric|gt:0',
             'discount'              => 'required|gt:-1',
             'shipping_cost'         => 'required_if:product_type,==,physical|gt:-1',
-            'code'                  => 'required|numeric|min:1|digits_between:6,20|unique:products,code,'.$product->id,
+            'code'                  => 'required|numeric|min:1|digits_between:6,20|unique:products,code,' . $product->id,
             'minimum_order_qty'     => 'required|numeric|min:1',
         ], [
             'name.required'                     => 'Product name is required!',
@@ -592,7 +573,8 @@ class ProductController extends Controller
         if ($brand_setting && empty($request->brand_id)) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'brand_id', 'Brand is required!'
+                    'brand_id',
+                    'Brand is required!'
                 );
             });
         }
@@ -612,7 +594,8 @@ class ProductController extends Controller
         if (is_null($request->name[array_search('en', $request->lang)])) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'name', 'Name field is required!'
+                    'name',
+                    'Name field is required!'
                 );
             });
         }
@@ -621,19 +604,19 @@ class ProductController extends Controller
         $color_image_array = [];
         if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
             $db_color_image = $product->color_image ? json_decode($product->color_image, true) : [];
-            if(!$db_color_image){
-                foreach($product_images as $image){
+            if (!$db_color_image) {
+                foreach ($product_images as $image) {
                     $db_color_image[] = [
-                        'color'=>null,
-                        'image_name'=>$image,
+                        'color' => null,
+                        'image_name' => $image,
                     ];
                 }
             }
 
             $db_color_image_final = [];
-            if($db_color_image){
-                foreach ($db_color_image as $color_img){
-                    if($color_img['color']) {
+            if ($db_color_image) {
+                foreach ($db_color_image as $color_img) {
+                    if ($color_img['color']) {
                         $db_color_image_final[] = $color_img['color'];
                     }
                 }
@@ -641,17 +624,17 @@ class ProductController extends Controller
 
             $input_colors = [];
             foreach ($request->colors as $color) {
-                $input_colors[] = str_replace('#','',$color);
+                $input_colors[] = str_replace('#', '', $color);
             }
             $diff_color = array_diff($db_color_image_final, $input_colors);
 
             $color_image_required = [];
-            if($db_color_image){
-                foreach ($db_color_image as $color_img){
-                    if($color_img['color'] !=null && !in_array($color_img['color'], $diff_color)){
+            if ($db_color_image) {
+                foreach ($db_color_image as $color_img) {
+                    if ($color_img['color'] != null && !in_array($color_img['color'], $diff_color)) {
                         $color_image_required[] = [
-                            'color'=>$color_img['color'],
-                            'image_name'=>$color_img['image_name'],
+                            'color' => $color_img['color'],
+                            'image_name' => $color_img['image_name'],
                         ];
                     }
                 }
@@ -659,14 +642,14 @@ class ProductController extends Controller
             $color_image_array = $db_color_image;
 
             foreach ($input_colors as $color) {
-                if(!in_array($color, $db_color_image_final)){
-                    $img = 'color_image_'.$color;
-                    if($request->file($img)){
+                if (!in_array($color, $db_color_image_final)) {
+                    $img = 'color_image_' . $color;
+                    if ($request->file($img)) {
                         $image_name = ImageManager::upload('product/', 'png', $request->file($img));
                         $product_images[] = $image_name;
                         $col_img_arr = [
-                            'color'=>$color,
-                            'image_name'=>$image_name,
+                            'color' => $color,
+                            'image_name' => $image_name,
                         ];
                         $color_image_required[] = $col_img_arr;
                         $color_image_array[] = $col_img_arr;
@@ -674,10 +657,11 @@ class ProductController extends Controller
                 }
             }
 
-            if(count($color_image_required) != count($request->colors)) {
+            if (count($color_image_required) != count($request->colors)) {
                 $validator->after(function ($validator) {
                     $validator->errors()->add(
-                        'images', 'Color images is required!'
+                        'images',
+                        'Color images is required!'
                     );
                 });
             }
@@ -705,8 +689,8 @@ class ProductController extends Controller
             ]);
         }
 
+        $product->category_ids          = $service->update_categories($request->category_id, $request->sub_category_id, $request->sub_sub_category_id);
         $product->product_type          = $request->product_type;
-        $product->category_ids          = json_encode($category);
         $product->brand_id              = isset($request->brand_id) ? $request->brand_id : null;
         $product->unit                  = $request->product_type == 'physical' ? $request->unit : null;
         $product->digital_product_type  = $request->product_type == 'digital' ? $request->digital_product_type : null;
@@ -770,13 +754,11 @@ class ProductController extends Controller
                 array_push($variations, $item);
                 $stock_count += $item['qty'];
             }
-        } else {
-            $stock_count = (integer)$request['current_stock'];
-        }
+        } else
+            $stock_count = (int)$request['current_stock'];
 
-        if ($validator->errors()->count() > 0) {
+        if ($validator->errors()->count() > 0)
             return response()->json(['errors' => Helpers::error_processor($validator)]);
-        }
 
         //combinations end
         $product->variation         = $request->product_type == 'physical' ? json_encode($variations) : json_encode([]);
@@ -791,33 +773,30 @@ class ProductController extends Controller
         $product->attributes        = $request->product_type == 'physical' ? json_encode($request->choice_attributes) : json_encode([]);
         $product->discount_type     = $request->discount_type;
         $product->current_stock     = $request->product_type == 'physical' ? abs($stock_count) : 0;
-        $product->shipping_cost     = $request->product_type == 'physical' ? (Helpers::get_business_settings('product_wise_shipping_cost_approval')==1?$product->shipping_cost:Convert::usd($request->shipping_cost)) : 0;
-        $product->multiply_qty      = ($request->product_type == 'physical') ? ($request->multiplyQTY=='on'?1:0) : 0;
+        $product->shipping_cost     = $request->product_type == 'physical' ? (Helpers::get_business_settings('product_wise_shipping_cost_approval') == 1 ? $product->shipping_cost : Convert::usd($request->shipping_cost)) : 0;
+        $product->multiply_qty      = ($request->product_type == 'physical') ? ($request->multiplyQTY == 'on' ? 1 : 0) : 0;
 
-        if(Helpers::get_business_settings('product_wise_shipping_cost_approval')==1 && $product->shipping_cost != Convert::usd($request->shipping_cost))
-        {
+        if (Helpers::get_business_settings('product_wise_shipping_cost_approval') == 1 && $product->shipping_cost != Convert::usd($request->shipping_cost)) {
             $product->temp_shipping_cost = Convert::usd($request->shipping_cost);
             $product->is_shipping_cost_updated = 0;
-
         }
 
         $product->video_provider = 'youtube';
         $product->video_url = $request->video_link;
-        if ($product->request_status == 2) {
+        if ($product->request_status == 2)
             $product->request_status = 0;
-        }
 
-        if ($request->ajax()) {
+        if ($request->ajax())
             return response()->json([], 200);
-        } else {
+        else {
             if ($request->file('images')) {
                 foreach ($request->file('images') as $img) {
                     $image_name = ImageManager::upload('product/', 'png', $img);
                     $product_images[] = $image_name;
-                    if($request->has('colors_active')){
+                    if ($request->has('colors_active')) {
                         $color_image_array[] = [
-                            'color'=>null,
-                            'image_name'=>$image_name,
+                            'color' => null,
+                            'image_name' => $image_name,
                         ];
                     }
                 }
@@ -825,34 +804,33 @@ class ProductController extends Controller
             $product->images = json_encode($product_images);
             $product->color_image = json_encode($color_image_array);
 
-            if ($request->file('image')) {
+            if ($request->file('image'))
                 $product->thumbnail = ImageManager::update('product/thumbnail/', $product->thumbnail, 'png', $request->file('image'));
-            }
 
-            if($request->product_type == 'digital') {
-                if($request->digital_product_type == 'ready_product' && $request->hasFile('digital_file_ready')){
+            if ($request->product_type == 'digital') {
+                if ($request->digital_product_type == 'ready_product' && $request->hasFile('digital_file_ready'))
                     $product->digital_file_ready = ImageManager::update('product/digital-product/', $product->digital_file_ready, $request->digital_file_ready->getClientOriginalExtension(), $request->file('digital_file_ready'));
-                }elseif(($request->digital_product_type == 'ready_after_sell') && $product->digital_file_ready){
-                    ImageManager::delete('product/digital-product/'.$product->digital_file_ready);
+                elseif (($request->digital_product_type == 'ready_after_sell') && $product->digital_file_ready) {
+                    ImageManager::delete('product/digital-product/' . $product->digital_file_ready);
                     $product->digital_file_ready = null;
                 }
-            }elseif($request->product_type == 'physical' && $product->digital_file_ready){
-                ImageManager::delete('product/digital-product/'.$product->digital_file_ready);
+            } elseif ($request->product_type == 'physical' && $product->digital_file_ready) {
+                ImageManager::delete('product/digital-product/' . $product->digital_file_ready);
                 $product->digital_file_ready = null;
             }
 
             $product->meta_title = $request->meta_title;
             $product->meta_description = $request->meta_description;
-            if ($request->file('meta_image')) {
+            if ($request->file('meta_image'))
                 $product->meta_image = ImageManager::update('product/meta/', $product->meta_image, 'png', $request->file('meta_image'));
-            }
+
             $product->save();
 
             $tag_ids = [];
-            if ($request->tags != null) {
+            if ($request->tags != null)
                 $tags = explode(",", $request->tags);
-            }
-            if(isset($tags)){
+
+            if (isset($tags)) {
                 foreach ($tags as $key => $value) {
                     $tag = Tag::firstOrNew(
                         ['tag' => trim($value)]
@@ -866,19 +844,23 @@ class ProductController extends Controller
             foreach ($request->lang as $index => $key) {
                 if ($request->name[$index] && $key != 'en') {
                     Translation::updateOrInsert(
-                        ['translationable_type' => 'App\Model\Product',
+                        [
+                            'translationable_type' => 'App\Model\Product',
                             'translationable_id' => $product->id,
                             'locale' => $key,
-                            'key' => 'name'],
+                            'key' => 'name'
+                        ],
                         ['value' => $request->name[$index]]
                     );
                 }
                 if ($request->description[$index] && $key != 'en') {
                     Translation::updateOrInsert(
-                        ['translationable_type' => 'App\Model\Product',
+                        [
+                            'translationable_type' => 'App\Model\Product',
                             'translationable_id' => $product->id,
                             'locale' => $key,
-                            'key' => 'description'],
+                            'key' => 'description'
+                        ],
                         ['value' => $request->description[$index]]
                     );
                 }
@@ -891,14 +873,16 @@ class ProductController extends Controller
     public function view($id)
     {
         $product = Product::with(['reviews'])->where(['id' => $id])->first();
+        $product ? $this->authorize('view', $product) : abort(404);
         $reviews = Review::where(['product_id' => $id])->paginate(Helpers::pagination_limit());
         return view('seller-views.product.view', compact('product', 'reviews'));
     }
 
     public function remove_image(Request $request)
     {
-        ImageManager::delete('/product/' . $request['image']);
         $product = Product::find($request['id']);
+        $product ? $this->authorize('view', $product) : abort(404);
+        ImageManager::delete('/product/' . $request['image']);
         $array = [];
         if (count(json_decode($product['images'])) < 2) {
             Toastr::warning('You cannot delete all images!');
@@ -907,21 +891,20 @@ class ProductController extends Controller
         $colors = json_decode($product['colors']);
         $color_image = json_decode($product['color_image']);
         $color_image_arr = [];
-        if($colors && $color_image){
-            foreach($color_image as $img){
-                if($img->color != $request->color && $img->image_name != $request->name){
+        if ($colors && $color_image) {
+            foreach ($color_image as $img) {
+                if ($img->color != $request->color && $img->image_name != $request->name) {
                     $color_image_arr[] = [
-                        'color' =>$img->color!=null ? $img->color:null,
-                        'image_name' =>$img->image_name,
+                        'color' => $img->color != null ? $img->color : null,
+                        'image_name' => $img->image_name,
                     ];
                 }
             }
         }
 
         foreach (json_decode($product['images']) as $image) {
-            if ($image != $request['name']) {
+            if ($image != $request['name'])
                 array_push($array, $image);
-            }
         }
         Product::where('id', $request['id'])->update([
             'images' => json_encode($array),
@@ -934,10 +917,10 @@ class ProductController extends Controller
     public function delete($id)
     {
         $product = Product::find($id);
+        $product ? $this->authorize('view', $product) : abort(404);
         Cart::where('product_id', $product->id)->delete();
-        foreach (json_decode($product['images'], true) as $image) {
+        foreach (json_decode($product['images'], true) as $image)
             ImageManager::delete('/product/' . $image);
-        }
         ImageManager::delete('/product/thumbnail/' . $product['thumbnail']);
         $product->delete();
         FlashDealProduct::where(['product_id' => $id])->delete();
@@ -964,12 +947,12 @@ class ProductController extends Controller
         $skip = ['youtube_video_url', 'details', 'thumbnail'];
         foreach ($collections as $collection) {
             foreach ($collection as $key => $value) {
-                if ($key!="" && !in_array($key, $col_key)) {
+                if ($key != "" && !in_array($key, $col_key)) {
                     Toastr::error('Please upload the correct format file.');
                     return back();
                 }
 
-                if ($key!="" && $value === "" && !in_array($key, $skip)) {
+                if ($key != "" && $value === "" && !in_array($key, $skip)) {
                     Toastr::error('Please fill ' . $key . ' fields');
                     return back();
                 }
@@ -1003,7 +986,7 @@ class ProductController extends Controller
                 'variation' => json_encode([]),
                 'featured_status' => 1,
                 'added_by' => 'seller',
-                'user_id' => auth('seller')->id(),
+                'user_id' => auth()->id(),
             ]);
         }
         DB::table('products')->insert($data);
@@ -1013,7 +996,7 @@ class ProductController extends Controller
 
     public function bulk_export_data()
     {
-        $products = Product::where(['added_by' => 'seller', 'user_id' => \auth('seller')->id()])->get();
+        $products = Product::where(['added_by' => 'seller', 'user_id' => auth()->id()])->get();
         //export from product
         $storage = [];
         foreach ($products as $item) {
@@ -1057,11 +1040,10 @@ class ProductController extends Controller
     {
         if ($request->limit > 270) {
             Toastr::warning(translate('You can not generate more than 270 barcode'));
-             return back();
+            return back();
         }
         $product = Product::findOrFail($id);
         $limit =  $request->limit ?? 4;
         return view('seller-views.product.barcode', compact('product', 'limit'));
     }
-
 }

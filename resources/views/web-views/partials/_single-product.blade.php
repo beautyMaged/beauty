@@ -26,7 +26,7 @@
             <div class="d-flex d-block">
                 <a href="{{route('product',$product->slug)}}">
                     <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}"
-                         onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'">
+                         onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'">
                 </a>
             </div>
         </div>

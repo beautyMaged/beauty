@@ -995,7 +995,7 @@
                         <div class="card-body d-flex flex-column justify-content-around">
                             <center>
                                 <img height="60" id="viewerWL"
-                                        onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                        onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                         src="{{asset('storage/company')}}/{{\App\Model\BusinessSetting::where(['type' => 'company_web_logo'])->pluck('value')[0]}}">
                             </center>
                             <div class="mt-4 position-relative">
@@ -1020,7 +1020,7 @@
                         <div class="card-body d-flex flex-column justify-content-around">
                             <center>
                                 <img height="60" id="viewerWFL"
-                                    onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                    onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                     src="{{asset('storage/company')}}/{{\App\Model\BusinessSetting::where(['type' => 'company_footer_logo'])->pluck('value')[0]}}">
                             </center>
                             <div class="position-relative mt-4">
@@ -1045,7 +1045,7 @@
                         <div class="card-body d-flex flex-column justify-content-around">
                             <center>
                                 <img height="60" id="viewerFI"
-                                        onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                        onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                         src="{{asset('storage/company')}}/{{\App\Model\BusinessSetting::where(['type' => 'company_fav_icon'])->pluck('value')[0]}}">
                             </center>
                             <div class="position-relative mt-4">
@@ -1070,7 +1070,7 @@
                         <div class="card-body d-flex flex-column justify-content-around">
                             <center>
                                 <img height="60" id="viewerLoader"
-                                        onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                        onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                         src="{{asset('storage/company')}}/{{\App\CPU\Helpers::get_business_settings('loader_gif')}}">
                             </center>
                             <div class="position-relative mt-4">
@@ -1095,7 +1095,7 @@
                         <div class="card-body d-flex flex-column justify-content-around">
                             <center>
                                 <img height="60" id="viewerML"
-                                        onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
+                                        onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                         src="{{asset('storage/company')}}/{{\App\Model\BusinessSetting::where(['type' => 'company_mobile_logo'])->pluck('value')[0]}}">
                             </center>
                             <div class="mt-4 position-relative">

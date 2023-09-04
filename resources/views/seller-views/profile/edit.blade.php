@@ -93,7 +93,7 @@
                             class="avatar avatar-xxl avatar-circle avatar-border-lg avatar-uploader profile-cover-avatar"
                             for="avatarUploader">
                             <img id="viewer"
-                                 onerror="this.src='{{asset('public/assets/back-end/img/160x160/img1.jpg')}}'"
+                                 onerror="this.onerror=null;this.src='{{asset('public/assets/back-end/img/160x160/img1.jpg')}}'"
                                  class="avatar-img"
                                  src="{{asset('storage/app/public/seller')}}/{{$data->image}}"
                                  alt="Image">

@@ -7,7 +7,7 @@
                 {{--                <div class="modal-body cursor-pointer __p-3px" onclick="location.href='{{$banner['url']}}'">--}}
                 <div class="modal-body cursor-pointer __p-3px">
                     <div class="row">
-                        <div class="col-lg-3 m-auto py-3"> <img class="d-block w-100" onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'" src="{{asset('storage/banner')}}/{{$banner['photo']}}" alt=""> </div>
+                        <div class="col-lg-3 m-auto py-3"> <img class="d-block w-100" onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'" src="{{asset('storage/banner')}}/{{$banner['photo']}}" alt=""> </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-12 text-center  m-auto pt-3"> <h3 class="s_24">{{$banner->main_title}}</h3> </div>

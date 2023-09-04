@@ -11,7 +11,7 @@
         <div class="d-flex align-items-center justify-content-center active">
             <img class="img-responsive rounded"
                 src="{{asset('storage/app/public/product/thumbnail')}}/{{$product->thumbnail}}"
-                 onerror="this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'"
+                 onerror="this.onerror=null;this.src='{{asset('public/assets/back-end/img/160x160/img2.jpg')}}'"
                  data-zoom="{{asset('storage/app/public/product')}}/{{$product['image']}}"
                  alt="Product image" height="100">
             <div class="cz-image-zoom-pane"></div>

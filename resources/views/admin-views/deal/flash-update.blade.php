@@ -80,7 +80,7 @@
                                     <div class="form-group">
                                         <center>
                                             <img class="border radius-10 ratio-4:1 max-w-655px" id="viewer"
-                                            onerror="this.src='{{asset('assets/front-end/img/placeholder.png')}}'" src="{{asset('storage/deal')}}/{{$deal['banner']}}" alt="banner image"/>
+                                            onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/placeholder.png')}}'" src="{{asset('storage/deal')}}/{{$deal['banner']}}" alt="banner image"/>
                                         </center>
                                     </div>
                                     <div class="form-group">
