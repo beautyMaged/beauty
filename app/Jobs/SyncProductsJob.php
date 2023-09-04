@@ -26,9 +26,9 @@ class SyncProductsJob implements ShouldQueue
     use RequestTrait;
 
     private Shopify $shopify;
-    private $totalNumberOfProducts = 10;
+    private $totalNumberOfProducts = 0;
     private $count = 0;
-    private $sinceId = 0;
+    private $sinceId = 7842677194999;
     private $user_id;
 
     /**
@@ -51,11 +51,11 @@ class SyncProductsJob implements ShouldQueue
     {
         $headers = $this->shopify->getStoreUrlHeaders();
 
-//        if ($this->totalNumberOfProducts === 0) {
-//            $endpoint = $this->shopify->getStoreURL('products/count.json');
-//            $response = $this->sendRequestToShopify('GET', $endpoint, $headers);
-//            $this->totalNumberOfProducts = $response['body']['count'];
-//        }
+        if ($this->totalNumberOfProducts === 0) {
+            $endpoint = $this->shopify->getStoreURL('products/count.json');
+            $response = $this->sendRequestToShopify('GET', $endpoint, $headers);
+            $this->totalNumberOfProducts = $response['body']['count'];
+        }
 
         try {
             $products = [];
@@ -86,9 +86,9 @@ class SyncProductsJob implements ShouldQueue
         $p->user_id = $this->user_id;
         $p->added_by = "seller";
         $p->name = $product['title'];
-//        $p->slug = Str::slug($product['title'], '-') . '-' . Str::random(6);
+        //        $p->slug = Str::slug($product['title'], '-') . '-' . Str::random(6);
         $p->slug = Str::slug($product['id']);
-        $category = json_decode('[{"id":"36","position":0}]', true);
+        $category = json_decode('[{"id":"37","position":0}]', true);
         $p->category_ids = json_encode($category);
         $p->brand_id = 13;
         $p->details = $product['body_html'];
@@ -98,7 +98,7 @@ class SyncProductsJob implements ShouldQueue
         foreach ($product['options'] as $key => $option) {
             array_push(
                 $choice_options,
-                ['name' => 'choice_'.$key, 'title' => $option['name'], 'options' => $option['values']]
+                ['name' => 'choice_' . $key, 'title' => $option['name'], 'options' => $option['values']]
             );
         }
         $p->choice_options = json_encode($choice_options);
@@ -128,13 +128,13 @@ class SyncProductsJob implements ShouldQueue
         $images = [];
         foreach ($product['images'] as $image) {
             array_push($images, ['cdn' => $image['src']]);
-//            $image_name = ImageManager::upload('product/', 'png', $image['src']);
-//            $images[] = $image_name;
+            //            $image_name = ImageManager::upload('product/', 'png', $image['src']);
+            //            $images[] = $image_name;
         }
         $p->images = json_encode($images);
 
-//        $thumbnail = ImageManager::upload('product/thumbnail/', 'png', $product['image']['src']);
-//        $p->thumbnail = $thumbnail;
+        //        $thumbnail = ImageManager::upload('product/thumbnail/', 'png', $product['image']['src']);
+        //        $p->thumbnail = $thumbnail;
         $p->thumbnail = json_encode(['cdn' => isset($product['image']) ? $product['image']['src'] : []]);
         $p->save();
 

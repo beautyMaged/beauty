@@ -121,7 +121,7 @@
     <div class="col-12" style="margin-top:13rem;position: fixed;z-index: 9999;">
         <div id="loading" style="">
             <center>
-                <img width="200" src="{{asset('storage/company')}}/{{\App\CPU\Helpers::get_business_settings('loader_gif')}}" onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/loader.gif')}}'">
+                <img width="200" src="{{asset('storage/company')}}/{{\App\CPU\Helpers::get_business_settings('loader_gif')}}" onerror="this.src='{{asset('assets/front-end/img/loader.gif')}}'">
             </center>
         </div>
     </div>
@@ -819,19 +819,23 @@
     });
 </script>
 @stack('script')
-<!--Start of Tawk.to Script-->
-<script type="text/javascript">
-    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
-    (function () {
-        var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
-        s1.async = true;
-        s1.src = 'https://embed.tawk.to/64a67a9ecc26a871b026ade9/1h4l4tvbo';
-        s1.charset = 'UTF-8';
-        s1.setAttribute('crossorigin', '*');
-        s0.parentNode.insertBefore(s1, s0);
-    })();
-</script>
-<!--End of Tawk.to Script-->
+
+<script type="text/javascript" id="zsiqchat">var $zoho=$zoho || {};$zoho.salesiq = $zoho.salesiq || {widgetcode: "siqb4bb6cdb038e2e2925f53c51a1c992dbaa3417822fc48d1ac46c878102063830", values:{},ready:function(){}};var d=document;s=d.createElement("script");s.type="text/javascript";s.id="zsiqscript";s.defer=true;s.src="https://salesiq.zohopublic.com/widget";t=d.getElementsByTagName("script")[0];t.parentNode.insertBefore(s,t);</script>
+// Start of Tawk.to Script
+
+// <script type="text/javascript">
+//     var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+//     (function () {
+//         var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+//         s1.async = true;
+//         s1.src = 'https://embed.tawk.to/64a67a9ecc26a871b026ade9/1h4l4tvbo';
+//         s1.charset = 'UTF-8';
+//         s1.setAttribute('crossorigin', '*');
+//         s0.parentNode.insertBefore(s1, s0);
+//     })();
+// </script>
+
+// End of Tawk.to Script
 
 </body>
 </html>
