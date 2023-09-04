@@ -136,9 +136,8 @@ class Product extends Model
 
     public function getNameAttribute($name)
     {
-        if (strpos(url()->current(), '/admin') || strpos(url()->current(), '/seller')) {
+        if (strpos(url()->current(), '/admin') || strpos(url()->current(), '/seller'))
             return $name;
-        }
         return $this->translations[0]->value ?? $name;
     }
 

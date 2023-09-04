@@ -16,6 +16,7 @@
     'brands' => 'العلامات التجارية',
     'add_new' => 'أضف جديد',
     'List' => 'القائمة',
+    'collection' => 'مجموعة',
     'categories' => 'الأقسام',
     'category' => 'القسم',
     'sub_category' => 'القسم الفرعي',

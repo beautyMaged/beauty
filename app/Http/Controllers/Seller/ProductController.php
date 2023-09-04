@@ -365,7 +365,6 @@ class ProductController extends Controller
         } else
             $products = Product::where(['added_by' => 'seller', 'user_id' => auth()->id()]);
         $products = $products->orderBy('id', 'DESC')->paginate(Helpers::pagination_limit())->appends($query_param);
-
         return view('seller-views.product.list', compact('products', 'search'));
     }
 

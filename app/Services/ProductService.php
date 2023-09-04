@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Model\Category;
 use function App\CPU\translate;
+use App\CPU\Helpers;
 
 class ProductService
 {
@@ -14,11 +15,11 @@ class ProductService
             $cat = Category::Where('parent_id', $product[$i][0])->get();
             $res[$i] = '<option value="' . 0 . '" disabled selected>---' . translate("Select") . '---</option>';
             foreach ($cat as $row) {
-                if ($row->id == $product[$i][1]) {
-                    $res[$i] .= '<option value="' . $row->id . '" selected >' . $row->name . '</option>';
-                } else {
-                    $res[$i] .= '<option value="' . $row->id . '">' . $row->name . '</option>';
-                }
+                $name = $row->translations[0]->value ?? $row->name;
+                if ($row->id == $product[$i][1])
+                    $res[$i] .= '<option value="' . $row->id . '" selected >' . $name . '</option>';
+                else
+                    $res[$i] .= '<option value="' . $row->id . '">' . $name . '</option>';
             }
         }
         return $res;

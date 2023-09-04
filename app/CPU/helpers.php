@@ -112,11 +112,11 @@ class Helpers
 
     public static function default_lang()
     {
-        if (strpos(url()->current(), '/api')) {
+        if (strpos(url()->current(), '/api'))
             $lang = App::getLocale();
-        } elseif (session()->has('local')) {
+        elseif (session()->has('local'))
             $lang = session('local');
-        } else {
+        else {
             $data = Helpers::get_business_settings('language');
             $code = 'en';
             $direction = 'ltr';
@@ -211,7 +211,7 @@ class Helpers
         if ((is_array($data['attributes']) ? $data['attributes'] : json_decode($data['attributes'])) != null) {
             $attributes_arr = is_array($data['attributes']) ? $data['attributes'] : json_decode($data['attributes']);
             foreach ($attributes_arr as $attribute) {
-                $attributes[] = (integer)$attribute;
+                $attributes[] = (int)$attribute;
             }
         }
         $data['attributes'] = $attributes;
@@ -220,9 +220,9 @@ class Helpers
         foreach ($variation_arr as $var) {
             $variation[] = [
                 'type' => $var['type'],
-                'price' => (double)$var['price'],
+                'price' => (float)$var['price'],
                 'sku' => $var['sku'],
-                'qty' => (integer)$var['qty'],
+                'qty' => (int)$var['qty'],
             ];
         }
         $data['variation'] = $variation;
@@ -233,7 +233,7 @@ class Helpers
 
     public static function product_data_formatting($data, $multi_data = false)
     {
-        if($data) {
+        if ($data) {
             $storage = [];
             if ($multi_data == true) {
                 foreach ($data as $item) {
@@ -326,9 +326,9 @@ class Helpers
 
     public static function language_load()
     {
-        if (\session()->has('language_settings')) {
+        if (\session()->has('language_settings'))
             $language = \session('language_settings');
-        } else {
+        else {
             $language = BusinessSetting::where('type', 'language')->first();
             \session()->put('language_settings', $language);
         }
@@ -396,7 +396,7 @@ class Helpers
         if ($currency_model == 'multi_currency') {
             Helpers::currency_load();
             $code = session('currency_code') == null ? 'USD' : session('currency_code');
-            if($code == 'USD'){
+            if ($code == 'USD') {
                 return $price;
             }
             $currency = Currency::where('code', $code)->first();
@@ -413,33 +413,32 @@ class Helpers
 
     public static function order_status_update_message($status)
     {
-        if ($status == 'pending') {
+        if ($status == 'pending')
             $data = BusinessSetting::where('type', 'order_pending_message')->first()->value;
-        } elseif ($status == 'confirmed') {
+        elseif ($status == 'confirmed')
             $data = BusinessSetting::where('type', 'order_confirmation_msg')->first()->value;
-        } elseif ($status == 'processing') {
+        elseif ($status == 'processing')
             $data = BusinessSetting::where('type', 'order_processing_message')->first()->value;
-        } elseif ($status == 'out_for_delivery') {
+        elseif ($status == 'out_for_delivery')
             $data = BusinessSetting::where('type', 'out_for_delivery_message')->first()->value;
-        } elseif ($status == 'delivered') {
+        elseif ($status == 'delivered')
             $data = BusinessSetting::where('type', 'order_delivered_message')->first()->value;
-        } elseif ($status == 'returned') {
+        elseif ($status == 'returned')
             $data = BusinessSetting::where('type', 'order_returned_message')->first()->value;
-        } elseif ($status == 'failed') {
+        elseif ($status == 'failed')
             $data = BusinessSetting::where('type', 'order_failed_message')->first()->value;
-        } elseif ($status == 'delivery_boy_delivered') {
+        elseif ($status == 'delivery_boy_delivered')
             $data = BusinessSetting::where('type', 'delivery_boy_delivered_message')->first()->value;
-        } elseif ($status == 'del_assign') {
+        elseif ($status == 'del_assign')
             $data = BusinessSetting::where('type', 'delivery_boy_assign_message')->first()->value;
-        } elseif ($status == 'ord_start') {
+        elseif ($status == 'ord_start')
             $data = BusinessSetting::where('type', 'delivery_boy_start_message')->first()->value;
-        } elseif ($status == 'expected_delivery_date') {
+        elseif ($status == 'expected_delivery_date')
             $data = BusinessSetting::where('type', 'delivery_boy_expected_delivery_date_message')->first()->value;
-        } elseif ($status == 'canceled') {
+        elseif ($status == 'canceled')
             $data = BusinessSetting::where('type', 'order_canceled')->first()->value;
-        } else {
+        else
             $data = '{"status":"0","message":""}';
-        }
 
         $res = json_decode($data, true);
 
@@ -456,7 +455,8 @@ class Helpers
     {
         $key = BusinessSetting::where(['type' => 'push_notification_key'])->first()->value;
         $url = "https://fcm.googleapis.com/fcm/send";
-        $header = array("authorization: key=" . $key . "",
+        $header = array(
+            "authorization: key=" . $key . "",
             "content-type: application/json"
         );
 
@@ -507,7 +507,8 @@ class Helpers
         $key = BusinessSetting::where(['type' => 'push_notification_key'])->first()->value;
 
         $url = "https://fcm.googleapis.com/fcm/send";
-        $header = ["authorization: key=" . $key . "",
+        $header = [
+            "authorization: key=" . $key . "",
             "content-type: application/json",
         ];
 
@@ -574,7 +575,8 @@ class Helpers
             $objects = scandir($dir);
             foreach ($objects as $object) {
                 if ($object != "." && $object != "..") {
-                    if (filetype($dir . "/" . $object) == "dir") Helpers::remove_dir($dir . "/" . $object); else unlink($dir . "/" . $object);
+                    if (filetype($dir . "/" . $object) == "dir") Helpers::remove_dir($dir . "/" . $object);
+                    else unlink($dir . "/" . $object);
                 }
             }
             reset($objects);
@@ -699,7 +701,7 @@ class Helpers
         if (!is_null($position) && $position == 'left') {
             $string =  number_format($amount, (!empty($decimal_point_settings) ? $decimal_point_settings : 0))  . ' ' . currency_symbol();
         } else {
-            $string = currency_symbol(). '' . number_format($amount, !empty($decimal_point_settings) ? $decimal_point_settings : 0) ;
+            $string = currency_symbol() . '' . number_format($amount, !empty($decimal_point_settings) ? $decimal_point_settings : 0);
         }
         return $string;
     }
@@ -707,11 +709,10 @@ class Helpers
     public static function pagination_limit()
     {
         $pagination_limit = BusinessSetting::where('type', 'pagination_limit')->first();
-        if ($pagination_limit != null) {
+        if ($pagination_limit != null)
             return $pagination_limit->value;
-        } else {
+        else
             return 25;
-        }
     }
 
     public static function gen_mpdf($view, $file_prefix, $file_postfix)
@@ -778,12 +779,13 @@ function auto_translator($q, $sl, $tl)
 {
     $res = file_get_contents("https://translate.googleapis.com/translate_a/single?client=gtx&ie=UTF-8&oe=UTF-8&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&dt=at&sl=" . $sl . "&tl=" . $tl . "&hl=hl&q=" . urlencode($q), $_SERVER['DOCUMENT_ROOT'] . "/transes.html");
     $res = json_decode($res);
-    return str_replace('_',' ',$res[0][0][0]);
+    return str_replace('_', ' ', $res[0][0][0]);
 }
 
 function getLanguageCode(string $country_code): string
 {
-    $locales = array('af-ZA',
+    $locales = array(
+        'af-ZA',
         'am-ET',
         'ar-AE',
         'ar-BH',
@@ -930,10 +932,11 @@ function getLanguageCode(string $country_code): string
         'zh-HK',
         'zh-MO',
         'zh-SG',
-        'zh-TW');
+        'zh-TW'
+    );
 
     foreach ($locales as $locale) {
-        $locale_region = explode('-',$locale);
+        $locale_region = explode('-', $locale);
         if (strtoupper($country_code) == $locale_region[1]) {
             return $locale_region[0];
         }

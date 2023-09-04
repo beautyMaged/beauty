@@ -114,6 +114,7 @@
   'status' => 'Status',
   'name' => 'Name',
   'description' => 'Description',
+  'collection' => 'Collection',
   'Category' => 'Category',
   'Sub Category' => 'Sub Category',
   'Sub Sub Category' => 'Sub Sub Category',
@@ -3175,4 +3176,6 @@
   'sayed' => 'Sayed',
   'out for delivery' => 'Out for delivery',
   'coupon_status_updated' => 'Coupon status updated',
+  'Unregistered Client' => 'Unregistered Client',
+  '₹' => '₹',
 );

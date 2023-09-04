@@ -3,21 +3,15 @@
 namespace App\Jobs;
 
 use App\CPU\BackEndHelper;
-use App\CPU\Helpers;
-use App\CPU\ImageManager;
 use App\Helpers\Shopify;
-use App\Model\Color;
 use App\Model\Product;
-use App\Model\Seller;
 use App\Model\Tag;
 use App\Traits\RequestTrait;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class SyncProductsJob implements ShouldQueue
@@ -90,6 +84,7 @@ class SyncProductsJob implements ShouldQueue
         $p->slug = Str::slug($product['id']);
         $category = json_decode('[{"id":"37","position":0}]', true);
         $p->category_ids = json_encode($category);
+        $p->collection = $product['tags'];
         $p->brand_id = 13;
         $p->details = $product['body_html'];
         $p->colors = json_encode([]);
@@ -139,9 +134,8 @@ class SyncProductsJob implements ShouldQueue
         $p->save();
 
         $tag_ids = [];
-        if ($product['tags'] != null) {
+        if ($product['tags'] != null)
             $tags = explode(",", $product['tags']);
-        }
         if (isset($tags)) {
             foreach ($tags as $key => $value) {
                 $tag = Tag::firstOrNew(

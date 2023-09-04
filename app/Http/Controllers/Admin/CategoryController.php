@@ -67,9 +67,8 @@ class CategoryController extends Controller
                 ));
             }
         }
-        if (count($data)) {
+        if (count($data))
             Translation::insert($data);
-        }
 
         Toastr::success('Category added successfully!');
         return back();
@@ -77,7 +76,7 @@ class CategoryController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $category = category::withoutGlobalScopes()->find($id);
+        $category = Category::withoutGlobalScopes()->find($id);
         return view('admin-views.category.category-edit', compact('category'));
     }
 

@@ -52,12 +52,10 @@
                                 if (count($product['translations'])) {
                                     $translate = [];
                                     foreach ($product['translations'] as $t) {
-                                        if ($t->locale == $lang && $t->key == 'name') {
+                                        if ($t->locale == $lang && $t->key == 'name') 
                                             $translate[$lang]['name'] = $t->value;
-                                        }
-                                        if ($t->locale == $lang && $t->key == 'description') {
+                                        if ($t->locale == $lang && $t->key == 'description') 
                                             $translate[$lang]['description'] = $t->value;
-                                        }
                                     }
                                 }
                                 ?>

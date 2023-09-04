@@ -92,10 +92,9 @@ class CurrencyController extends Controller
             Currency::where('id', $request->id)->delete();
             // Toastr::success(translate('Currency removed successfully!'));
             return response()->json(['status' => 1]);
-        } else {
+        } 
             // Toastr::warning(translate('This Currency cannot be removed due to payment gateway dependency!'));
-            return response()->json(['status' => 0]);
-        }
+        return response()->json(['status' => 0]);
         // return back();
     }
 

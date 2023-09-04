@@ -87,9 +87,8 @@
                                     <th class="text-right">{{ \App\CPU\translate('selling_price') }}</th>
                                     <th class="text-right">{{ \App\CPU\translate('unit_price') }}</th>
                                     <th class="text-center">{{ \App\CPU\translate('Show_as_featured') }}</th>
-                                    <th class="text-center">{{ \App\CPU\translate('Active') }}
-                                        {{ \App\CPU\translate('status') }}</th>
-
+                                    <th class="text-center">{{ \App\CPU\translate('Active') }}{{ \App\CPU\translate('status') }}</th>
+                                    <th class="text-center">{{ \App\CPU\translate('collection') }}</th>
                                     <th class="text-center">{{ \App\CPU\translate('category') }}</th>
                                     <th class="text-center">{{ \App\CPU\translate('sub_category') }}</th>
                                     <th class="text-center">{{ \App\CPU\translate('sub_sub_category') }}</th>
@@ -138,6 +137,9 @@
                                                     id="{{ $p['id'] }}" {{ $p->status == 1 ? 'checked' : '' }}>
                                                 <span class="switcher_control"></span>
                                             </label>
+                                        </td>
+                                        <td>
+                                            {{$p['collection'] ?? \App\CPU\translate('not_available')}}
                                         </td>
                                         <td>
                                             <select

@@ -51,9 +51,8 @@
                                         if (count($category['translations'])) {
                                             $translate = [];
                                             foreach ($category['translations'] as $t) {
-                                                if ($t->locale == $lang && $t->key == "name") {
+                                                if ($t->locale == $lang && $t->key == "name")
                                                     $translate[$lang]['name'] = $t->value;
-                                                }
                                             }
                                         }
                                         ?>

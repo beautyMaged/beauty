@@ -396,12 +396,10 @@ class ProductController extends BaseController
     {
         $query_param = [];
         $search = $request['search'];
-        if ($type == 'in_house') {
+        if ($type == 'in_house')
             $pro = Product::where(['added_by' => 'admin']);
-        } else {
+        else
             $pro = Product::where(['added_by' => 'seller'])->where('request_status', $request->status);
-        }
-
         if ($request->has('search')) {
             $key = explode(' ', $request['search']);
             $pro = $pro->where(function ($q) use ($key) {

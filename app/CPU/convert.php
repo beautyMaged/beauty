@@ -2,8 +2,6 @@
 
 namespace App\CPU;
 
-
-use App\Model\BusinessSetting;
 use App\Model\Currency;
 
 class Convert
@@ -16,9 +14,8 @@ class Convert
             $usd = Currency::where('code', 'USD')->first()->exchange_rate ?? 1;
             $rate = $default['exchange_rate'] / $usd;
             $value = floatval($amount) / floatval($rate);
-        } else {
+        } else
             $value = floatval($amount);
-        }
 
         return $value;
     }
@@ -31,9 +28,9 @@ class Convert
             $usd = Currency::where('code', 'USD')->first()->exchange_rate ?? 1;
             $rate = $default['exchange_rate'] / $usd;
             $value = floatval($amount) * floatval($rate);
-        } else {
+        } else
             $value = floatval($amount);
-        }
+
         return round($value, 2);
     }
 
@@ -45,9 +42,8 @@ class Convert
             $usd = Currency::where('code', 'USD')->first()->exchange_rate ?? 1;
             $rate = $bdt / $usd;
             $value = floatval($amount) / floatval($rate);
-        } else {
+        } else
             $value = floatval($amount);
-        }
 
         return $value;
     }
@@ -60,9 +56,8 @@ class Convert
             $usd = Currency::where('code', 'USD')->first()->exchange_rate ?? 1;
             $rate = $usd / $bdt;
             $value = floatval($amount) / floatval($rate);
-        } else {
+        } else
             $value = floatval($amount);
-        }
 
         return $value;
     }
@@ -75,9 +70,8 @@ class Convert
             $usd = Currency::where('code', 'USD')->first()->exchange_rate ?? 1;
             $rate = $usd / $myr;
             $value = floatval($amount) / floatval($rate);
-        } else {
+        } else
             $value = floatval($amount);
-        }
 
         return $value;
     }
@@ -90,9 +84,8 @@ class Convert
             $usd = Currency::where('code', 'USD')->first()->exchange_rate ?? 1;
             $rate = $usd / $zar;
             $value = floatval($amount) / floatval($rate);
-        } else {
+        } else
             $value = floatval($amount);
-        }
 
         return $value;
     }
@@ -105,9 +98,8 @@ class Convert
             $usd = Currency::where('code', 'USD')->first()->exchange_rate ?? 1;
             $rate = $usd / $inr;
             $value = floatval($amount) / floatval($rate);
-        } else {
+        } else
             $value = floatval($amount);
-        }
 
         return $value;
     }
@@ -120,9 +112,8 @@ class Convert
             $usd = Currency::where('code', 'USD')->first()->exchange_rate ?? 1;
             $rate = $usd / $egp;
             $value = floatval($amount) / floatval($rate);
-        } else {
+        } else
             $value = floatval($amount);
-        }
 
         return $value;
     }

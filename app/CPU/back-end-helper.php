@@ -31,26 +31,24 @@ class BackEndHelper
         $currency_model = Helpers::get_business_settings('currency_model');
         if ($currency_model == 'multi_currency') {
 
-            if (session()->has('default')) {
+            if (session()->has('default'))
                 $default = session('default');
-            } else {
+            else {
                 $default = Currency::find(Helpers::get_business_settings('system_default_currency'))->exchange_rate;
                 session()->put('default', $default);
             }
 
-            if (session()->has('usd')) {
+            if (session()->has('usd'))
                 $usd = session('usd');
-            } else {
+            else {
                 $usd = Currency::where('code', 'USD')->first()->exchange_rate;
                 session()->put('usd', $usd);
             }
 
             $rate = $default / $usd;
-            $rate = 1;
             $value = floatval($amount) * floatval($rate);
-        } else {
+        } else
             $value = floatval($amount);
-        }
 
         return round($value, 2);
     }
