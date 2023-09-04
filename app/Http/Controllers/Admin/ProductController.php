@@ -22,12 +22,14 @@ use App\Model\Wishlist;
 use App\Model\Tag;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
+use App\Http\Requests\Product\updateCategories;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Rap2hpoutre\FastExcel\FastExcel;
 use function App\CPU\translate;
 use App\Model\Cart;
+use App\Services\ProductService;
 
 class ProductController extends BaseController
 {
@@ -392,7 +394,7 @@ class ProductController extends BaseController
         }
     }
 
-    function list(Request $request, $type)
+    function list(Request $request, $type, ProductService $service)
     {
         $query_param = [];
         $search = $request['search'];
@@ -414,7 +416,19 @@ class ProductController extends BaseController
         $pro = $pro->orderBy('id', 'DESC')->paginate(Helpers::pagination_limit())->appends(
             ['status' => $request['status']]
         )->appends($query_param);
-        return view('admin-views.product.list', compact('pro', 'search', 'request_status', 'type'));
+        $_ = [];
+        $sub_ = [];
+        $sub_sub_ = [];
+        foreach ($pro as $p) {
+            $category_ids = json_decode($p->category_ids);
+            $_[] = [0, $category_ids[0]->id];
+            $sub_[] = [$category_ids[0]->id, isset($category_ids[1]) ? $category_ids[1]->id : null];
+            $sub_sub_[] = [isset($category_ids[1]) ? $category_ids[1]->id : null, isset($category_ids[2]) ? $category_ids[2]->id : null];
+        }
+        $categories = $service->get_categories($_);
+        $sub_categories = $service->get_categories($sub_);
+        $sub_sub_categories = $service->get_categories($sub_sub_);
+        return view('admin-views.product.list', compact('pro', 'search', 'request_status', 'type', 'categories', 'sub_categories', 'sub_sub_categories'));
     }
 
     /**
@@ -590,9 +604,8 @@ class ProductController extends BaseController
             } else {
                 $product->status = $request['status'];
             }
-        } else {
+        } else
             $product->status = $request['status'];
-        }
         $product->save();
         return response()->json([
             'success' => $success,
@@ -613,17 +626,9 @@ class ProductController extends BaseController
         return response()->json([], 200);
     }
 
-    public function get_categories(Request $request)
+    public function get_categories(Request $request, ProductService $service)
     {
-        $cat = Category::where(['parent_id' => $request->parent_id])->get();
-        $res = '<option value="' . 0 . '" disabled selected>---' . translate("Select") . '---</option>';
-        foreach ($cat as $row) {
-            if ($row->id == $request->sub_category) {
-                $res .= '<option value="' . $row->id . '" selected >' . $row->name . '</option>';
-            } else {
-                $res .= '<option value="' . $row->id . '">' . $row->name . '</option>';
-            }
-        }
+        $res = $service->get_categories([[$request->parent_id, $request->sub_category]])[0];
         return response()->json([
             'select_tag' => $res,
         ]);
@@ -683,9 +688,16 @@ class ProductController extends BaseController
         );
     }
 
-    public function update(Request $request, $id)
+    public function update_categories(updateCategories $request, $id, ProductService $service)
     {
         $product = Product::find($id);
+        $product->category_ids = $service->update_categories($request->category_id, $request->sub_category_id, $request->sub_sub_category_id);
+        $product->save();
+        return response()->noContent();
+    }
+
+    public function update(Request $request, Product $product, ProductService $service)
+    {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'category_id' => 'required',
@@ -823,30 +835,9 @@ class ProductController extends BaseController
             }
         }
 
+        $product->category_ids = $service->update_categories($request->category_id, $request->sub_category_id, $request->sub_sub_category_id);
         $product->name = $request->name[array_search('en', $request->lang)];
-
-        $category = [];
-        if ($request->category_id != null) {
-            array_push($category, [
-                'id' => $request->category_id,
-                'position' => 1,
-            ]);
-        }
-        if ($request->sub_category_id != null) {
-            array_push($category, [
-                'id' => $request->sub_category_id,
-                'position' => 2,
-            ]);
-        }
-        if ($request->sub_sub_category_id != null) {
-            array_push($category, [
-                'id' => $request->sub_sub_category_id,
-                'position' => 3,
-            ]);
-        }
-
         $product->product_type = $request->product_type;
-        $product->category_ids = json_encode($category);
         $product->brand_id = isset($request->brand_id) ? $request->brand_id : null;
         $product->unit = $request->product_type == 'physical' ? $request->unit : null;
         $product->digital_product_type = $request->product_type == 'digital' ? $request->digital_product_type : null;
@@ -914,13 +905,11 @@ class ProductController extends BaseController
                 array_push($variations, $item);
                 $stock_count += $item['qty'];
             }
-        } else {
+        } else
             $stock_count = (int)$request['current_stock'];
-        }
 
-        if ($validator->errors()->count() > 0) {
+        if ($validator->errors()->count() > 0)
             return response()->json(['errors' => Helpers::error_processor($validator)]);
-        }
 
         //combinations end
         $product->variation = $request->product_type == 'physical' ? json_encode($variations) : json_encode([]);
