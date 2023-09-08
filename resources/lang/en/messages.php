@@ -3181,4 +3181,5 @@
   '₹' => '₹',
   'Category_Deleted_Successfully' => 'Category Deleted Successfully',
   'Sub Sub Sub Category' => 'Sub Sub Sub Category',
+  'sub_sub_sub_category' => 'Sub sub sub category',
 );

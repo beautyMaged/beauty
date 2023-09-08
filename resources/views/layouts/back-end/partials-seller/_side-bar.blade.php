@@ -308,13 +308,13 @@
                             </a>
                         </li>
 
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <small class="nav-subtitle">{{\App\CPU\translate('promotion_management')}}</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
-                        </li>
+                        </li> --}}
 
 
-                        <li class="navbar-vertical-aside-has-menu {{Request::is('seller/coupon*')?'active':''}}">
+                        {{-- <li class="navbar-vertical-aside-has-menu {{Request::is('seller/coupon*')?'active':''}}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
                                href="javascript:" title="{{\App\CPU\translate('Offers_&_Deals')}}">
                                 <i class="tio-users-switch nav-icon"></i>
@@ -333,15 +333,15 @@
                                     </a>
                                 </li>
                             </ul>
-                        </li>
+                        </li> --}}
 
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <small class="nav-subtitle">{{\App\CPU\translate('Help_&_Support_Section')}}</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
-                        </li>
+                        </li> --}}
 
 
-                        <li class="navbar-vertical-aside-has-menu {{Request::is('seller/messages*')?'active':''}}">
+                        {{-- <li class="navbar-vertical-aside-has-menu {{Request::is('seller/messages*')?'active':''}}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
                                href="javascript:">
                                 <i class="tio-user nav-icon"></i>
@@ -364,7 +364,7 @@
                                     </a>
                                 </li>
                             </ul>
-                        </li>
+                        </li> --}}
 
                         <li class="nav-item {{(Request::is('seller/transaction/order-list')) ? 'scroll-here':''}}">
                             <small class="nav-subtitle" title="">
@@ -439,7 +439,7 @@
                             </li>
                         @endif
 
-                        <li class="navbar-vertical-aside-has-menu {{Request::is('seller/business-settings/withdraw*')?'active':''}}">
+                        {{-- <li class="navbar-vertical-aside-has-menu {{Request::is('seller/business-settings/withdraw*')?'active':''}}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                href="{{route('seller.business-settings.withdraw.list')}}">
                                 <i class="tio-wallet-outlined nav-icon"></i>
@@ -448,7 +448,7 @@
                                         {{\App\CPU\translate('withdraws')}}
                                     </span>
                             </a>
-                        </li>
+                        </li> --}}
 
                         <li class="navbar-vertical-aside-has-menu {{Request::is('seller/profile*')?'active':''}}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"

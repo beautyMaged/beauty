@@ -46,11 +46,11 @@ class Product extends Model
         $brand_setting = BusinessSetting::where('type', 'product_brand')->first()->value;
         $digital_product_setting = BusinessSetting::where('type', 'digital_product')->first()->value;
 
-        if (!$digital_product_setting) {
+        if (!$digital_product_setting)
             $product_type = ['physical'];
-        } else {
+        else
             $product_type = ['digital', 'physical'];
-        }
+        
 
         return $query->when($brand_setting, function ($q) {
             $q->whereHas('brand', function ($query) {

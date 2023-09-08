@@ -299,20 +299,21 @@
             }
         });
         window.setTimeout(function () {
-            $.post({
-                url: '{{ route('cart.getStock') }}',
-                data: $('#add-to-cart-form').serializeArray(),
+            if($('#add-to-cart-form').length)
+                $.post({
+                    url: '{{ route('cart.getStock') }}',
+                    data: $('#add-to-cart-form').serializeArray(),
 
-                success: function (response) {
-                    console.log(response);
-                    if (response.status == 1) {
-                        choices_stock.text(response.message)
-                        deleted_price.text(response.price)
-                    } else if (response.status == 0) {
-                        choices_stock.text(response.message)
+                    success: function (response) {
+                        console.log(response);
+                        if (response.status == 1) {
+                            choices_stock.text(response.message)
+                            deleted_price.text(response.price)
+                        } else
+                        if (response.status == 0)
+                            choices_stock.text(response.message)
                     }
-                }
-            });
+                });
         }, 100);
     }
 

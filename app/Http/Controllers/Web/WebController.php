@@ -173,7 +173,7 @@ class WebController extends Controller
         $all_cats = Category::get();
         $latest_products = Product::with(['reviews'])->active()->inRandomOrder()->limit(14)->get()->chunk(7);
         $reviews_of_all_products = Review::with('user')->get();
-        $featured_mains = Category::where(['position' => 0])->where('home_status', true)->priority()->get();
+        $featured_mains = Category::where(['position' => 0])->where('home_status', true)->priority()->take(3)->get();
         $categories = Category::where(['position' => 0])->where('home_status', true)->priority()->take(11)->get();
         $brands = Brand::active()->take(15)->get();
         //best sell product
