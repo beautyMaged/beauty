@@ -340,6 +340,14 @@
                                                 class="text-truncate">{{\App\CPU\translate('Sub_Sub_Categories')}}</span>
                                         </a>
                                     </li>
+                                    <li class="nav-item {{Request::is('admin/sub-sub-sub-category/view')?'active':''}}">
+                                        <a class="nav-link " href="{{route('admin.sub-sub-sub-category.view')}}"
+                                           title="{{\App\CPU\translate('Sub_Sub_Sub_Categories')}}">
+                                            <span class="tio-circle nav-indicator-icon"></span>
+                                            <span
+                                                class="text-truncate">{{\App\CPU\translate('Sub_Sub_Sub_Categories')}}</span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                             <li class="navbar-vertical-aside-has-menu {{Request::is('admin/brand*')?'active':''}}">

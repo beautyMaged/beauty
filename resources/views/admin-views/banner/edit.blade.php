@@ -72,7 +72,7 @@
                                         <select class="js-example-responsive form-control w-100"
                                                 name="category_id">
                                             @foreach(\App\CPU\CategoryManager::parents() as $category)
-                                                <option value="{{$category['id']}}" {{$banner['resource_id']==$category['id']?'selected':''}}>{{$category['name']}}</option>
+                                                <option value="{{$category['id']}}" {{$banner['resource_id']==$category['id']?'selected':''}}>{{$category->translations[0]->value ?? $category->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>

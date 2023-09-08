@@ -44,7 +44,7 @@
                             <select class="js-select2-custom form-control __form-control" name="category_id" id="cat_id">
                                 <option value="all" {{ $category_id == 'all' ? 'selected' : '' }}>{{\App\CPU\translate('all_category')}}</option>
                                 @foreach(\App\Model\Category::where(['position'=>0])->get() as $category)
-                                    <option value="{{$category['id']}}" {{ $category_id == $category['id'] ? 'selected' : '' }}>{{$category['name']}}</option>
+                                    <option value="{{$category['id']}}" {{ $category_id == $category['id'] ? 'selected' : '' }}>{{$category->translations[0]->value ?? $category->name}}</option>
                                 @endforeach
                             </select>
                         </div>

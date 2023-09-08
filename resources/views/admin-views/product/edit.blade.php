@@ -52,10 +52,12 @@
                                 if (count($product['translations'])) {
                                     $translate = [];
                                     foreach ($product['translations'] as $t) {
-                                        if ($t->locale == $lang && $t->key == 'name') 
+                                        if ($t->locale == $lang && $t->key == 'name') {
                                             $translate[$lang]['name'] = $t->value;
-                                        if ($t->locale == $lang && $t->key == 'description') 
+                                        }
+                                        if ($t->locale == $lang && $t->key == 'description') {
                                             $translate[$lang]['description'] = $t->value;
+                                        }
                                     }
                                 }
                                 ?>
@@ -68,8 +70,9 @@
                                         </label>
                                         <input type="text" {{ $lang == 'en' ? 'required' : '' }} name="name[]"
                                             id="{{ $lang }}_name"
-                                            value="{{ $translate[$lang]['name'] ?? $product['name'] }}" class="form-control"
-                                            placeholder="{{ \App\CPU\translate('New Product') }}" required>
+                                            value="{{ $translate[$lang]['name'] ?? $product['name'] }}"
+                                            class="form-control" placeholder="{{ \App\CPU\translate('New Product') }}"
+                                            required>
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{ $lang }}">
                                     <div class="form-group pt-4">
@@ -148,7 +151,7 @@
                                         @foreach ($categories as $category)
                                             <option value="{{ $category['id'] }}"
                                                 {{ $category->id == $product_category[0]->id ? 'selected' : '' }}>
-                                                {{ $category['name'] }}</option>
+                                                {{ $category->translations[0]->value ?? $category->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -166,8 +169,17 @@
                                         class="title-color">{{ \App\CPU\translate('Sub Sub Category') }}</label>
 
                                     <select class="js-example-basic-multiple js-states js-example-responsive form-control"
+                                        name="sub_sub_category_id" id="sub-sub-category-select"
                                         data-id="{{ count($product_category) >= 3 ? $product_category[2]->id : '' }}"
-                                        name="sub_sub_category_id" id="sub-sub-category-select">
+                                        onchange="getRequest('{{ url('/') }}/admin/product/get-categories?parent_id='+this.value,'sub-sub-sub-category-select','select')">
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="title-color">{{ \App\CPU\translate('Sub Sub Sub Category') }}</label>
+
+                                    <select class="js-example-basic-multiple js-states js-example-responsive form-control"
+                                        name="sub_sub_sub_category_id" id="sub-sub-sub-category-select"
+                                        data-id="{{ count($product_category) >= 4 ? $product_category[3]->id : '' }}">
                                     </select>
                                 </div>
 
@@ -194,7 +206,8 @@
                                                 ---{{ \App\CPU\translate('Select') }}---</option>
                                             @foreach ($br as $b)
                                                 <option value="{{ $b['id'] }}"
-                                                    {{ $b->id == $product->brand_id ? 'selected' : '' }}>{{ $b['name'] }}
+                                                    {{ $b->id == $product->brand_id ? 'selected' : '' }}>
+                                                    {{ $b['name'] }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -333,9 +346,11 @@
                                 <div class="col-md-2 form-group">
                                     <label class="title-color">{{ \App\CPU\translate('discount_type') }} </label>
                                     <select class="form-control" name="discount_type">
-                                        <option value="percent" {{ $product['discount_type'] == 'percent' ? 'selected' : '' }}>
+                                        <option value="percent"
+                                            {{ $product['discount_type'] == 'percent' ? 'selected' : '' }}>
                                             {{ \App\CPU\translate('Percent') }}</option>
-                                        <option value="flat" {{ $product['discount_type'] == 'flat' ? 'selected' : '' }}>
+                                        <option value="flat"
+                                            {{ $product['discount_type'] == 'flat' ? 'selected' : '' }}>
                                             {{ \App\CPU\translate('Flat') }}</option>
 
                                     </select>
@@ -628,10 +643,10 @@
                 },
                 onExtensionErr: function(index, file) {
                     toastr.error(
-                    '{{ \App\CPU\translate('Please only input png or jpg type file') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
+                        '{{ \App\CPU\translate('Please only input png or jpg type file') }}', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
                 },
                 onSizeErr: function(index, file) {
                     toastr.error('{{ \App\CPU\translate('File size too big') }}', {
@@ -663,10 +678,10 @@
                 },
                 onExtensionErr: function(index, file) {
                     toastr.error(
-                    '{{ \App\CPU\translate('Please only input png or jpg type file') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
+                        '{{ \App\CPU\translate('Please only input png or jpg type file') }}', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
                 },
                 onSizeErr: function(index, file) {
                     toastr.error('{{ \App\CPU\translate('File size too big') }}', {
@@ -717,9 +732,8 @@
                 url: route,
                 dataType: 'json',
                 success: function(data) {
-                    if (type == 'select') {
-                        $('#' + id).empty().append(data.select_tag);
-                    }
+                    if (type == 'select')
+                        $('#' + id).empty().append(data.select_tag)
                 },
             });
         }
@@ -748,7 +762,7 @@
                 '" placeholder="{{ \App\CPU\translate('Choice Title') }}" readonly></div><div class="col-lg-9"><input type="text" class="form-control" name="choice_options_' +
                 i +
                 '[]" placeholder="{{ \App\CPU\translate('Enter choice values') }}" data-role="tagsinput" onchange="update_sku()"></div></div>'
-                );
+            );
             $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
         }
 
@@ -887,10 +901,14 @@
                 let category = $("#category_id").val();
                 let sub_category = $("#sub-category-select").attr("data-id");
                 let sub_sub_category = $("#sub-sub-category-select").attr("data-id");
+                let sub_sub_sub_category = $("#sub-sub-sub-category-select").attr("data-id");
                 getRequest('{{ url('/') }}/admin/product/get-categories?parent_id=' + category +
                     '&sub_category=' + sub_category, 'sub-category-select', 'select');
                 getRequest('{{ url('/') }}/admin/product/get-categories?parent_id=' + sub_category +
                     '&sub_category=' + sub_sub_category, 'sub-sub-category-select', 'select');
+                getRequest('{{ url('/') }}/admin/product/get-categories?parent_id=' +
+                    sub_sub_category +
+                    '&sub_category=' + sub_sub_sub_category, 'sub-sub-sub-category-select', 'select');
             }, 100)
             // color select select2
             $('.color-var-select').select2({
@@ -906,9 +924,8 @@
             if ($('#color_switcher').prop('checked')) {
                 $('#color_wise_image').show();
                 color_wise_image($('#colors-selector'));
-            } else {
+            } else
                 $('#color_wise_image').hide();
-            }
 
             function colorCodeSelect(state) {
                 var colorCode = $(state.element).val();
@@ -921,9 +938,8 @@
 
     <script>
         function check() {
-            for (instance in CKEDITOR.instances) {
+            for (instance in CKEDITOR.instances)
                 CKEDITOR.instances[instance].updateElement();
-            }
             var formData = new FormData(document.getElementById('product_form'));
             $.ajaxSetup({
                 headers: {

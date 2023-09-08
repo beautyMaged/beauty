@@ -133,11 +133,10 @@ class ProductController extends BaseController
             });
         }
 
-        if ($request['discount_type'] == 'percent') {
+        if ($request['discount_type'] == 'percent')
             $dis = ($request['unit_price'] / 100) * $request['discount'];
-        } else {
+        else
             $dis = $request['discount'];
-        }
 
         if ($request['product_type'] == 'physical' && $request['unit_price'] <= $dis) {
             $validator->after(function ($validator) {
@@ -419,16 +418,20 @@ class ProductController extends BaseController
         $_ = [];
         $sub_ = [];
         $sub_sub_ = [];
+        $sub_sub_sub_ = [];
         foreach ($pro as $p) {
             $category_ids = json_decode($p->category_ids);
+            //dd($p->id);
             $_[] = [0, $category_ids[0]->id];
             $sub_[] = [$category_ids[0]->id, isset($category_ids[1]) ? $category_ids[1]->id : null];
             $sub_sub_[] = [isset($category_ids[1]) ? $category_ids[1]->id : null, isset($category_ids[2]) ? $category_ids[2]->id : null];
+            $sub_sub_sub_[] = [isset($category_ids[2]) ? $category_ids[2]->id : null, isset($category_ids[3]) ? $category_ids[3]->id : null];
         }
         $categories = $service->get_categories($_);
         $sub_categories = $service->get_categories($sub_);
         $sub_sub_categories = $service->get_categories($sub_sub_);
-        return view('admin-views.product.list', compact('pro', 'search', 'request_status', 'type', 'categories', 'sub_categories', 'sub_sub_categories'));
+        $sub_sub_sub_categories = $service->get_categories($sub_sub_sub_);
+        return view('admin-views.product.list', compact('pro', 'search', 'request_status', 'type', 'categories', 'sub_categories', 'sub_sub_categories', 'sub_sub_sub_categories'));
     }
 
     /**
@@ -502,9 +505,8 @@ class ProductController extends BaseController
                     }
                 });
             $query_param = ['search' => $request['search']];
-        } else {
+        } else
             $pro = Product::where(['added_by' => 'seller'])->where('is_shipping_cost_updated', 0);
-        }
         $pro = $pro->orderBy('id', 'DESC')->paginate(Helpers::pagination_limit())->appends($query_param);
 
         return view('admin-views.product.updated-product-list', compact('pro', 'search'));
@@ -691,7 +693,7 @@ class ProductController extends BaseController
     public function update_categories(updateCategories $request, $id, ProductService $service)
     {
         $product = Product::find($id);
-        $product->category_ids = $service->update_categories($request->category_id, $request->sub_category_id, $request->sub_sub_category_id);
+        $product->category_ids = $service->update_categories($request->category_id, $request->sub_category_id, $request->sub_sub_category_id, $request->sub_sub_sub_category_id);
         $product->save();
         return response()->noContent();
     }
@@ -747,11 +749,10 @@ class ProductController extends BaseController
             });
         }
 
-        if ($request['discount_type'] == 'percent') {
+        if ($request['discount_type'] == 'percent')
             $dis = ($request['unit_price'] / 100) * $request['discount'];
-        } else {
+        else
             $dis = $request['discount'];
-        }
 
         if ($request['product_type'] == 'physical' && $request['unit_price'] <= $dis) {
             $validator->after(function ($validator) {
@@ -835,7 +836,7 @@ class ProductController extends BaseController
             }
         }
 
-        $product->category_ids = $service->update_categories($request->category_id, $request->sub_category_id, $request->sub_sub_category_id);
+        $product->category_ids = $service->update_categories($request->category_id, $request->sub_category_id, $request->sub_sub_category_id, $request->sub_sub_sub_category_id);
         $product->name = $request->name[array_search('en', $request->lang)];
         $product->product_type = $request->product_type;
         $product->brand_id = isset($request->brand_id) ? $request->brand_id : null;
@@ -996,9 +997,8 @@ class ProductController extends BaseController
             $product->save();
 
             $tag_ids = [];
-            if ($request->tags != null) {
+            if ($request->tags != null)
                 $tags = explode(",", $request->tags);
-            }
             if (isset($tags)) {
                 foreach ($tags as $key => $value) {
                     $tag = Tag::firstOrNew(

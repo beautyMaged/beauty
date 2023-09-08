@@ -173,11 +173,29 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
                 Route::get('fetch', 'SubSubCategoryController@fetch')->name('fetch');
                 Route::post('store', 'SubSubCategoryController@store')->name('store');
                 Route::post('edit', 'SubSubCategoryController@edit')->name('edit');
-                Route::post('update', 'SubSubCategoryController@update')->name('update');
                 Route::post('delete', 'SubSubCategoryController@delete')->name('delete');
                 Route::post('get-sub-category', 'SubSubCategoryController@getSubCategory')->name('getSubCategory');
                 Route::post('get-category-id', 'SubSubCategoryController@getCategoryId')->name('getCategoryId');
                 Route::post('featured-status', 'SubSubCategoryController@featuredChanger')->name('featured.status');
+            }
+        );
+
+        Route::group(
+            [
+                'prefix' => 'sub-sub-sub-category',
+                'as' => 'sub-sub-sub-category.',
+                'middleware' => ['module:product_management']
+            ],
+            function () {
+                Route::get('view', 'SubSubSubCategoryController@index')->name('view');
+                Route::get('fetch', 'SubSubSubCategoryController@fetch')->name('fetch');
+                Route::post('store', 'SubSubSubCategoryController@store')->name('store');
+                Route::post('edit', 'SubSubSubCategoryController@edit')->name('edit');
+                Route::post('update', 'SubSubSubCategoryController@update')->name('update');
+                Route::post('delete', 'SubSubSubCategoryController@delete')->name('delete');
+                Route::post('get-sub-category', 'SubSubSubCategoryController@getSubCategory')->name('getSubCategory');
+                Route::post('get-category-id', 'SubSubSubCategoryController@getCategoryId')->name('getCategoryId');
+                Route::post('featured-status', 'SubSubSubCategoryController@featuredChanger')->name('featured.status');
             }
         );
 

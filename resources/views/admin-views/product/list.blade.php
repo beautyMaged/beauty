@@ -87,11 +87,13 @@
                                     <th class="text-right">{{ \App\CPU\translate('selling_price') }}</th>
                                     <th class="text-right">{{ \App\CPU\translate('unit_price') }}</th>
                                     <th class="text-center">{{ \App\CPU\translate('Show_as_featured') }}</th>
-                                    <th class="text-center">{{ \App\CPU\translate('Active') }}{{ \App\CPU\translate('status') }}</th>
+                                    <th class="text-center">
+                                        {{ \App\CPU\translate('Active') }}{{ \App\CPU\translate('status') }}</th>
                                     <th class="text-center">{{ \App\CPU\translate('collection') }}</th>
                                     <th class="text-center">{{ \App\CPU\translate('category') }}</th>
                                     <th class="text-center">{{ \App\CPU\translate('sub_category') }}</th>
                                     <th class="text-center">{{ \App\CPU\translate('sub_sub_category') }}</th>
+                                    <th class="text-center">{{ \App\CPU\translate('sub_sub_sub_category') }}</th>
 
                                     <th class="text-center">{{ \App\CPU\translate('Action') }}</th>
                                 </tr>
@@ -139,12 +141,12 @@
                                             </label>
                                         </td>
                                         <td>
-                                            {{$p['collection'] ?? \App\CPU\translate('not_available')}}
+                                            {{ $p['collection'] ?? \App\CPU\translate('not_available') }}
                                         </td>
                                         <td>
                                             <select
                                                 class="js-example-basic-multiple js-states js-example-responsive form-control"
-                                                name="category_id" id="category_{{ $p['id'] }}"
+                                                id="category_{{ $p['id'] }}" name="category_id"
                                                 onchange="getRequest('{{ url('/') }}/admin/product/get-categories?parent_id='+this.value,'sub_category_{{ $p['id'] }}','select')">
                                                 {!! $categories[$k] !!}
                                             </select>
@@ -152,7 +154,7 @@
                                         <td>
                                             <select
                                                 class="js-example-basic-multiple js-states js-example-responsive form-control"
-                                                name="sub_category_id" id="sub_category_{{ $p['id'] }}"
+                                                id="sub_category_{{ $p['id'] }}" name="sub_category_id"
                                                 data-id="{{ count($product_category) >= 2 ? $product_category[1]->id : '' }}"
                                                 onchange="getRequest('{{ url('/') }}/admin/product/get-categories?parent_id='+this.value,'sub_sub_category_{{ $p['id'] }}','select')">
                                                 {!! $sub_categories[$k] !!}
@@ -161,10 +163,20 @@
                                         <td>
                                             <select
                                                 class="js-example-basic-multiple js-states js-example-responsive form-control"
-                                                name="sub_sub_category_id" id="sub_sub_category_{{ $p['id'] }}"
+                                                id="sub_sub_category_{{ $p['id'] }}" name="sub_sub_category_id"
                                                 data-id="{{ count($product_category) >= 3 ? $product_category[2]->id : '' }}"
-                                                onchange="update({{ $p['id'] }})">
+                                                onchange="getRequest('{{ url('/') }}/admin/product/get-categories?parent_id='+this.value,'sub_sub_sub_category_{{ $p['id'] }}','select')">
                                                 {!! $sub_sub_categories[$k] !!}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select
+                                                class="js-example-basic-multiple js-states js-example-responsive form-control"
+                                                id="sub_sub_sub_category_{{ $p['id'] }}"
+                                                name="sub_sub_sub_category_id"
+                                                data-id="{{ count($product_category) >= 4 ? $product_category[3]->id : '' }}"
+                                                onchange="update({{ $p['id'] }})">
+                                                {!! $sub_sub_sub_categories[$k] !!}
                                             </select>
                                         </td>
                                         <td>
@@ -239,6 +251,7 @@
                     category_id: $(`#category_${id}`).val(),
                     sub_category_id: $(`#sub_category_${id}`).val(),
                     sub_sub_category_id: $(`#sub_sub_category_${id}`).val(),
+                    sub_sub_sub_category_id: $(`#sub_sub_sub_category_${id}`).val(),
                 },
                 success: function(data) {
 
@@ -262,23 +275,27 @@
         });
 
         function getRequest(route, id, type) {
-            $.get({
-                url: route,
-                dataType: 'json',
-                success: function(data) {
-                    if (type == 'select')
-                        $('#' + id).empty().append(data.select_tag).trigger('change')
-                },
-            });
+            if (route.includes('parent_id=0'))
+                $('#' + id).empty().append(
+                    `<option value="0" disabled selected>---{{ \App\CPU\translate('Select') }}---</option>`).trigger(
+                    'change')
+            else
+                $.get({
+                    url: route,
+                    dataType: 'json',
+                    success: function(data) {
+                        if (type == 'select')
+                            $('#' + id).empty().append(data.select_tag).trigger('change')
+                    },
+                });
         }
 
         $(document).on('change', '.status', function() {
             var id = $(this).attr("id");
-            if ($(this).prop("checked") == true) {
+            if ($(this).prop("checked") == true)
                 var status = 1;
-            } else if ($(this).prop("checked") == false) {
+            else if ($(this).prop("checked") == false)
                 var status = 0;
-            }
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
@@ -297,7 +314,7 @@
                     } else if (data.success == false) {
                         toastr.error(
                             '{{ \App\CPU\translate('Status updated failed. Product must be approved') }}'
-                            );
+                        );
                         setTimeout(function() {
                             location.reload();
                         }, 2000);

@@ -16,3 +16,4 @@ composer-setup.php
 .zip
 composer.json
 .gitignore
+rsync

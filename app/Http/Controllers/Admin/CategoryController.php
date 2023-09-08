@@ -7,6 +7,7 @@ use App\CPU\ImageManager;
 use App\Http\Controllers\Controller;
 use App\Model\Category;
 use App\Model\Translation;
+use App\Services\CategoryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Brian2694\Toastr\Facades\Toastr;
@@ -21,14 +22,13 @@ class CategoryController extends Controller
         {
             $key = explode(' ', $request['search']);
             $categories = Category::where(function ($q) use ($key) {
-                foreach ($key as $value) {
+                foreach ($key as $value)
                     $q->orWhere('name', 'like', "%{$value}%");
-                }
             });
             $query_param = ['search' => $request['search']];
-        }else{
-            $categories = Category::where(['position' => 0]);
         }
+        else
+            $categories = Category::where(['position' => 0]);
 
         $categories = $categories->latest()->paginate(Helpers::pagination_limit())->appends($query_param);
         return view('admin-views.category.view', compact('categories','search'));
@@ -53,6 +53,8 @@ class CategoryController extends Controller
         $category->parent_id = 0;
         $category->position = 0;
         $category->priority = $request->priority;
+        $category->home_status = 1;
+        
         $category->save();
 
         $data = [];
@@ -85,9 +87,8 @@ class CategoryController extends Controller
         $category = Category::find($request->id);
         $category->name = $request->name[array_search('en', $request->lang)];
         $category->slug = Str::slug($request->name[array_search('en', $request->lang)]);
-        if ($request->image) {
+        if ($request->image)
             $category->icon = ImageManager::update('category/', $category->icon, 'png', $request->file('image'));
-        }
         $category->priority = $request->priority;
         $category->save();
 
@@ -102,38 +103,14 @@ class CategoryController extends Controller
                 );
             }
         }
-
         Toastr::success('Category updated successfully!');
         return back();
     }
 
-    public function delete(Request $request)
+    public function delete(Request $request, CategoryService $service)
     {
-        $categories = Category::where('parent_id', $request->id)->get();
-        if (!empty($categories)) {
-            foreach ($categories as $category) {
-                $categories1 = Category::where('parent_id', $category->id)->get();
-                if (!empty($categories1)) {
-                    foreach ($categories1 as $category1) {
-                        $translation = Translation::where('translationable_type','App\Model\Category')
-                                    ->where('translationable_id',$category1->id);
-                        $translation->delete();
-                        Category::destroy($category1->id);
-
-                    }
-                }
-                $translation = Translation::where('translationable_type','App\Model\Category')
-                                    ->where('translationable_id',$category->id);
-                $translation->delete();
-                Category::destroy($category->id);
-
-            }
-        }
-        $translation = Translation::where('translationable_type','App\Model\Category')
-                                    ->where('translationable_id',$request->id);
-        $translation->delete();
-        Category::destroy($request->id);
-
+        $service->delete($request->id);
+        $service->deleteSubs($request->id, 3);
         return response()->json();
     }
 

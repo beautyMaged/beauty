@@ -63,7 +63,7 @@
                                             <option value="" selected
                                                     disabled>{{\App\CPU\translate('Select_main_category')}}</option>
                                             @foreach(\App\Model\Category::where(['position'=>0])->get() as $category)
-                                                <option value="{{$category['id']}}">{{$category['name']}}</option>
+                                                <option value="{{$category['id']}}">{{$category->translations[0]->value ?? $category->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -166,7 +166,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($categories as $key=>$category)
+                            @foreach($categories as $category)
                                 <tr>
                                     <td>{{$category['id']}}</td>
                                     <td class="text-center">
@@ -174,7 +174,7 @@
                                              onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                              src="{{asset('storage/category')}}/{{$category['icon']}}">
                                     </td>
-                                    <td>{{$category['name']}}</td>
+                                    <td>{{$category->translations[0]->value ?? $category->name}}</td>
                                     <td>{{$category['priority']}}</td>
                                     <td>
                                         <div class="d-flex justify-content-center gap-2">
@@ -264,7 +264,7 @@
                         method: 'POST',
                         data: {id: id},
                         success: function () {
-                            toastr.success('{{\App\CPU\translate('Sub_Category_deleted_Successfully.')}}');
+                            toastr.success('{{\App\CPU\translate('Category_deleted_Successfully.')}}');
                             location.reload();
                         }
                     });

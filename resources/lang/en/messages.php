@@ -1991,6 +1991,7 @@
   'Categories' => 'Categories',
   'Sub_Categories' => 'Sub Categories',
   'Sub_Sub_Categories' => 'Sub Sub Categories',
+  'Sub_Sub_Sub_Categories' => 'Sub Sub Sub Categories',
   'Product_Attributes' => 'Product Attributes',
   'promotion_management' => 'Promotion management',
   'Offers_&_Deals' => 'Offers & Deals',
@@ -3178,4 +3179,6 @@
   'coupon_status_updated' => 'Coupon status updated',
   'Unregistered Client' => 'Unregistered Client',
   '₹' => '₹',
+  'Category_Deleted_Successfully' => 'Category Deleted Successfully',
+  'Sub Sub Sub Category' => 'Sub Sub Sub Category',
 );

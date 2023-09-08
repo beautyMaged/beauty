@@ -4,19 +4,18 @@ namespace App\Services;
 
 use App\Model\Category;
 use function App\CPU\translate;
-use App\CPU\Helpers;
 
 class ProductService
 {
-    public function get_categories(array $product)
+    public function get_categories(array $products)
     {
         $res = [];
-        for ($i = 0; $i < count($product); $i++) {
-            $cat = Category::Where('parent_id', $product[$i][0])->get();
+        for ($i = 0; $i < count($products); $i++) {
+            $cat = Category::Where('parent_id', $products[$i][0])->get();
             $res[$i] = '<option value="' . 0 . '" disabled selected>---' . translate("Select") . '---</option>';
             foreach ($cat as $row) {
                 $name = $row->translations[0]->value ?? $row->name;
-                if ($row->id == $product[$i][1])
+                if ($row->id == $products[$i][1])
                     $res[$i] .= '<option value="' . $row->id . '" selected >' . $name . '</option>';
                 else
                     $res[$i] .= '<option value="' . $row->id . '">' . $name . '</option>';
@@ -25,7 +24,7 @@ class ProductService
         return $res;
     }
 
-    public function update_categories($category, $sub_category, $sub_sub_category)
+    public function update_categories($category, $sub_category, $sub_sub_category, $sub_sub_sub_category)
     {
         $ids = [];
         if ($category != null) {
@@ -44,6 +43,12 @@ class ProductService
             array_push($ids, [
                 'id' => $sub_sub_category,
                 'position' => 3,
+            ]);
+        }
+        if ($sub_sub_sub_category != null) {
+            array_push($ids, [
+                'id' => $sub_sub_sub_category,
+                'position' => 4,
             ]);
         }
         return json_encode($ids);

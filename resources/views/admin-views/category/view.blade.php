@@ -146,7 +146,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            @foreach($categories as $key=>$category)
+                            @foreach($categories as $category)
                                 <tr>
                                     <td >{{$category['id']}}</td>
                                     <td class="text-center">
@@ -154,7 +154,7 @@
                                                 onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
                                                 src="{{asset('storage/category')}}/{{$category['icon']}}">
                                     </td>
-                                    <td>{{$category['name']}}</td>
+                                    <td>{{$category->translations[0]->value ?? $category->name}}</td>
                                     <td>
                                         {{$category['priority']}}
                                     </td>

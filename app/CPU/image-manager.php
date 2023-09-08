@@ -25,18 +25,16 @@ class ImageManager
 
     public static function update(string $dir, $old_image, string $format, $image = null)
     {
-        if (Storage::disk('public')->exists($dir . $old_image)) {
+        if (Storage::disk('public')->exists($dir . $old_image))
             Storage::disk('public')->delete($dir . $old_image);
-        }
         $imageName = ImageManager::upload($dir, $format, $image);
         return $imageName;
     }
 
     public static function delete($full_path)
     {
-        if (Storage::disk('public')->exists($full_path)) {
+        if (Storage::disk('public')->exists($full_path))
             Storage::disk('public')->delete($full_path);
-        }
 
         return [
             'success' => 1,

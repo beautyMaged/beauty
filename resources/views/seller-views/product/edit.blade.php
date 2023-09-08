@@ -130,7 +130,7 @@
                                             <option value="0" selected disabled>---{{ \App\CPU\translate('Select')}}---</option>
                                             @foreach($categories as $category)
                                                 <option
-                                                    value="{{$category['id']}}" {{ $category->id==$product_category[0]->id ? 'selected' : ''}} >{{$category['name']}}</option>
+                                                    value="{{$category['id']}}" {{ $category->id==$product_category[0]->id ? 'selected' : ''}} >{{$category->translations[0]->value ?? $category->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
