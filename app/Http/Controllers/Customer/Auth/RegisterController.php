@@ -34,6 +34,7 @@ class RegisterController extends Controller
 
     public function submit(Request $request)
     {
+        $request->flashExcept(['password', 'con_password']);
         $request->validate([
             'f_name' => 'required',
             'email' => 'required|email|unique:users',
@@ -42,32 +43,32 @@ class RegisterController extends Controller
         ], [
             'f_name.required' => 'First name is required',
         ]);
-
+        
         //recaptcha validation
-//        $recaptcha = Helpers::get_business_settings('recaptcha');
-//        if (isset($recaptcha) && $recaptcha['status'] == 1) {
-//            try {
-//                $request->validate([
-//                    'g-recaptcha-response' => [
-//                        function ($attribute, $value, $fail) {
-//                            $secret_key = Helpers::get_business_settings('recaptcha')['secret_key'];
-//                            $response = $value;
-//                            $url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $response;
-//                            $response = \file_get_contents($url);
-//                            $response = json_decode($response);
-//                            if (!$response->success) {
-//                                $fail(\App\CPU\translate('ReCAPTCHA Failed'));
-//                            }
-//                        },
-//                    ],
-//                ]);
-//            } catch (\Exception $exception) {}
-//        } else {
-//            if (strtolower($request->default_captcha_value) != strtolower(Session('default_captcha_code'))) {
-//                \Illuminate\Support\Facades\Session::forget('default_captcha_code');
-//                return back()->withErrors(\App\CPU\translate('Captcha Failed'));
-//            }
-//        }
+        //        $recaptcha = Helpers::get_business_settings('recaptcha');
+        //        if (isset($recaptcha) && $recaptcha['status'] == 1) {
+        //            try {
+        //                $request->validate([
+        //                    'g-recaptcha-response' => [
+        //                        function ($attribute, $value, $fail) {
+        //                            $secret_key = Helpers::get_business_settings('recaptcha')['secret_key'];
+        //                            $response = $value;
+        //                            $url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $response;
+        //                            $response = \file_get_contents($url);
+        //                            $response = json_decode($response);
+        //                            if (!$response->success) {
+        //                                $fail(\App\CPU\translate('ReCAPTCHA Failed'));
+        //                            }
+        //                        },
+        //                    ],
+        //                ]);
+        //            } catch (\Exception $exception) {}
+        //        } else {
+        //            if (strtolower($request->default_captcha_value) != strtolower(Session('default_captcha_code'))) {
+        //                \Illuminate\Support\Facades\Session::forget('default_captcha_code');
+        //                return back()->withErrors(\App\CPU\translate('Captcha Failed'));
+        //            }
+        //        }
 
         $user = User::create([
             'f_name' => $request['f_name'],
@@ -80,21 +81,21 @@ class RegisterController extends Controller
 
         $phone_verification = Helpers::get_business_settings('phone_verification');
         $email_verification = Helpers::get_business_settings('email_verification');
-        if ($phone_verification && !$user->is_phone_verified) {
-            auth('customer')->loginUsingId($user->id);
 
-            return redirect(route('customer.auth.check', [$user->id]));
-        }
-        if ($email_verification && !$user->is_email_verified) {
-            auth('customer')->loginUsingId($user->id);
-
-            return redirect(route('customer.auth.check', [$user->id]));
-        }
-
-        Toastr::success(translate('registration_success_login_now'));
         auth('customer')->loginUsingId($user->id);
+        
+        if ($phone_verification && !$user->is_phone_verified)
+            return redirect(route('customer.auth.check', [$user->id]));
 
-        return redirect(url('/'));
+        if ($email_verification && !$user->is_email_verified)
+            return redirect(route('customer.auth.check', [$user->id]));
+
+        // Toastr::success(translate('registration_success_login_now'));
+
+        return  response()->json([
+            'success' => true,
+            'message' => translate('registration_success_login_now')
+        ]);
     }
 
     public static function check($id)
@@ -125,8 +126,8 @@ class RegisterController extends Controller
             if ($emailServices_smtp['status'] == 1) {
                 Mail::to($user->email)->send(new \App\Mail\EmailVerification($token));
                 $response = translate('check_your_email');
-            }else{
-                $response= translate('email_failed');
+            } else {
+                $response = translate('email_failed');
             }
 
             Toastr::success($response);
@@ -158,12 +159,10 @@ class RegisterController extends Controller
                 }
 
                 Toastr::success(translate('verification_done_successfully'));
-
             } else {
                 Toastr::error(translate('Verification_code_or_OTP mismatched'));
                 return redirect()->back();
             }
-
         } else {
             if (isset($verify)) {
                 try {
@@ -178,7 +177,6 @@ class RegisterController extends Controller
             } else {
                 Toastr::error('Verification code/ OTP mismatched');
             }
-
         }
 
         return redirect(route('customer.auth.login'));
@@ -187,7 +185,7 @@ class RegisterController extends Controller
     public static function login_process($user, $email, $password)
     {
         if (auth('customer')->attempt(['email' => $email, 'password' => $password], true)) {
-            $wish_list = Wishlist::whereHas('wishlistProduct',function($q){
+            $wish_list = Wishlist::whereHas('wishlistProduct', function ($q) {
                 return $q;
             })->where('customer_id', $user->id)->pluck('product_id')->toArray();
 
@@ -201,5 +199,4 @@ class RegisterController extends Controller
 
         return $message;
     }
-
 }

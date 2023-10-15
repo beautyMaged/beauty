@@ -5,6 +5,7 @@
      style="margin-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}:0 ">
     <a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="{{route('shop-cart')}}">
         <span class="navbar-tool-label bold">
+            {{-- WTF!!! --}}
             @if(auth()->check())
                 @php($cart=\App\CPU\CartManager::get_cart())
             @else

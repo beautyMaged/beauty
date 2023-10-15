@@ -20,6 +20,7 @@ class SharedController extends Controller
         Helpers::language_load();
         session()->put('local', $local);
         Session::put('direction', $direction);
-        return redirect()->back();
+        // return redirect()->back();
+        return response()->json(session()->has('local'));
     }
 }

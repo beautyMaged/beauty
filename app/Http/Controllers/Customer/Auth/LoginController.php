@@ -37,7 +37,7 @@ class LoginController extends Controller
         $builder->build($width = 100, $height = 40, $font = null);
         $phrase = $builder->getPhrase();
 
-        if(Session::has('default_captcha_code')) {
+        if (Session::has('default_captcha_code')) {
             Session::forget('default_captcha_code');
         }
         Session::put('default_captcha_code', $phrase);
@@ -61,30 +61,30 @@ class LoginController extends Controller
         ]);
 
         //recaptcha validation
-//        $recaptcha = Helpers::get_business_settings('recaptcha');
-//        if (isset($recaptcha) && $recaptcha['status'] == 1) {
-//            try {
-//                $request->validate([
-//                    'g-recaptcha-response' => [
-//                        function ($attribute, $value, $fail) {
-//                            $secret_key = Helpers::get_business_settings('recaptcha')['secret_key'];
-//                            $response = $value;
-//                            $url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $response;
-//                            $response = \file_get_contents($url);
-//                            $response = json_decode($response);
-//                            if (!$response->success) {
-//                                $fail(\App\CPU\translate('ReCAPTCHA Failed'));
-//                            }
-//                        },
-//                    ],
-//                ]);
-//            } catch (\Exception $exception) {}
-//        } else {
-//            if (strtolower($request->default_captcha_value) != strtolower(Session('default_captcha_code'))) {
-//                Session::forget('default_captcha_code');
-//                return back()->withErrors(\App\CPU\translate('Captcha Failed'));
-//            }
-//        }
+        //        $recaptcha = Helpers::get_business_settings('recaptcha');
+        //        if (isset($recaptcha) && $recaptcha['status'] == 1) {
+        //            try {
+        //                $request->validate([
+        //                    'g-recaptcha-response' => [
+        //                        function ($attribute, $value, $fail) {
+        //                            $secret_key = Helpers::get_business_settings('recaptcha')['secret_key'];
+        //                            $response = $value;
+        //                            $url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $response;
+        //                            $response = \file_get_contents($url);
+        //                            $response = json_decode($response);
+        //                            if (!$response->success) {
+        //                                $fail(\App\CPU\translate('ReCAPTCHA Failed'));
+        //                            }
+        //                        },
+        //                    ],
+        //                ]);
+        //            } catch (\Exception $exception) {}
+        //        } else {
+        //            if (strtolower($request->default_captcha_value) != strtolower(Session('default_captcha_code'))) {
+        //                Session::forget('default_captcha_code');
+        //                return back()->withErrors(\App\CPU\translate('Captcha Failed'));
+        //            }
+        //        }
 
         $remember = ($request['remember']) ? true : false;
 
@@ -104,11 +104,11 @@ class LoginController extends Controller
             return redirect(route('customer.auth.check', [$user->id]));
         }
         if (isset($user) && $user->is_active && auth('customer')->attempt(['email' => $user->email, 'password' => $request->password], $remember)) {
-//            $wish_list = Wishlist::whereHas('wishlistProduct',function($q){
-//                return $q;
-//            })->where('customer_id', auth('customer')->user()->id)->pluck('product_id')->toArray();
-//
-//            session()->put('wish_list', $wish_list);
+            //            $wish_list = Wishlist::whereHas('wishlistProduct',function($q){
+            //                return $q;
+            //            })->where('customer_id', auth('customer')->user()->id)->pluck('product_id')->toArray();
+            //
+            //            session()->put('wish_list', $wish_list);
             Toastr::info('Welcome to ' . Helpers::get_business_settings('company_name') . '!');
             CartManager::cart_to_db();
             return redirect(session('keep_return_url'));
@@ -146,15 +146,18 @@ class LoginController extends Controller
             return redirect(route('customer.auth.check', [$user->id]));
         }
         if (isset($user) && $user->is_active && auth('customer')->attempt(['email' => $user->email, 'password' => $request->password_log], $remember)) {
-//            $wish_list = Wishlist::whereHas('wishlistProduct',function($q){
-//                return $q;
-//            })->where('customer_id', auth('customer')->user()->id)->pluck('product_id')->toArray();
-//
-//            session()->put('wish_list', $wish_list);
-            Toastr::info('Welcome to ' . Helpers::get_business_settings('company_name') . '!');
+            //            $wish_list = Wishlist::whereHas('wishlistProduct',function($q){
+            //                return $q;
+            //            })->where('customer_id', auth('customer')->user()->id)->pluck('product_id')->toArray();
+            //
+            //            session()->put('wish_list', $wish_list);
+            // Toastr::info('Welcome to ' . Helpers::get_business_settings('company_name') . '!');
             CartManager::cart_to_db();
-//            return redirect(session('keep_return_url'));
-            return redirect()->back();
+            //            return redirect(session('keep_return_url'));
+            return  response()->json([
+                'success' => true,
+                'message' => 'Welcome to ' . Helpers::get_business_settings('company_name') . '!'
+            ]);
         }
 
         Toastr::error('Credentials do not match or account has been suspended.');

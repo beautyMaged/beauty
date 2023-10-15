@@ -13,6 +13,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::post('image-upload', 'SharedController@imageUpload')->name('image-upload');
-Route::get('image-remove/{id}/{folder}', 'SharedController@imageRemove')->name('image-remove');
-Route::get('lang/{locale}', 'SharedController@lang')->name('lang');
+Route::prefix('app')->group(function () {
+    Route::post('image-upload', 'SharedController@imageUpload')->name('image-upload');
+    Route::get('image-remove/{id}/{folder}', 'SharedController@imageRemove')->name('image-remove');
+    Route::get('lang/{locale}', 'SharedController@lang')->name('lang');
+});

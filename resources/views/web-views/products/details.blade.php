@@ -201,7 +201,7 @@
                                 class="cz-product-gallery row {{session('direction') == 'rtl' ? 'text-right' : 'text-left'}}"
                                 dir="{{session('direction') == 'rtl' ? 'ltr' : 'rtl'}}">
                                 <div class="cz-preview col-lg-9 d-inline-block" dir="ltr">
-                                    @if($product->images!=null  && json_decode($product->images)>0)
+                                    @if($product->images!=null && json_decode($product->images)>0)
                                         @if(json_decode($product->colors) && $product->color_image)
                                             @foreach (json_decode($product->color_image) as $key => $photo)
                                                 @if($photo->color != null)

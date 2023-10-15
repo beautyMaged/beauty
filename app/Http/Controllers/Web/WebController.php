@@ -6,6 +6,7 @@ use App\CPU\Helpers;
 use App\CPU\OrderManager;
 use App\CPU\ProductManager;
 use App\CPU\CartManager;
+use App\CPU\BrandManager;
 use App\Helpers\Shopify;
 use App\Http\Controllers\Controller;
 use App\Model\Admin;
@@ -110,26 +111,81 @@ class WebController extends Controller
             $user->lat = $request->new_lat;
             $user->long = $request->new_long;
             $user->save();
-            Toastr::success(translate('Location Confirmed'));
-            return response()->json(['status' => 1, 'msg' => translate('Location Confirmed')]);
-        } else {
-            session::forget('current_location');
-            session::forget('current_city');
-            session::forget('current_country');
-            session::forget('new_lat');
-            session::forget('new_long');
-
-            session::put('current_location', $request->address);
-            session::put('current_city', $request->city);
-            session::put('current_country', $request->country);
-            session::put('new_lat', $request->new_lat);
-            session::put('new_long', $request->new_long);
-
-            //                return 'test';
-            Toastr::success(translate('Location Confirmed'));
-
-            return response()->json(['status' => 1, 'msg' => translate('Location Confirmed')]);
+            // Toastr::success(translate('Location Confirmed'));
+            return response()->json([
+                'success' => true,
+                'message' => translate('Location Confirmed')
+            ]);
         }
+        session::forget('current_location');
+        session::forget('current_city');
+        session::forget('current_country');
+        session::forget('new_lat');
+        session::forget('new_long');
+
+        session::put('current_location', $request->address);
+        session::put('current_city', $request->city);
+        session::put('current_country', $request->country);
+        session::put('new_lat', $request->new_lat);
+        session::put('new_long', $request->new_long);
+
+        //                return 'test';
+        // Toastr::success(translate('Location Confirmed'));
+
+        return response()->json([
+            'success' => true,
+            'message' => translate('Location Confirmed')
+        ]);
+    }
+
+    public function level1_products()
+    {
+        $products = [[], []];
+        $categories = Category::Select(['id', 'name'])
+            ->where('position', 0)
+            ->where('home_status', true)
+            ->priority()
+            ->get();
+        foreach ($categories as $category) {
+            // colour && brands
+            $products[0][$category->id] = Product::Select('colors', 'brand_id')
+                ->with(['brand'])
+                ->WhereJsonContains('category_ids', [
+                    ['id' => strval($category->id)],
+                ])
+                ->take(20)
+                ->inRandomOrder()
+                ->get();
+            $products[1][$category->id] = Product::active()
+                ->WhereJsonContains('category_ids', [
+                    ['id' => strval($category->id)],
+                ])
+                ->take(4)
+                ->get();
+        }
+        return $products;
+    }
+    public function feedData()
+    {
+        return Category::Select(['id', 'name'])
+            ->where('position', 0)
+            ->where('home_status', true)
+            ->priority()
+            ->get()
+            ->map(
+                function ($category) {
+                    $category->products =
+                        Product::with(['reviews'])
+                        ->WhereJsonContains('category_ids', [
+                            ['id' => strval($category->id)],
+                        ])
+                        ->inRandomOrder()
+                        ->limit(21)
+                        ->get()
+                        ->chunk(7);
+                    return $category;
+                }
+            );
     }
 
     public function home()
@@ -173,7 +229,6 @@ class WebController extends Controller
         $all_cats = Category::get();
         $latest_products = Product::with(['reviews'])->active()->inRandomOrder()->limit(14)->get()->chunk(7);
         $reviews_of_all_products = Review::with('user')->get();
-        $featured_mains = Category::where(['position' => 0])->where('home_status', true)->priority()->take(3)->get();
         $categories = Category::where(['position' => 0])->where('home_status', true)->priority()->take(11)->get();
         $brands = Brand::active()->take(15)->get();
         //best sell product
@@ -197,19 +252,18 @@ class WebController extends Controller
             ->take(4)
             ->get();
 
-        if ($bestSellProduct->count() == 0) {
+        if ($bestSellProduct->count() == 0)
             $bestSellProduct = $latest_products;
-        }
 
-        if ($topRated->count() == 0) {
+        if ($topRated->count() == 0)
             $topRated = $bestSellProduct;
-        }
 
         $deal_of_the_day = DealOfTheDay::join('products', 'products.id', '=', 'deal_of_the_days.product_id')->select(
             'deal_of_the_days.*',
             'products.unit_price'
         )->where('products.status', 1)->where('deal_of_the_days.status', 1)->first();
 
+        [$_categories, $_products] = $this->feedData();
         return view(
             'web-views.home',
             compact(
@@ -218,7 +272,6 @@ class WebController extends Controller
                 'main_products_banners',
                 'footer_products_banners',
                 'featured_products',
-                'featured_mains',
                 'topRated',
                 'bestSellProduct',
                 'latest_products',
@@ -227,7 +280,9 @@ class WebController extends Controller
                 'deal_of_the_day',
                 'top_sellers',
                 'home_categories',
-                'brand_setting'
+                'brand_setting',
+                '_categories',
+                '_products',
             )
         );
     }
@@ -281,8 +336,56 @@ class WebController extends Controller
 
     public function all_categories()
     {
-        $categories = Category::all();
-        return view('web-views.categories', compact('categories'));
+        $categories = Category::get();
+        return response()->json($categories);
+        return view('web-views.categories', ('categories'));
+    }
+
+    public function categories_with_product_count(Request $request)
+    {
+        $categories = Category::get()
+            ->map(
+                fn ($category) => [
+                    'name' => $category->name,
+                    'products' => $category->products = Product::active()
+                        ->WhereJsonContains('category_ids', [
+                            ['id' => strval($category->id)],
+                        ])
+                        ->count()
+                ]
+            );
+        return response()->json($categories);
+    }
+
+    public function categories()
+    {
+        return response()->json(
+            Category::Select(['id', 'name'])
+                ->With([
+                    'childes:id,name,parent_id',
+                    'childes.childes:id,name,parent_id',
+                    'childes.childes.childes:id,name,parent_id'
+                ])
+                ->Where('parent_id', 0)
+                ->priority()
+                ->get()
+        );
+    }
+
+    public function categories_home()
+    {
+        return response()->json(
+            Category::Select(['id', 'name', 'icon'])
+                ->With([
+                    'childes:id,name,parent_id',
+                    'childes.childes:id,name,parent_id',
+                    'childes.childes.childes:id,name,parent_id'
+                ])
+                ->Where('home_status', true)
+                ->Where('parent_id', 0)
+                ->priority()
+                ->get()
+        );
     }
 
     public function categories_by_category($id)
@@ -293,10 +396,17 @@ class WebController extends Controller
         ]);
     }
 
-    public function all_brands()
+    public function all_brands(Request $request)
     {
-        $brands = Brand::active()->paginate(24);
+        $brands = Brand::active()->paginate($request['take'] ?? 24);
+        if ($request->wantsJson())
+            return response()->json($brands);
         return view('web-views.brands', compact('brands'));
+    }
+
+    public function brands_with_product_count()
+    {
+        return BrandManager::get_active_brands();
     }
 
     public function all_sellers()
@@ -326,17 +436,17 @@ class WebController extends Controller
             'name.required' => 'Product name is required!',
         ]);
 
-        $result = ProductManager::search_products_web($request['name']);
-        $products = $result['products'];
+        $query = ProductManager::search_products_web($request['name']);
+        if ($query->count() == 0)
+            $query = ProductManager::translated_product_search_web($request['name']);
 
-        if ($products == null) {
-            $result = ProductManager::translated_product_search_web($request['name']);
-            $products = $result['products'];
-        }
+        $products = $query->take(10)->get();
 
-        return response()->json([
-            'result' => view('web-views.partials._search-result', compact('products'))->render(),
-        ]);
+        // return response()->json([
+        //     'result' => view('web-views.partials._search-result', compact('products'))->render(),
+        // ]);
+
+        return response()->json($products);
     }
 
     public function checkout_details(Request $request)
@@ -1197,6 +1307,7 @@ class WebController extends Controller
     public function quick_view(Request $request)
     {
         $product = ProductManager::get_product($request->product_id);
+        $totalReviews = Review::where('product_id', $product->id)->count();
         $order_details = OrderDetail::where('product_id', $product->id)->get();
         $wishlists = Wishlist::where('product_id', $product->id)->get();
         $countOrder = count($order_details);
@@ -1230,6 +1341,7 @@ class WebController extends Controller
                 'web-views.partials._quick-view-data',
                 compact(
                     'product',
+                    'totalReviews',
                     'countWishlist',
                     'countOrder',
                     'relatedProducts',
@@ -1246,10 +1358,16 @@ class WebController extends Controller
         ]);
     }
 
-    public function product($slug)
+    public function product(Request $request, $slug)
     {
         $product = Product::active()->with(['reviews', 'seller.shop'])->where('slug', $slug)->first();
         if ($product != null) {
+
+            $product->purchasePrice = Helpers::currency_converter($product->purchase_price);
+            // $product->price = Helpers::currency_converter($product->unit_price - Helpers::get_product_discount($product, $product->unit_price));
+            $product->priceRange = Helpers::get_price_range($product);
+
+            $categories = Category::Select('id', 'name')->WhereIn('id', array_map(fn ($category) => $category->id, json_decode($product->category_ids)))->get()->pluck('name', 'id');
             $countOrder = OrderDetail::where('product_id', $product->id)->count();
             $countWishlist = Wishlist::where('product_id', $product->id)->count();
             $relatedProducts = Product::with(['reviews'])->active()->where('user_id', $product->user_id)->where(
@@ -1275,7 +1393,27 @@ class WebController extends Controller
             $inhouse_vacation_end_date = $product->added_by == 'admin' ? $inhouse_vacation['vacation_end_date'] : null;
             $inhouse_vacation_status = $product->added_by == 'admin' ? $inhouse_vacation['status'] : false;
             $inhouse_temporary_close = $product->added_by == 'admin' ? $temporary_close['status'] : false;
-
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'data' => compact(
+                        'product',
+                        'categories',
+                        'countWishlist',
+                        'countOrder',
+                        'relatedProducts',
+                        'deal_of_the_day',
+                        'current_date',
+                        'seller_vacation_start_date',
+                        'seller_vacation_end_date',
+                        'seller_temporary_close',
+                        'inhouse_vacation_start_date',
+                        'inhouse_vacation_end_date',
+                        'inhouse_vacation_status',
+                        'inhouse_temporary_close'
+                    )
+                ], 200);
+            }
             return view(
                 'web-views.products.details',
                 compact(
@@ -1295,14 +1433,19 @@ class WebController extends Controller
                 )
             );
         }
-
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => false,
+                'message' => translate('not_found'),
+            ], 404);
+        }
         Toastr::error(translate('not_found'));
         return back();
     }
 
     public function tester()
     {
-        $porduct_data = App\Models\Product::active();
+        $porduct_data = Product::active();
         $products = $porduct_data->get();
         $product_ids = [];
         foreach ($products as $product) {
@@ -1314,239 +1457,6 @@ class WebController extends Controller
         }
         $products = $porduct_data->whereIn('id', $product_ids)->get();
 
-        $colors = App\Models\Color::pluck('code')->toArray();
-        $selected_colors = [];
-        foreach ($products as $product) {
-            if (count(json_decode($product->colors)) > 0) {
-                foreach (json_decode($product->colors) as $color) {
-                    if (in_array($color, $colors)) {
-                        array_push($selected_colors, $color);
-                    }
-                }
-            }
-        }
-        $colors = App\Models\Color::whereIn('code', $selected_colors)->get();
-    }
-
-    public function products(Request $request)
-    {
-        $request['sort_by'] == null ? $request['sort_by'] == 'latest' : $request['sort_by'];
-
-        $porduct_data = Product::active()->with(['reviews']);
-
-        if ($request['data_from'] == 'category') {
-            $products = $porduct_data->get();
-            $product_ids = [];
-            foreach ($products as $product) {
-                foreach (json_decode($product['category_ids'], true) as $category) {
-                    if ($category['id'] == $request['id'])
-                        array_push($product_ids, $product['id']);
-                }
-            }
-            $query = $porduct_data->whereIn('id', $product_ids);
-        }
-
-        if ($request['data_from'] == 'brand')
-            $query = $porduct_data->where('brand_id', $request['id']);
-
-        if ($request['data_from'] == 'latest') {
-            $query = $porduct_data;
-            if ($request['id'] != null && !empty($request['id'])) {
-                $products = $query->get();
-                $product_ids = [];
-                foreach ($products as $product) {
-                    foreach (json_decode($product['category_ids'], true) as $category) {
-                        if ($category['id'] == $request['id']) {
-                            array_push($product_ids, $product['id']);
-                        }
-                    }
-                }
-                $query = $query->whereIn('id', $product_ids);
-            }
-        }
-
-        if ($request['data_from'] == 'top-rated') {
-            $reviews = Review::select('product_id', DB::raw('AVG(rating) as count'))
-                ->groupBy('product_id')
-                ->orderBy("count", 'desc')->get();
-            $product_ids = [];
-            foreach ($reviews as $review) {
-                array_push($product_ids, $review['product_id']);
-            }
-            $query = $porduct_data->whereIn('id', $product_ids);
-
-
-            if ($request['id'] != null && !empty($request['id'])) {
-                $products = $query->get();
-                $product_ids = [];
-                foreach ($products as $product) {
-                    foreach (json_decode($product['category_ids'], true) as $category) {
-                        if ($category['id'] == $request['id']) {
-                            array_push($product_ids, $product['id']);
-                        }
-                    }
-                }
-                $query = $query->whereIn('id', $product_ids);
-            }
-        }
-
-        if ($request['data_from'] == 'best-selling') {
-            $details = OrderDetail::with('product')
-                ->select('product_id', DB::raw('COUNT(product_id) as count'))
-                ->groupBy('product_id')
-                ->orderBy("count", 'desc')
-                ->get();
-            $product_ids = [];
-            foreach ($details as $detail) {
-                array_push($product_ids, $detail['product_id']);
-            }
-            $query = $porduct_data->whereIn('id', $product_ids);
-
-            if ($request['id'] != null && !empty($request['id'])) {
-                $products = $query->get();
-                $product_ids = [];
-                foreach ($products as $product) {
-                    foreach (json_decode($product['category_ids'], true) as $category) {
-                        if ($category['id'] == $request['id']) {
-                            array_push($product_ids, $product['id']);
-                        }
-                    }
-                }
-                $query = $porduct_data->whereIn('id', $product_ids);
-            }
-        }
-
-        if ($request['data_from'] == 'most-favorite') {
-            $details = Wishlist::with('product')
-                ->select('product_id', DB::raw('COUNT(product_id) as count'))
-                ->groupBy('product_id')
-                ->orderBy("count", 'desc')
-                ->get();
-            $product_ids = [];
-            foreach ($details as $detail) {
-                array_push($product_ids, $detail['product_id']);
-            }
-            $query = $porduct_data->whereIn('id', $product_ids);
-
-            if ($request['id'] != null && !empty($request['id'])) {
-                $products = $query->get();
-                $product_ids = [];
-                foreach ($products as $product) {
-                    foreach (json_decode($product['category_ids'], true) as $category) {
-                        if ($category['id'] == $request['id']) {
-                            array_push($product_ids, $product['id']);
-                        }
-                    }
-                }
-                $query = $query->whereIn('id', $product_ids);
-            }
-        }
-
-        if ($request['data_from'] == 'featured') {
-            $query = Product::with(['reviews'])->active()->where('featured', 1);
-        }
-
-        if ($request['data_from'] == 'featured_deal') {
-            $featured_deal_id = FlashDeal::where(['status' => 1])->where(['deal_type' => 'feature_deal'])->pluck(
-                'id'
-            )->first();
-            $featured_deal_product_ids = FlashDealProduct::where('flash_deal_id', $featured_deal_id)->pluck(
-                'product_id'
-            )->toArray();
-            $query = Product::with(['reviews'])->active()->whereIn('id', $featured_deal_product_ids);
-
-            if ($request['id'] != null && !empty($request['id'])) {
-                $products = $query->get();
-                $product_ids = [];
-                foreach ($products as $product) {
-                    foreach (json_decode($product['category_ids'], true) as $category) {
-                        if ($category['id'] == $request['id']) {
-                            array_push($product_ids, $product['id']);
-                        }
-                    }
-                }
-                $query = $query->whereIn('id', $product_ids);
-            }
-        }
-
-        if ($request->has('color') && $request->color != null) {
-            $products = $query->get();
-            $product_ids = [];
-            foreach ($products as $product) {
-                foreach (json_decode($product['colors'], true) as $key => $color) {
-                    if ($color == '#' . $request['color']) {
-                        array_push($product_ids, $product['id']);
-                    }
-                }
-            }
-            $query = $query->whereIn('id', $product_ids);
-        }
-
-
-        if ($request['data_from'] == 'search') {
-            $key = explode(' ', $request['name']);
-            $product_ids = Product::where(function ($q) use ($key) {
-                foreach ($key as $value) {
-                    $q->orWhere('name', 'like', "%{$value}%")
-                        ->orWhereHas('tags', function ($query) use ($value) {
-                            $query->where('tag', 'like', "%{$value}%");
-                        });
-                }
-            })->pluck('id');
-
-            if ($product_ids->count() == 0) {
-                $product_ids = Translation::where('translationable_type', 'App\Model\Product')
-                    ->where('key', 'name')
-                    ->where(function ($q) use ($key) {
-                        foreach ($key as $value)
-                            $q->orWhere('value', 'like', "%{$value}%");
-                    })
-                    ->pluck('translationable_id');
-            }
-
-            $query = $porduct_data->WhereIn('id', $product_ids);
-        }
-
-        if ($request['data_from'] == 'discounted')
-            $query = Product::with(['reviews'])->active()->where('discount', '!=', 0);
-
-
-        if ($request['sort_by'] == 'latest')
-            $fetched = $query->latest();
-        elseif ($request['sort_by'] == 'low-high')
-            $fetched = $query->orderBy('unit_price', 'ASC');
-        elseif ($request['sort_by'] == 'high-low')
-            $fetched = $query->orderBy('unit_price', 'DESC');
-        elseif ($request['sort_by'] == 'a-z')
-            $fetched = $query->orderBy('name', 'ASC');
-        elseif ($request['sort_by'] == 'z-a')
-            $fetched = $query->orderBy('name', 'DESC');
-        else
-            $fetched = $query->latest();
-
-        if ($request['min_price'] != null || $request['max_price'] != null) {
-            //            return $request['min_price'];
-            //            $fetched = $fetched->whereBetween('unit_price', [Helpers::convert_currency_to_usd($request['min_price']), Helpers::convert_currency_to_usd($request['max_price'])]);
-            $fetched = $fetched->whereBetween('purchase_price', [$request['min_price'], $request['max_price']]);
-            //            return \response()->json(['data' => $fetched->get()]);
-
-        }
-
-        $brands_ids = $query->pluck('brand_id')->toArray();
-        $brands = Brand::whereIn('id', $brands_ids)->get();
-
-        $data = [
-            'id' => $request['id'],
-            'name' => $request['name'],
-            'data_from' => $request['data_from'],
-            'sort_by' => $request['sort_by'],
-            'page_no' => $request['page'],
-            'min_price' => $request['min_price'],
-            'max_price' => $request['max_price'],
-        ];
-
-        //        $products = $fetched->paginate(20)->appends($data);
-        $products = $fetched->paginate(5000)->appends($data);
         $colors = Color::pluck('code')->toArray();
         $selected_colors = [];
         foreach ($products as $product) {
@@ -1558,28 +1468,219 @@ class WebController extends Controller
                 }
             }
         }
-        //        return $colors_;
         $colors = Color::whereIn('code', $selected_colors)->get();
+    }
 
-        if ($request->ajax()) {
-            return response()->json([
-                'total_product' => $products->total(),
-                'view' => view('web-views.products._ajax-products', compact('products'))->render()
-            ], 200);
+    public function products(Request $request)
+    {
+        // $request['sort_by'] == null ? $request['sort_by'] == 'latest' : $request['sort_by'];
+        $request['sort_by'] ??= 'latest';
+        $porduct_data = Product::active()->with(['reviews', 'brand']);
+
+        /* data_from */
+        switch ($request['data_from']) {
+            case 'latest':
+                $query = $porduct_data;
+                $title = 'recent_pro';
+                // ->Select('id', 'name', 'images', 'brand_id', 'colors', 'slug', 'variation');
+                // if ($request['id'] != null && !empty($request['id']))
+                //     // $query = $query->whereRaw("JSON_CONTAINS(JSON_EXTRACT(category_ids,'$[*].id'),?,'$')", [$request['id']]);
+                //     $query = $query->WhereJsonContains("category_ids", ['id' => strval($request['id'])]);
+                break;
+            case 'category':
+                $query = $porduct_data->WhereJsonContains("category_ids", ['id' => strval($request['id'])]);
+                break;
+            case 'brand':
+                $query = $porduct_data->where('brand_id', $request['id']);
+                break;
+            case 'top-rated':
+                $title = "top_rate_pro";
+                $reviews = Review::select('product_id', DB::raw('AVG(rating) as count'))
+                    ->groupBy('product_id')
+                    ->orderBy("count", 'desc')->get();
+                $product_ids = [];
+                foreach ($reviews as $review)
+                    array_push($product_ids, $review['product_id']);
+                $query = $porduct_data->whereIn('id', $product_ids);
+                if ($request['id'] != null && !empty($request['id']))
+                    $query = $query->WhereJsonContains("category_ids", ['id' => strval($request['id'])]);
+                break;
+            case 'best-selling':
+                $title = "top_sell_pro";
+
+                $details = OrderDetail::with('product')
+                    ->select('product_id', DB::raw('COUNT(product_id) as count'))
+                    ->groupBy('product_id')
+                    ->orderBy("count", 'desc')
+                    ->get();
+                $product_ids = [];
+                foreach ($details as $detail) {
+                    array_push($product_ids, $detail['product_id']);
+                }
+                $query = $porduct_data->whereIn('id', $product_ids);
+
+                if ($request['id'] != null && !empty($request['id']))
+                    $query = $query->WhereJsonContains("category_ids", ['id' => strval($request['id'])]);
+                break;
+            case 'most-favorite':
+                $details = Wishlist::with('product')
+                    ->select('product_id', DB::raw('COUNT(product_id) as count'))
+                    ->groupBy('product_id')
+                    ->orderBy("count", 'desc')
+                    ->get();
+                $product_ids = [];
+                foreach ($details as $detail)
+                    array_push($product_ids, $detail['product_id']);
+
+                $query = $porduct_data->whereIn('id', $product_ids);
+
+                if ($request['id'] != null && !empty($request['id']))
+                    $query = $query->WhereJsonContains("category_ids", ['id' => strval($request['id'])]);
+
+                break;
+            case 'featured':
+                $query = Product::with(['reviews'])->active()->where('featured', 1);
+                break;
+            case 'featured_deal':
+                $title = "special_offers";
+
+                $featured_deal_id = FlashDeal::where(['status' => 1])->where(['deal_type' => 'feature_deal'])->pluck(
+                    'id'
+                )->first();
+                $featured_deal_product_ids = FlashDealProduct::where('flash_deal_id', $featured_deal_id)->pluck(
+                    'product_id'
+                )->toArray();
+                $query = Product::with(['reviews'])->active()->whereIn('id', $featured_deal_product_ids);
+
+                if ($request['id'] != null && !empty($request['id']))
+                    $query = $query->WhereJsonContains("category_ids", ['id' => strval($request['id'])]);
+                break;
+            case 'search':
+                $query = ProductManager::search_products_web($request['name']);
+                if ($query->count() == 0)
+                    $query = ProductManager::translated_product_search_web($request['name']);
+                break;
+            case 'discounted':
+                $query = Product::with(['reviews'])->active()->where('discount', '!=', 0);
+                break;
         }
-        if ($request['data_from'] == 'category')
-            $data['brand_name'] = Category::find((int)$request['id'])->name;
+
+        /* sort_by */
+        switch ($request['sort_by']) {
+            case 'latest':
+                $fetched = $query->latest();
+                break;
+            case 'low-high':
+                $fetched = $query->orderBy('unit_price', 'ASC');
+                break;
+            case 'high-low':
+                $fetched = $query->orderBy('unit_price', 'DESC');
+                break;
+            case 'a-z':
+                $fetched = $query->orderBy('name', 'ASC');
+                break;
+            case 'z-a':
+                $fetched = $query->orderBy('name', 'DESC');
+                break;
+            default:
+                $fetched = $query->latest();
+        }
+
+        /* colour */
+        if ($request->has('color') && $request->color != null)
+            $query = $query->WhereJsonContains("colors", ['#' . $request['color']]);
+        if ($request['min_price'] != null || $request['max_price'] != null) {
+            //            return $request['min_price'];
+            //            $fetched = $fetched->whereBetween('unit_price', [Helpers::convert_currency_to_usd($request['min_price']), Helpers::convert_currency_to_usd($request['max_price'])]);
+            $fetched = $fetched->whereBetween('purchase_price', [$request['min_price'], $request['max_price']]);
+            //            return \response()->json(['data' => $fetched->get()]);
+
+        }
+
+        //        $products = $fetched->paginate(20)->appends($data);
+        $products = $fetched->simplePaginate($request['take'] ?? 12);
+
+        // ->appends($data);
+        // $colors = Color::pluck('code')->toArray();
+        $selected_colors = [];
+        // $brands_ids = [];
+        $decimal_point_settings = Helpers::get_business_settings('decimal_point_settings');
+        $products->map(function ($product) use ($selected_colors /*, $brands_ids */) {
+            $product->pre_price = Helpers::currency_converter($product->unit_price);
+            $product->price = Helpers::currency_converter($product->unit_price - Helpers::get_product_discount($product, $product->unit_price));
+            if ($product->discount > 0) {
+                if ($product->discount_type == 'percent')
+                    $product->discountValue = round($product->discount, (!empty($decimal_point_settings) ? $decimal_point_settings : 0)) . "%";
+                else
+                if ($product->discount_type == 'flat')
+                    $product->discountValue = Helpers::currency_converter($product->discount);
+                $product->purchasePrice = Helpers::currency_converter($product->purchase_price);
+                $product->priceAfterDiscount = Helpers::currency_converter($product->purchase_price - Helpers::get_product_discount($product, $product->purchase_price));
+            }
+            // array_push($brands_ids, $product->brand_id);
+            if (count(json_decode($product->colors)) > 0)
+                foreach (json_decode($product->colors) as $color)
+                    array_push($selected_colors, $color);
+            return $product;
+        });
+        $colors = Color::Select('name', 'code')->whereIn('code', $selected_colors)->get();
+        // $brands_ids = $query->pluck('brand_id')->toArray();
+        // $brands = Brand::Select('id', 'name', 'image')->WhereIn('id', $brands_ids)->get();
+
+        // foreach ($products as $product)
+        //     if (count(json_decode($product->colors)) > 0)
+        //         foreach (json_decode($product->colors) as $color)
+        //             // if (in_array($color, $colors))
+        //             array_push($selected_colors, $color);
+
+
+
+        // if ($request->ajax()) {
+        //     return response()->json([
+        //         'total_product' => $products->total(),
+        //         'view' => view('web-views.products._ajax-products', compact('products'))->render()
+        //     ], 200);
+        // }
+        $title = '';
+        $data = [
+            'id' => $request['id'],
+            'name' => $request['name'],
+            'data_from' => $request['data_from'],
+            'sort_by' => $request['sort_by'],
+            'page_no' => $request['page'],
+            'min_price' => $request['min_price'],
+            'max_price' => $request['max_price'],
+        ];
         if ($request['data_from'] == 'brand') {
             $brand_data = Brand::active()->find((int)$request['id']);
-            if ($brand_data)
+            if ($brand_data) {
+                $title = $brand_data->name;
                 $data['brand_name'] = $brand_data->name;
-            else {
-                Toastr::warning(translate('not_found'));
-                return redirect('/');
+            } else {
+                // Toastr::warning(translate('not_found'));
+                return response()->json([
+                    'success' => false,
+                    'message' => translate('not_found')
+                ], 404);
+            }
+        } else {
+            if (!isset($title) && isset($request['id'])) {
+                $title = Category::find((int)$request['id'])->name;
+                $data['brand_name'] = $title;
             }
         }
         //        return $products;
-        return view('web-views.products.view', compact('products', 'data', 'colors', 'brands'), $data);
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'products' => $products,
+                // 'data' => $data,
+                'colors' => $colors,
+                'title' => $title
+                // 'brands' => $brands,
+            ], 200);
+        }
+        return view('web-views.products.view', compact('products', 'data', 'colors'/*, 'brands' */), $data);
     }
 
     public function discounted_products(Request $request)
@@ -1785,7 +1886,10 @@ class WebController extends Controller
     public function helpTopic()
     {
         $helps = HelpTopic::Status()->latest()->get();
-        return view('web-views.help-topics', compact('helps'));
+        return response()->json([
+            'success' => true,
+            'helps' => $helps
+        ]);
     }
 
     //for Contact US Page
@@ -1915,8 +2019,10 @@ class WebController extends Controller
         $contact->subject = $request->subject;
         $contact->message = $request->message;
         $contact->save();
-        Toastr::success(translate('Your Message Send Successfully'));
-        return back();
+        return response()->json([
+            'success' => true,
+            'message' => translate('Your Message Send Successfully'),
+        ]);
     }
 
     public function captcha($tmp)
@@ -2033,15 +2139,21 @@ class WebController extends Controller
     {
         $subscription_email = Subscription::where('email', $request->subscription_email)->first();
         if (isset($subscription_email)) {
-            Toastr::info(translate('You already subcribed this site!!'));
-            return back();
+            // Toastr::info(translate('You already subcribed this site!!'));
+            return response()->json([
+                'success' => true,
+                'message' => translate('You already subcribed this site!!')
+            ]);
         } else {
             $new_subcription = new Subscription;
             $new_subcription->email = $request->subscription_email;
             $new_subcription->save();
 
-            Toastr::success(translate('Your subscription successfully done!!'));
-            return back();
+            // Toastr::success(translate('Your subscription successfully done!!'));
+            return response()->json([
+                'success' => true,
+                'message' => translate('Your subscription successfully done!!')
+            ]);
         }
     }
 

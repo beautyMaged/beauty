@@ -1,5 +1,3 @@
-
-
 :root {
     --primary-clr: #3b71de;
 }
@@ -5843,7 +5841,6 @@ a {
 .sub_cats_menu {display: none}
 .sub_cats_menu.show {display: inline-block}
 .all_cats_list {display: none}
-.category-item {}
 /* End Categories List Slider */
 
 
@@ -6000,7 +5997,3 @@ header .row {margin-right: auto!important;margin-left: auto!important;}
 #st-1 .st-btn[data-network] > img { filter: brightness(0) saturate(0%)!important;width: 36px!important;height: 26px!important;}
 /*.st-cmp-settings {display: none!important}*/
 #st-cmp-v2 {display: none!important;}
-
-
-
-

@@ -1,6 +1,6 @@
 @extends('layouts.front-end.app')
 
-@section('title', $web_config['name']->value.' '.\App\CPU\translate('Online Shopping').' | '.$web_config['name']->value.' '.\App\CPU\translate(' Ecommerce'))
+@section('title', $web_config['name']->value.' '.\App\CPU\translate('Online Shopping').' | '.$web_config['name']->value.' '.\App\CPU\translate('Ecommerce'))
 
 @push('css_or_js')
     {{--    <meta property="og:image" content="{{asset('storage/app/public/company')}}/{{$web_config['web_logo']->value}}"/>--}}
@@ -294,7 +294,7 @@
                                                                     <img src="{{asset('storage/product/' . $large_image->image_name)}}"
                                                                         alt="product"
                                                                         style="{{$k_img == 0 ? 'display:block;' : 'display:none;'}}height:100%"
-                                                                        class=" px-1 pt-2 {{$one_chunk[$k]->id}}_{{$k_img}}_img product_image">
+                                                                        class="px-1 pt-2 {{$one_chunk[$k]->id}}_{{$k_img}}_img product_image">
                                                                 @endforeach
                                                             @else
                                                                 <img src="{{asset('storage/product/thumbnail/' . $one_chunk[$k]->thumbnail)}}"
@@ -1067,8 +1067,7 @@
                 }
             }
         })
-    </script>
-    <script>
+
         $('#featured_products_list').owlCarousel({
             loop: true,
             autoplay: false,
@@ -1115,8 +1114,7 @@
                 }
             }
         });
-    </script>
-    <script>
+
         $('#brands-slider').owlCarousel({
             loop: false,
             autoplay: false,
@@ -1162,9 +1160,7 @@
                 }
             }
         })
-    </script>
 
-    <script>
         $('#category-slider, #top-seller-slider').owlCarousel({
             loop: false,
             autoplay: false,
@@ -1652,7 +1648,9 @@
             }
         });
 
+    </script>
 
+    <script>
         // let real_image_container = $('.real_image_container');
         // real_image_container.hover(function () {
         //     $(this).css('display', 'none');

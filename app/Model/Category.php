@@ -9,18 +9,28 @@ use Illuminate\Support\Facades\App;
 
 class Category extends Model
 {
+    // use \Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
+
     protected $casts = [
         'parent_id' => 'integer',
         'position' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'home_status' => 'integer',
-        'priority' => 'integer'
+        'priority' => 'integer',
+
+        // 'category_ids' => 'json'
     ];
+
+    // public function products()
+    // {
+    //     //return Product::WhereRaw("json_unquote(json_extract(category_ids, '$[0].id')) = ?", [$this->id])->get();
+    //     return $this->hasManyJson(Product::class, "category_ids->ids[]->id");
+    // }
 
     public function translations()
     {
-        return $this->morphMany('App\Model\Translation', 'translationable');
+        return $this->morphMany(Translation::class, 'translationable');
     }
 
     public function parent()
@@ -57,8 +67,7 @@ class Category extends Model
             $builder->with(['translations' => function ($query) {
                 if (strpos(url()->current(), '/api'))
                     return $query->where('locale', App::getLocale());
-
-                return $query->where('locale', Helpers::default_lang());
+                return $query->select('value', 'translationable_id')->where('locale', Helpers::default_lang());
             }]);
         });
     }

@@ -14,9 +14,7 @@
     <!-- Main Theme Styles + Bootstrap-->
     <link rel="stylesheet" media="screen" href="{{asset('assets/front-end')}}/css/theme.min.css">
     <link rel="stylesheet" media="screen" href="{{asset('assets/front-end')}}/css/slick.css">
-    <link rel="stylesheet" media="screen" href="{{asset('assets/front-end')}}/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <link rel="stylesheet" href="{{asset('assets/back-end')}}/css/toastr.css"/>
     <link rel="stylesheet" href="{{asset('assets/front-end')}}/css/master.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Titillium+Web:wght@400;600;700&display=swap" rel="stylesheet">
     {{-- light box --}}
@@ -50,7 +48,8 @@
     @php($google_tag_manager_id = \App\CPU\Helpers::get_business_settings('google_tag_manager_id'))
     @if($google_tag_manager_id )
     <!-- Google Tag Manager -->
-        <script>(function (w, d, s, l, i) {
+        <script>
+            (function (w, d, s, l, i) {
                 w[l] = w[l] || [];
                 w[l].push({
                     'gtm.start':
@@ -62,7 +61,8 @@
                 j.src =
                     'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
                 f.parentNode.insertBefore(j, f);
-            })(window, document, 'script', 'dataLayer', '{{$google_tag_manager_id}}');</script>
+            })(window, document, 'script', 'dataLayer', '{{$google_tag_manager_id}}');
+        </script>
         <!-- End Google Tag Manager -->
     @endif
 
@@ -117,7 +117,7 @@
 <!-- Navbar Electronics Store-->
 
 {{--loader--}}
-<div class="row" style="width: 100%;height: 100vh;z-index: 100000;position: fixed;top:0;background: #fff;padding: 0!important;margin: 0!important;">
+<div class="row" style="display: none;width: 100%;height: 100vh;z-index: 100000;position: fixed;top:0;background: #fff;padding: 0!important;margin: 0!important;">
     <div class="col-12" style="margin-top:13rem;position: fixed;z-index: 9999;">
         <div id="loading" style="">
             <center>

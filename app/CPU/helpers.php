@@ -346,13 +346,12 @@ class Helpers
         $lowest_price = $product->purchase_price;
         $highest_price = $product->purchase_price;
 
-        foreach (json_decode($product->variation) as $key => $variation) {
-            if ($lowest_price > $variation->price) {
+        foreach (json_decode($product->variation) as $variation) {
+            if ($lowest_price > $variation->price)
                 $lowest_price = round($variation->price, 2);
-            }
-            if ($highest_price < $variation->price) {
+
+            if ($highest_price < $variation->price)
                 $highest_price = round($variation->price, 2);
-            }
         }
 
         $lowest_price = Helpers::currency_converter($lowest_price - Helpers::get_product_discount($product, $lowest_price));

@@ -64,20 +64,18 @@ class CartManager
     {
         $user = Helpers::get_customer();
         if (session()->has('offline_cart') && $user == 'offline') {
-//            return $group_id;
+            //            return $group_id;
             $cart = session('offline_cart')->collect();
-            if ($group_id != null) {
+            if ($group_id != null)
                 return $cart->where('cart_group_id', $group_id)->get();
-            } else {
+            else
                 return $cart;
-            }
         }
 
-        if ($group_id == null) {
+        if ($group_id == null)
             $cart = Cart::whereIn('cart_group_id', CartManager::get_cart_group_ids())->get();
-        } else {
+        else
             $cart = Cart::where('cart_group_id', $group_id)->get();
-        }
 
         return $cart;
     }
@@ -164,12 +162,12 @@ class CartManager
                     }
 
                     if ($shipping_type == 'order_wise' && session('coupon_type') == 'free_delivery' && (session(
-                                'coupon_seller_id'
-                            ) == '0' || (is_null(
-                                    session('coupon_seller_id')
-                                ) && $cart_data->seller_is == 'admin') || (session(
-                                    'coupon_seller_id'
-                                ) == $cart_data->seller_id && $cart_data->seller_is == 'seller'))) {
+                        'coupon_seller_id'
+                    ) == '0' || (is_null(
+                        session('coupon_seller_id')
+                    ) && $cart_data->seller_is == 'admin') || (session(
+                        'coupon_seller_id'
+                    ) == $cart_data->seller_id && $cart_data->seller_is == 'seller'))) {
                         $amount += CartManager::get_shipping_cost($cart);
                     }
                 }
@@ -294,8 +292,8 @@ class CartManager
                                 'status' => 1,
                                 'message' => 'متبقي ' . json_decode($product->variation)[$i]->qty . ' في المخزون',
                                 'price' => \App\CPU\Helpers::currency_converter(
-                                        json_decode($product->variation)[$i]->price
-                                    ) . ' ' . $usd
+                                    json_decode($product->variation)[$i]->price
+                                ) . ' ' . $usd
                             ];
                         } else {
                             return [
@@ -350,7 +348,7 @@ class CartManager
             }
         }
         $str = str_replace(str_split('\\/:*?"<>|-_ '), '', $str);
-//        Log::alert($str);
+        //        Log::alert($str);
         if ($user == 'offline') {
             if (session()->has('offline_cart')) {
                 $cart = session('offline_cart');
@@ -400,7 +398,7 @@ class CartManager
         if ($str != null) {
             $count = count(json_decode($product->variation));
             for ($i = 0; $i < $count; $i++) {
-//                Log::alert(str_replace(str_split('\\/:*?"<>|-_ '), '', json_decode($product->variation)[$i]->type));
+                //                Log::alert(str_replace(str_split('\\/:*?"<>|-_ '), '', json_decode($product->variation)[$i]->type));
                 if (str_replace(str_split('\\/:*?"<>|-_ '), '', json_decode($product->variation)[$i]->type) == $str) {
                     $price = json_decode($product->variation)[$i]->price;
                     if (json_decode($product->variation)[$i]->qty < $request['quantity']) {
@@ -523,7 +521,7 @@ class CartManager
                     $request->quantity
                 );
             }
-//            return $status;
+            //            return $status;
             return [
                 'status' => $status,
                 'qty' => $qty,

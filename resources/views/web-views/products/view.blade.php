@@ -129,6 +129,7 @@
 
         if(isset($_GET['id']) && $_GET['data_from']  != 'brand') {$category_banners =\App\Model\Category::find($_GET['id']);} else {$category_banners = null;}
         if(!isset($_GET['id']) && isset($_GET['data_from'])) {$url = route('products',['data_from'=>$_GET['data_from'] ,'page'=>1]);}
+        
         if (!isset($_GET['id']) && $_GET['data_from'] == 'best-selling') {$brand_name = \App\CPU\translate('top_sell_pro');}
         if (!isset($_GET['id']) && $_GET['data_from'] == 'top-rated') {$brand_name = \App\CPU\translate('top_rate_pro');}
         if (!isset($_GET['id']) && $_GET['data_from'] == 'latest') {$brand_name = \App\CPU\translate('recent_pro');}

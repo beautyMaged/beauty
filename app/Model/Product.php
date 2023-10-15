@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class Product extends Model
 {
+
     protected $casts = [
         'user_id' => 'integer',
         'brand_id' => 'integer',
@@ -33,7 +34,7 @@ class Product extends Model
         'shipping_cost' => 'float',
         'multiply_qty' => 'integer',
         'temp_shipping_cost' => 'float',
-        'is_shipping_cost_updated' => 'integer'
+        'is_shipping_cost_updated' => 'integer',
     ];
 
     public function translations()
@@ -80,7 +81,7 @@ class Product extends Model
 
     public function reviews()
     {
-        return $this->hasMany(Review::class, 'product_id');
+        return $this->hasMany(Review::class);
     }
 
     public function brand()
@@ -113,20 +114,20 @@ class Product extends Model
 
     public function order_details()
     {
-        return $this->hasMany(OrderDetail::class, 'product_id');
+        return $this->hasMany(OrderDetail::class);
     }
 
 
     public function order_delivered()
     {
-        return $this->hasMany(OrderDetail::class, 'product_id')
+        return $this->hasMany(OrderDetail::class)
             ->where('delivery_status', 'delivered');
 
     }
 
     public function wish_list()
     {
-        return $this->hasMany(Wishlist::class, 'product_id');
+        return $this->hasMany(Wishlist::class);
     }
 
     public function tags()

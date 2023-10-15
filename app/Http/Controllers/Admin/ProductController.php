@@ -218,6 +218,13 @@ class ProductController extends BaseController
             ]);
         }
 
+        if ($request->sub_sub_sub_category_id != null) {
+            array_push($category, [
+                'id' => $request->sub_sub_sub_category_id,
+                'position' => 4,
+            ]);
+        }
+
         $p->category_ids = json_encode($category);
         $p->brand_id = $request->brand_id;
         $p->unit = $request->product_type == 'physical' ? $request->unit : null;

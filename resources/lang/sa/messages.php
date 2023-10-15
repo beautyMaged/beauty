@@ -3202,4 +3202,10 @@
   'Sub Sub Sub Category' => 'القسم الداخلي',
   'Sub Sub Sub Categories' => 'Sub Sub Sub Categories',
   'sub_sub_sub_category' => 'Sub sub sub category',
+  'product_brand_updated' => 'Product brand updated',
+  'Announcement_Setup' => 'Announcement Setup',
+  'For single vendor operation  deactive all seller!!' => 'For single vendor operation  deactive all seller!!',
+  'Now  your multi vendor business mode is opening  you can add new seller !!' => 'Now  your multi vendor business mode is opening  you can add new seller !!',
+  'Stock Left' => 'متبقي',
+
 );

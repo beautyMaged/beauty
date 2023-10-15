@@ -74,8 +74,7 @@
         </div>
         <div
             class="col-xxl-9 col-xl-9 col-lg-9 col-md-9 col-sm-12 col-12 m-auto text-center slider_div first_home_slider"
-            dir="rtl" style="background: #a9a9a994;
-    padding-left: 0;padding-right: 0;">
+            dir="rtl" style="background: #a9a9a994;padding-left: 0;padding-right: 0;">
             @php($main_banner=\App\Model\Banner::where('banner_type','Main Banner')->where('published',1)->orderBy('id','desc')->get())
             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                 <ol class="carousel-indicators" dir="{{session('direction')}}">
@@ -100,9 +99,9 @@
                                 <span class="bold s_27 d-block">
                                     {{$banner->title}}
                                 </span>
-{{--                                <span class="bold s_22 d-block" style="padding-left: 211px;">--}}
-{{--                                    {{$banner->description}}--}}
-{{--                                </span>--}}
+        {{--                                <span class="bold s_22 d-block" style="padding-left: 211px;">--}}
+        {{--                                    {{$banner->description}}--}}
+        {{--                                </span>--}}
                             </div>
                         </div>
                     @endforeach

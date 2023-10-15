@@ -1,7 +1,28 @@
-@php( $local = session()->has('local')?session('local'):'en')
+@php
+$all_cats ??= \App\Model\Category::get();
+@endphp
+{{-- @php
+$level1Cat = $all_cats->filter(function ($item) {
+    return $item->position == 0 && $item->home_status == true;
+})->sortByDesc('priority')->values();
+$level2Cat = $all_cats->filter(function ($item) use($level1Cat) {
+    return $item->position == 1 && $item->parent_id == $level1Cat->get(0)->id;
+})->values();
+foreach($level1Cat as $cat)
+    print_r($cat->id."<br/>");
+die();
+@endphp --}}
+@php($local = session()->has('local')?session('local'):'en')
 @php($lang = \App\Model\BusinessSetting::where('type', 'language')->first())
 
 <style>
+.sub_sub_cats_menu {
+    display: none;
+}
+.all_main_cats .show {
+    display: inline-block;
+}
+.show
 .for-count-value { color: {{$web_config['primary_color']}};} .count-value {color: {{$web_config['primary_color']}};}
 .all_cats_list { {{session('direction') == 'rtl' ? 'right:-20px!important' : ''}} }
 .owl-carousel.owl-rtl .owl-item { {{session('direction') == 'rtl' ? 'float:right!important' : 'float:left!important'}} }
@@ -345,7 +366,7 @@
                                 <div style="" class="category-item_1"> <a href="{{route('home')}}/flash-deals/1"><span class="boldy">{{\App\CPU\translate('daily_offers')}}</span></a> </div>
                                 <div style="" class="category-item_1"> <a href="{{route('home')}}/products?data_from=latest&page=1"><span class="boldy">{{\App\CPU\translate('recent_pro')}}</span></a> </div>
                                 <div style="" class="category-item_1"> <a href="{{route('products',['data_from'=>'featured_deal','page'=>1])}}"><span class="boldy">{{\App\CPU\translate('special_offers')}}</span></a> </div>
-                                @php($cats = \App\Model\Category::where('position', 0)->where('home_status', true)->orderBy('priority')->get())
+                                @php($cats = $all_cats->filter(fn ($item) => $item->position == 0 && $item->home_status == true)->sortBy('priority')->values())
                                 @foreach($cats as $cat)
                                     <div style="" class="category-item" data-value="menu_cat_{{$cat->id}}" data-id="{{$cat->id}}"> <a href="{{route('home')}}/products?id={{$cat->id}}&data_from=category&page=1"><span class="boldy">{{$cat->name}}</span></a> </div>
                                 @endforeach
@@ -365,17 +386,21 @@
                                 </div>
                                 <div class="col-xxl-2 col-xl-2 col-md-2 col-sm-2 col-2" style="padding: 22px 17px 0 0;">
                                     <div class="row">
-                                        <div class="{{$cat->childes->count() > 0 ? 'col-xxl-5 col-xl-5 col-lg-5 col-md-5 col-sm-5 col-12' : 'col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-center'}}" style="padding: 74px 0px;border-left: 1px solid #ddd;">
+                                        @php(
+                                            $catChildes = $all_cats->filter(function ($item) use($cat) {
+                                                return $item->position == 1 && $item->parent_id == $cat->id;
+                                            })->sortBy('priority')->values()
+                                        )
+                                        <div class="{{$catChildes->count() > 0 ? 'col-xxl-5 col-xl-5 col-lg-5 col-md-5 col-sm-5 col-12' : 'col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-center'}}" style="padding: 74px 0px;border-left: 1px solid #ddd;">
                                             <a href="{{route('home')}}/products?id={{$cat->id}}&data_from=category&page=1" class="bold s_16 d-block" style="padding: 13px 0;">{{\App\CPU\translate('View All')}}</a>
                                             <a href="{{route('home')}}/products?id={{$cat->id}}&data_from=top-rated&page=1" class="bold s_16 d-block"style="padding: 13px 0;">{{\App\CPU\translate('Top Rated')}}</a>
                                         </div>
-                                        @if($cat->childes->count() > 0)
+                                        @if($catChildes->count() > 0)
                                             <div class="col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7 col-12 s_14" style="padding-right: 14px;border-left: 1px solid #ddd;">
                                                 <h3 class="bold s_14">{{\App\CPU\translate('Sub Categories')}}</h3>
                                                 <ul style="list-style: none;padding-right: 11px;">
-                                                    @foreach($cat->childes as $single_child)
-                                                        <li style="padding: 4px 0;"><a href="{{route('home')}}/products?id={{$single_child->id}}&data_from=category&page=1">{{$single_child->name}}</a>
-                                                        </li>
+                                                    @foreach($catChildes as $single_child)
+                                                        <li style="padding: 4px 0;"><a href="{{route('home')}}/products?id={{$single_child->id}}&data_from=category&page=1">{{$single_child->name}}</a></li>
                                                     @endforeach
                                                 </ul>
                                             </div>
@@ -425,8 +450,9 @@
                                 @endif
                                 <div class="col-xxl-3 col-xl-3 col-md-3 col-sm-3 col-3" style="padding: 22px 17px 0 0;">
                                     <div class="row">
+                                        
                                         <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12 text-center">
-                                            <h3 class="bold s_18">{{\App\CPU\translate('Most Popular Brands')}}</h3>
+                                            <h3 class="bold s_18">{{\App\CPU\translate('Sub Sub Category')}}</h3>
                                         </div>
                                         {{--   @php($most_pop = \App\Model\Product::)--}}
                                         @foreach ($brands as $brand)
@@ -434,6 +460,7 @@
                                                 <a href="#"> <img src="{{asset('storage/brand/' . $brand->image)}}" class="most_pop_prod d-block" alt="" style="border-radius: 0;padding: 7px;width: 100%;height: 93px"> <span class="s_14 bold d-block">{{$brand->name}}</span> </a>
                                             </div>
                                         @endforeach
+
                                     </div>
                                 </div>
                                 <div class="col-xxl-3 col-xl-3 col-md-3 col-sm-3 col-3" style="padding: 22px 17px 0 0;">
@@ -457,7 +484,7 @@
                                         @php($most_pop = $porduct_data->whereIn('id', $product_ids)->limit(4)->get())
                                         @foreach($most_pop as $single_pop)
 
-                                            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 col-6 text-center py-3"> <a href="{{route('product', $single_pop->slug)}}"> <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$single_pop['thumbnail']}}" class="most_pop_prod d-block" alt="" style="border-radius: 50%;padding: 19px;width: 150px;height: 150px"> <span class="s_14 bold d-block">{{$single_pop->name}}</span> </a> </div>
+                                            {{-- <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 col-6 text-center py-3"> <a href="{{route('product', $single_pop->slug)}}"> <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$single_pop['thumbnail']}}" class="most_pop_prod d-block" alt="" style="border-radius: 50%;padding: 19px;width: 150px;height: 150px"> <span class="s_14 bold d-block">{{$single_pop->name}}</span> </a> </div> --}}
 
                                             <div
                                                 class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 col-6 text-center py-3">
@@ -485,13 +512,13 @@
                             <div class="all_main_cats col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 col-4" style="border: 1px solid #ddd;">
                                 <ul class="all_main_cats_list">
                                     {{-- @php($special_main_cats=\App\CPU\CategoryManager::parents()) --}}
-                                    @php($special_main_cats = \App\Model\Category::where('position', 0)->where('home_status', true)->orderBy('priority')->get())
-                                    @foreach($special_main_cats as $cat)
+                                    
+                                    @foreach($cats as $cat)
                                         <li class="single-main-item" data-target="{{$cat->id}}"> <a href="{{route('home')}}/products?id={{$cat->id}}&data_from=category&page=1" class="s_18">{{$cat->name}}</a> </li>
                                     @endforeach
                                 </ul>
                             </div>
-                            @foreach($special_main_cats as $key_sp => $cat)
+                            @foreach($cats as $key_sp => $cat)
                                 <div class="all_main_cats sub_cats_menu col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8 col-xs-8 col-8 {{$key_sp= '0' ? 'show' : ''}}" id="sub_items_from_main_{{$cat->id}}">
                                     <div class="row" style="padding: 10px">
                                         <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12" style="border-bottom: 1px solid #ddd">
@@ -500,9 +527,14 @@
                                         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 col-6">
                                             <h3 class="bold s_18 pt-3">المشهورة أكتر</h3>
                                             <ul style="list-style: none; padding: 0px 13px;border-left: 1px solid #ddd;">
-                                                @if($cat->childes->count() > 0)
-                                                    @foreach($cat->childes as $single_sub)
-                                                        <li class="" data-target="{{$single_sub->id}}"> <a href="{{route('home')}}/products?id={{$single_sub->id}}&data_from=category&page=1" class="s_14">{{$single_sub->name}}</a></li>
+                                                @php(
+                                                    $catChildes = $all_cats->filter(function ($item) use($cat) {
+                                                        return $item->position == 1 && $item->parent_id == $cat->id;
+                                                    })->sortBy('priority')->values()
+                                                )
+                                                @if($catChildes->count() > 0)
+                                                    @foreach($catChildes as $single_sub)
+                                                        <li class="sub-item" data-target="{{$single_sub->id}}"> <a href="{{route('home')}}/products?id={{$single_sub->id}}&data_from=category&page=1" class="s_14">{{$single_sub->name}}</a></li>
                                                         {{-- @foreach($single_sub->childes as $sub_sub_single)
                                                             <li class="" data-target="{{$sub_sub_single->id}}">
                                                                 <a href="{{route('home')}}/products?id={{$sub_sub_single->id}}&data_from=category&page=1" class="s_14">{{$sub_sub_single->name}}</a>
@@ -515,7 +547,6 @@
                                         @php($porduct_data = App\Model\Product::active())
                                         @php($products = $porduct_data->get())
                                         @php($product_ids = [])
-
                                         @foreach ($products as $product)
                                             @foreach (json_decode($product['category_ids'], true) as $category)
                                                 @if ($category['id'] == $cat->id)
@@ -523,27 +554,28 @@
                                                 @endif
                                             @endforeach
                                         @endforeach
-
-                                        @php($brands_in_category = $porduct_data->whereIn('id', $product_ids)->pluck('brand_id')->toArray())
-                                        @php($brands = App\Model\Brand::get())
-                                        @php($selected_brands = [])
-                                        @foreach($brands as $brand)
-                                            @if(in_array($brand->id, $brands_in_category))
-                                                @php(array_push($selected_brands, $brand->id))
-                                            @endif
-                                        @endforeach
-
-                                        @if($selected_brands)
-                                            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 col-6">
-                                                <h3 class="bold s_18 pt-3">أفضل الماركات</h3>
+                                        @php(
+                                            $subCats = $all_cats->filter(function ($item) use ($cat) {
+                                                return $item->position == 1 && $item->parent_id == $cat->id;
+                                            })->sortBy('priority')->values()
+                                        )
+                                        @foreach($subCats as $key_sub => $sub_cat)
+                                            <div id="sub_items_from_sub_{{$sub_cat->id}}" class="sub_sub_cats_menu col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 col-6">
+                                                <h3 class="bold s_18 pt-3">sub sub </h3>
                                                 <ul style="list-style: none; padding: 0 13px;">
-                                                    @foreach($selected_brands as $brand)
-                                                        @php($brand = App\Model\Brand::find($brand))
-                                                        <li class=""><a href="{{route('home')}}/products?id={{$brand->id}}&data_from=brand&page=1" class="s_14">{{$brand->name}}</a></li>
-                                                    @endforeach
+                                                    @php(
+                                                        $subCatChildes = $all_cats->filter(function ($item) use($sub_cat) {
+                                                            return $item->position == 2 && $item->parent_id == $sub_cat->id;
+                                                        })->sortBy('priority')->values()
+                                                    )
+                                                    @if($subCatChildes->count() > 0)
+                                                        @foreach($subCatChildes as $single_sub_sub)
+                                                            <li class="sub-sub-item" data-target="{{$single_sub_sub->id}}"> <a href="{{route('home')}}/products?id={{$single_sub_sub->id}}&data_from=category&page=1" class="s_14">{{$single_sub_sub->name}}</a></li>
+                                                        @endforeach
+                                                    @endif
                                                 </ul>
                                             </div>
-                                        @endif
+                                        @endforeach
                                     </div>
                                 </div>
                             @endforeach
@@ -650,7 +682,7 @@
                 all_cats_list.css('display', 'none');
 
             });
-            $('.sub_cats_menu ').first().addClass('show');
+            $('.sub_cats_menu').first().addClass('show');
             let single_main_item = $('.single-main-item');
             let sub_cats_menu = $('.sub_cats_menu');
             single_main_item.hover(function () {
@@ -658,6 +690,15 @@
                 sub_cats_menu.removeClass('show');
                 let single_main_item_id = $('#sub_items_from_main_' + id);
                 single_main_item_id.addClass('show')
+            });
+            let sub_sub_cats_menu = $('.sub_sub_cats_menu');
+            sub_sub_cats_menu.first().addClass('show');
+            let single_sub_item = $('.sub-item');
+            single_sub_item.hover(function () {
+                let id = $(this).attr('data-target');
+                sub_sub_cats_menu.removeClass('show');
+                let single_sub_item_id = $('#sub_items_from_sub_' + id);
+                single_sub_item_id.addClass('show')
             });
             $('.category-item').hover(function () {
                 let id_target = $(this).attr('data-value');
