@@ -8,11 +8,11 @@ use App\Jobs\SyncProductsJob;
 use App\Model\Seller;
 use App\Model\Shop;
 use Brian2694\Toastr\Facades\Toastr;
-use Illuminate\Events\Dispatcher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\CPU\Helpers;
 use Illuminate\Support\Facades\Session;
+use App\Model\Cron;
 
 use function App\CPU\translate;
 
@@ -32,9 +32,9 @@ class RegisterController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'image' => 'required|mimes: jpg,jpeg,png,gif',
-            'logo' => 'required|mimes: jpg,jpeg,png,gif',
-            'banner' => 'required|mimes: jpg,jpeg,png,gif',
+            'image' => 'required|mimes:jpg,jpeg,png,gif',
+            'logo' => 'required|mimes:jpg,jpeg,png,gif',
+            'banner' => 'required|mimes:jpg,jpeg,png,gif',
             'email' => 'required|unique:sellers',
             'shop_address' => 'required',
             'f_name' => 'required',
@@ -42,6 +42,7 @@ class RegisterController extends Controller
             'shop_name' => 'required',
             'phone' => 'required',
             'password' => 'required|min:8',
+            'platform' => 'in:shopify,salla,zid'
         ]);
 
         if ($request['from_submit'] != 'admin') {
@@ -86,6 +87,7 @@ class RegisterController extends Controller
 
             $shop = new Shop();
             $shop->seller_id = $seller->id;
+            $shop->platform = $request->platform;
             $shop->name = $request->shop_name;
             $shop->address = $request->shop_address;
             $shop->contact = $request->phone;
@@ -93,17 +95,8 @@ class RegisterController extends Controller
             $shop->banner = ImageManager::upload('shop/banner/', 'png', $request->file('banner'));
             $shop->save();
 
-            DB::table('shop_rest_api')->insert([
-                'shop_id' => $shop->id,
-                'platform' => $request->platform,
-                'host' => $request->host,
-                'access_token' => $request->api_access_token,
-                'api_key' => $request->api_key,
-                'api_secret' => $request->api_secret
-            ]);
-
             DB::table('seller_wallets')->insert([
-                'seller_id' => $seller['id'],
+                'seller_id' => $seller->id,
                 'withdrawn' => 0,
                 'commission_given' => 0,
                 'total_earning' => 0,
@@ -114,21 +107,40 @@ class RegisterController extends Controller
                 'updated_at' => now(),
             ]);
 
-            SyncProductsJob::dispatch(
-                $request->host,
-                $request->api_access_token,
-                $request->api_key,
-                $request->api_secret,
-                $seller->id
-            );
+            $this->{$request->platform}($request, $seller, $shop);
         });
 
-        if ($request->status == 'approved') {
-            Toastr::success('Shop apply successfully!');
-            return back();
-        } else {
-            Toastr::success('Shop apply successfully!');
-            return redirect()->route('seller.auth.login');
-        }
+        Toastr::success('Shop apply successfully!');
+
+        return $request->status == 'approved' ? back() : redirect()->route('seller.auth.login');
+        
+    }
+    private function shopify($request, $seller, $shop)
+    {
+        // DB::table('shop_rest_api')->insert([
+        //     'shop_id' => $shop->id,
+        //     'host' => $request->host,
+        //     'access_token' => $request->api_access_token,
+        //     'api_key' => $request->api_key,
+        //     'api_secret' => $request->api_secret
+        // ]);
+
+        // SyncProductsJob::dispatch(
+        //     $request->host,
+        //     $request->api_access_token,
+        //     $request->api_key,
+        //     $request->api_secret,
+        //     $seller->id
+        // );
+    }
+
+    private function salla($request, $seller, $shop)
+    {
+        
+    }
+
+    private function zid($request, $seller, $shop)
+    {
+        
     }
 }

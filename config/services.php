@@ -48,4 +48,26 @@ return [
         'redirect' => env('TWITTER_SERVICE_CALLBACK'),
     ],
 
+    'shopify' => [
+        'client_id'          => env('SHOPIFY_OAUTH_CLIENT_ID'),
+        'client_secret'      => env('SHOPIFY_OAUTH_CLIENT_SECRET'),
+        'scopes'             => ['read_products'],
+    ],
+
+    'salla' => [
+        'client_id'          => env('SALLA_OAUTH_CLIENT_ID'),
+        'client_secret'      => env('SALLA_OAUTH_CLIENT_SECRET'),
+        'redirect'           => env('SALLA_OAUTH_CLIENT_REDIRECT_URI'),
+        'webhook_secret'     => env('SALLA_WEBHOOK_SECRET'),
+        'authorization_mode' => env('SALLA_AUTHORIZATION_MODE', 'easy'),   // Supported: "easy", "custom"
+        'scopes'             => ['offline_access'],
+
+    ],
+
+    'zid' => [
+        'client_id'          => env('ZID_OAUTH_CLIENT_ID'),
+        'client_secret'      => env('ZID_OAUTH_CLIENT_SECRET'),
+        // 'webhook_secret'     => env('ZID_WEBHOOK_SECRET'),
+    ]
+
 ];

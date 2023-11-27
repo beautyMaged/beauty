@@ -2,11 +2,9 @@
 
 namespace App\Helpers;
 
-use App\Models\Product;
 use App\Traits\RequestTrait;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class Shopify

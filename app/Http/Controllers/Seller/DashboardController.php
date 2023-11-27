@@ -19,23 +19,49 @@ use Session;
 
 class DashboardController extends Controller
 {
+    public function installSalla()
+    {
+        return view('seller-views.system.installSalla');
+    }
+    public function installZid()
+    {
+        return view('seller-views.system.installZid');
+    }
+    public function installShopify()
+    {
+        return view('seller-views.system.installShopify');
+    }
     public function dashboard()
     {
+        $shop = auth()->user()->shop;
+        if ($shop->token == null) {
+            switch ($shop->platform) {
+                case 'salla':
+                    return $this->installSalla();
+                case 'zid':
+                    return $this->installZid();
+                case 'shopify':
+                    return $this->installShopify();
+            }
+            return;
+        }
+
         $top_sell = OrderDetail::with(['product'])
-            ->whereHas('product', function ($query){
-                $query->where(['added_by'=>'seller']);
+            ->whereHas('product', function ($query) {
+                $query->where(['added_by' => 'seller']);
             })
-            ->where(['seller_id'=>auth()->id()])
+            ->where(['seller_id' => auth()->id()])
             ->select('product_id', DB::raw('SUM(qty) as count'))
             ->groupBy('product_id')
             ->orderBy("count", 'desc')
             ->take(6)
             ->get();
 
-        $most_rated_products = Product::where(['user_id'=>auth()->id(), 'added_by'=>'seller'])
+        $most_rated_products = Product::where(['user_id' => auth()->id(), 'added_by' => 'seller'])
             ->rightJoin('reviews', 'reviews.product_id', '=', 'products.id')
             ->groupBy('product_id')
-            ->select(['product_id',
+            ->select([
+                'product_id',
                 DB::raw('AVG(reviews.rating) as ratings_average'),
                 DB::raw('count(*) as total')
             ])
@@ -45,10 +71,10 @@ class DashboardController extends Controller
 
         $top_deliveryman = Order::with(['delivery_man'])
             ->select('delivery_man_id', DB::raw('COUNT(delivery_man_id) as count'))
-            ->whereHas('delivery_man', function($query){
-                $query->where(['seller_id'=>auth()->id()]);
+            ->whereHas('delivery_man', function ($query) {
+                $query->where(['seller_id' => auth()->id()]);
             })
-            ->where(['order_status'=>'delivered'])
+            ->where(['order_status' => 'delivered'])
             ->whereNotNull('delivery_man_id')
             ->groupBy('delivery_man_id')
             ->orderBy("count", 'desc')
@@ -60,9 +86,9 @@ class DashboardController extends Controller
 
         $seller_data = [];
         $seller_earnings = OrderTransaction::where([
-            'seller_is'=>'seller',
-            'seller_id'=>auth()->id(),
-            'status'=>'disburse'
+            'seller_is' => 'seller',
+            'seller_id' => auth()->id(),
+            'status' => 'disburse'
         ])->select(
             DB::raw('IFNULL(sum(seller_amount),0) as sums'),
             DB::raw('YEAR(created_at) year, MONTH(created_at) month')
@@ -77,10 +103,10 @@ class DashboardController extends Controller
         }
 
         $commission_data = [];
-        $commission_given =OrderTransaction::where([
-            'seller_is'=>'seller',
-            'seller_id'=>auth()->id(),
-            'status'=>'disburse'
+        $commission_given = OrderTransaction::where([
+            'seller_is' => 'seller',
+            'seller_id' => auth()->id(),
+            'status' => 'disburse'
         ])->select(
             DB::raw('IFNULL(sum(admin_commission),0) as sums'),
             DB::raw('YEAR(created_at) year, MONTH(created_at) month')
@@ -129,19 +155,20 @@ class DashboardController extends Controller
         ], 200);
     }
 
-    public function get_earning_statitics(Request $request){
+    public function get_earning_statitics(Request $request)
+    {
         $dateType = $request->type;
 
         $seller_data = array();
-        if($dateType == 'yearEarn') {
+        if ($dateType == 'yearEarn') {
             $number = 12;
             $from = Carbon::now()->startOfYear()->format('Y-m-d');
             $to = Carbon::now()->endOfYear()->format('Y-m-d');
 
             $seller_earnings = OrderTransaction::where([
-                'seller_is'=>'seller',
-                'seller_id'=>auth()->id(),
-                'status'=>'disburse'
+                'seller_is' => 'seller',
+                'seller_id' => auth()->id(),
+                'status' => 'disburse'
             ])->select(
                 DB::raw('IFNULL(sum(seller_amount),0) as sums'),
                 DB::raw('YEAR(created_at) year, MONTH(created_at) month')
@@ -155,12 +182,11 @@ class DashboardController extends Controller
                     }
                 }
             }
-            $key_range = array("Jan","Feb","Mar","April","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
-
-        }elseif($dateType == 'MonthEarn') {
+            $key_range = array("Jan", "Feb", "Mar", "April", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+        } elseif ($dateType == 'MonthEarn') {
             $from = date('Y-m-01');
             $to = date('Y-m-t');
-            $number = date('d',strtotime($to));
+            $number = date('d', strtotime($to));
             $key_range = range(1, $number);
 
             $seller_earnings = OrderTransaction::where([
@@ -180,14 +206,13 @@ class DashboardController extends Controller
                     }
                 }
             }
-
-        }elseif($dateType == 'WeekEarn') {
+        } elseif ($dateType == 'WeekEarn') {
 
             $from = Carbon::now()->startOfWeek()->format('Y-m-d');
             $to = Carbon::now()->endOfWeek()->format('Y-m-d');
 
-            $number_start =date('d',strtotime($from));
-            $number_end =date('d',strtotime($to));
+            $number_start = date('d', strtotime($from));
+            $number_end = date('d', strtotime($to));
 
             $seller_earnings = OrderTransaction::where([
                 'seller_is' => 'seller',
@@ -215,15 +240,15 @@ class DashboardController extends Controller
         $seller_data_final = $seller_data;
 
         $commission_data = array();
-        if($dateType == 'yearEarn') {
+        if ($dateType == 'yearEarn') {
             $number = 12;
             $from = Carbon::now()->startOfYear()->format('Y-m-d');
             $to = Carbon::now()->endOfYear()->format('Y-m-d');
 
             $commission_earnings = OrderTransaction::where([
-                'seller_is'=>'seller',
-                'seller_id'=>auth()->id(),
-                'status'=>'disburse'
+                'seller_is' => 'seller',
+                'seller_id' => auth()->id(),
+                'status' => 'disburse'
             ])->select(
                 DB::raw('IFNULL(sum(admin_commission),0) as sums'),
                 DB::raw('YEAR(created_at) year, MONTH(created_at) month')
@@ -238,12 +263,11 @@ class DashboardController extends Controller
                 }
             }
 
-            $key_range = array("Jan","Feb","Mar","April","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
-
-        }elseif($dateType == 'MonthEarn') {
+            $key_range = array("Jan", "Feb", "Mar", "April", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+        } elseif ($dateType == 'MonthEarn') {
             $from = date('Y-m-01');
             $to = date('Y-m-t');
-            $number = date('d',strtotime($to));
+            $number = date('d', strtotime($to));
             $key_range = range(1, $number);
 
             $commission_earnings = OrderTransaction::where([
@@ -263,14 +287,13 @@ class DashboardController extends Controller
                     }
                 }
             }
-
-        }elseif($dateType == 'WeekEarn') {
+        } elseif ($dateType == 'WeekEarn') {
 
             $from = Carbon::now()->startOfWeek()->format('Y-m-d');
             $to = Carbon::now()->endOfWeek()->format('Y-m-d');
 
-            $number_start =date('d',strtotime($from));
-            $number_end =date('d',strtotime($to));
+            $number_start = date('d', strtotime($from));
+            $number_end = date('d', strtotime($to));
 
             $commission_earnings = OrderTransaction::where([
                 'seller_is' => 'seller',

@@ -14,12 +14,12 @@ class Seller extends Authenticatable
         'id' => 'integer',
         'orders_count' => 'integer',
         'product_count' => 'integer',
-        'pos+status' => 'integer'
+        'poststatus' => 'integer'
     ];
 
     public function scopeApproved($query)
     {
-        return $query->where(['status'=>'approved']);
+        return $query->where(['status' => 'approved']);
     }
 
     public function shop()
@@ -27,10 +27,10 @@ class Seller extends Authenticatable
         return $this->hasOne(Shop::class, 'seller_id');
     }
 
-    public function shops()
-    {
-        return $this->hasMany(Shop::class, 'seller_id');
-    }
+    // public function shops()
+    // {
+    //     return $this->hasMany(Shop::class, 'seller_id');
+    // }
 
     public function orders()
     {
@@ -39,7 +39,7 @@ class Seller extends Authenticatable
 
     public function product()
     {
-        return $this->hasMany(Product::class, 'user_id')->where(['added_by'=>'seller']);
+        return $this->hasMany(Product::class, 'user_id')->where(['added_by' => 'seller']);
     }
 
     public function wallet()

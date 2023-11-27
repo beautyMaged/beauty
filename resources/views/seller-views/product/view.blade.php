@@ -216,7 +216,7 @@
                                             <div class="card-body">
                                                 <img class="w-100"
                                                      onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
-                                                     src="{{asset("storage/app/public/product/$photo")}}"
+                                                     src="{{(is_string($photo)) ? asset("storage/product/$photo") : $photo->cdn}}"
                                                      alt="Product image">
 
                                             </div>

@@ -252,7 +252,8 @@
                                                 <img class="width-100"
                                                     onerror="this.onerror=null;this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
 {{--                                                    src="{{asset("storage/product/$photo")}}" alt="Product image"--}}
-                                                     src="{{(is_string($photo)) ? asset("storage/product/$photo") : $photo->cdn}}" alt="Product image">
+                                                     src="{{(is_string($photo)) ? asset("storage/product/$photo") : $photo->cdn}}"
+                                                     alt="Product image">
 
                                             </div>
                                         </div>

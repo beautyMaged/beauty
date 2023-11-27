@@ -1,17 +1,18 @@
 <?php
 
-use App\Http\Controllers\WebhookController;
+use WebhookController as ShopifyWebhookController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], function () {
-    Route::get('/', fn () => redirect()->route('admin.auth.login'));
+    Route::get('', fn () => redirect()->route('admin.auth.login'));
 
-    // Webhooks
+    // Shopify Webhooks
     Route::prefix('webhooks')->group(function () {
-        Route::post('/product/created', [\App\Http\Controllers\WebhookController::class, 'productCreated']);
-        Route::post('/product/updated', [\App\Http\Controllers\WebhookController::class, 'productUpdated']);
-        Route::post('/product/deleted', [\App\Http\Controllers\WebhookController::class, 'productDeleted']);
-        Route::post('/orders/created', [\App\Http\Controllers\WebhookController::class, 'orderCreated']);
+        Route::post('product/created', [ShopifyWebhookController::class, 'productCreated']);
+        Route::post('product/updated', [ShopifyWebhookController::class, 'productUpdated']);
+        Route::post('product/deleted', [ShopifyWebhookController::class, 'productDeleted']);
+        Route::post('orders/created', [ShopifyWebhookController::class, 'orderCreated']);
     });
 
     /*authentication*/
@@ -27,8 +28,8 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
 
         // Webhooks
         Route::prefix('webhooks')->group(function () {
-            Route::get('/configure/{id}', [\App\Http\Controllers\WebhookController::class, 'createWebhooks']);
-            Route::get('/delete/{id}', [\App\Http\Controllers\WebhookController::class, 'deleteWebhooks']);
+            Route::get('/configure/{id}', [ShopifyWebhookController::class, 'createWebhooks']);
+            Route::get('/delete/{id}', [ShopifyWebhookController::class, 'deleteWebhooks']);
         });
 
         //dashboard routes

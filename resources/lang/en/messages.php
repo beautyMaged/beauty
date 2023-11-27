@@ -3184,4 +3184,7 @@
   'sub_sub_sub_category' => 'Sub sub sub category',
   'Ecommerce' => 'Ecommerce',
   'Stock Left' => 'Left',
+  'install_salla' => 'Install Salla',
+  'install_zid' => 'Install Zid',
+  'install_shopify' => 'Install Shopify'
 );

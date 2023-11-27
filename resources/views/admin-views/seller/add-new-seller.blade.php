@@ -54,7 +54,7 @@
                             <div class="title-color mb-2 d-flex gap-1 align-items-center">{{\App\CPU\translate('Seller_Image')}} <span class="text-info">({{\App\CPU\translate('ratio')}} {{\App\CPU\translate('1')}}:{{\App\CPU\translate('1')}})</span></div>
                             <div class="custom-file text-left">
                                 <input type="file" name="image" id="customFileUpload" class="custom-file-input"
-                                    accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                    accept="image/*">
                                 <label class="custom-file-label" for="customFileUpload">{{\App\CPU\translate('Upload')}} {{\App\CPU\translate('image')}}</label>
                             </div>
                         </div>
@@ -79,38 +79,38 @@
                     <div class="col-lg-4  form-group">
                         <label for="platform">Select Platform</label>
                         <select class="form-control" id="platform" name="platform" value="{{old('platform')}}">
-                            <option>Shopify</option>
-                            <option>2</option>
-                            <option>3</option>
+                            <option>shopify</option>
+                            <option>salla</option>
+                            <option>zid</option>
                             <option>4</option>
                             <option>5</option>
                         </select>
                     </div>
-                    <div class="col-lg-4  form-group">
+                    {{-- <div class="col-lg-4  form-group">
                         <label for="api_access_token">Host</label>
                         <input type="text" class="form-control" id="host" name="host" value="{{old('host')}}" placeholder="host_name" required>
-                    </div>
-                    <div class="col-lg-4  form-group">
+                    </div> --}}
+                    {{-- <div class="col-lg-4  form-group">
                         <label for="api_access_token">API Access_Token</label>
                         <input type="text" class="form-control" id="api_access_token" name="api_access_token" value="{{old('api_access_token')}}">
-                    </div>
-                    <div class="col-lg-4  form-group">
+                    </div> --}}
+                    {{-- <div class="col-lg-4  form-group">
                         <label for="api_key">API Key</label>
                         <input type="text" class="form-control" id="api_key" name="api_key" value="{{old('api_key')}}">
-                    </div>
-                    <div class="col-lg-4  form-group">
+                    </div> --}}
+                    {{-- <div class="col-lg-4  form-group">
                         <label for="api_secret">API Secret</label>
                         <input type="text" class="form-control" id="api_secret" name="api_secret" value="{{old('api_secret')}}">
-                    </div>
-                    <div class="col-lg-4 form-group d-none">
+                    </div> --}}
+                    <div class="col-lg-4 form-group">
                         <label for="exampleInputPassword" class="title-color d-flex gap-1 align-items-center">{{\App\CPU\translate('password')}}</label>
 {{--                        <input type="password" class="form-control form-control-user" minlength="8" id="exampleInputPassword" name="password" placeholder="{{\App\CPU\translate('Ex: 8+ Character')}}" required>--}}
-                        <input type="password" class="form-control form-control-user" minlength="8" id="exampleInputPassword" name="password" value="37298208@" placeholder="{{\App\CPU\translate('Ex: 8+ Character')}}" required>
+                        <input type="password" class="form-control form-control-user" minlength="8" id="exampleInputPassword" name="password" placeholder="{{\App\CPU\translate('Ex: 8+ Character')}}" required>
                     </div>
-                    <div class="col-lg-4 form-group d-none">
+                    <div class="col-lg-4 form-group">
                         <label for="exampleRepeatPassword" class="title-color d-flex gap-1 align-items-center">{{\App\CPU\translate('confirm_password')}}</label>
 {{--                        <input type="password" class="form-control form-control-user" minlength="8" id="exampleRepeatPassword" placeholder="{{\App\CPU\translate('Ex: 8+ Character')}}" required>--}}
-                        <input type="password" class="form-control form-control-user" minlength="8" id="exampleRepeatPassword" value="37298208@" placeholder="{{\App\CPU\translate('Ex: 8+ Character')}}" required>
+                        <input type="password" class="form-control form-control-user" minlength="8" id="exampleRepeatPassword" placeholder="{{\App\CPU\translate('Ex: 8+ Character')}}" required>
                         <div class="pass invalid-feedback">{{\App\CPU\translate('Repeat')}}  {{\App\CPU\translate('password')}} {{\App\CPU\translate('not match')}} .</div>
                     </div>
                 </div>
@@ -147,7 +147,7 @@
 
                             <div class="custom-file">
                                 <input type="file" name="logo" id="LogoUpload" class="custom-file-input"
-                                    accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                    accept="image/*">
                                 <label class="custom-file-label" for="LogoUpload">{{\App\CPU\translate('Upload')}} {{\App\CPU\translate('logo')}}</label>
                             </div>
                         </div>
@@ -166,7 +166,7 @@
 
                             <div class="custom-file">
                                 <input type="file" name="banner" id="BannerUpload" class="custom-file-input"
-                                        accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                        accept="image/*">
                                 <label class="custom-file-label" for="BannerUpload">{{\App\CPU\translate('Upload')}} {{\App\CPU\translate('Banner')}}</label>
                             </div>
                         </div>

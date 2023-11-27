@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\CPU\Helpers;
 use App\Model\BusinessSetting;
+use App\Services\Salla\AuthService;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
@@ -27,6 +28,10 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->isLocal()) {
             $this->app->register(\Amirami\Localizator\ServiceProvider::class);
         }
+
+        $this->app->singleton('salla.auth', function () {
+            return $this->app->make(AuthService::class);
+        });
     }
 
     /**

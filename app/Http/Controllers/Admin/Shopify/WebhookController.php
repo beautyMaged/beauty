@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin\Shopify;
 
+use App\Http\Controllers\Controller;
 use App\Helpers\Shopify;
 use App\Jobs\CreateDraftOrderJob;
 use App\Jobs\CreateWebhooks;

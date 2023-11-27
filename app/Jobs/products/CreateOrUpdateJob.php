@@ -3,13 +3,9 @@
 namespace App\Jobs\products;
 
 use App\CPU\BackEndHelper;
-use App\CPU\ImageManager;
-use App\Model\Seller;
 use App\Model\Shop;
 use App\Model\Tag;
-use App\Models\Product;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;

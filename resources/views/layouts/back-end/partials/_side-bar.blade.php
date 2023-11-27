@@ -59,7 +59,7 @@
                                 </span>
                             </a>
                         </li>
-                        <li class="navbar-vertical-aside-has-menu {{(Request::is('admin/employee*') || Request::is('admin/custom-role*'))?'active':''}}">
+                        {{-- <li class="navbar-vertical-aside-has-menu {{(Request::is('admin/employee*') || Request::is('admin/custom-role*'))?'active':''}}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
                                href="javascript:" title="{{\App\CPU\translate('employees')}}">
                                 <i class="tio-user nav-icon"></i>
@@ -86,7 +86,7 @@
                                     </a>
                                 </li>
                             </ul>
-                        </li>
+                        </li> --}}
 
                         <!-- End Dashboards -->
 
@@ -375,7 +375,7 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li class="navbar-vertical-aside-has-menu {{Request::is('admin/attribute*')?'active':''}}">
+                            {{-- <li class="navbar-vertical-aside-has-menu {{Request::is('admin/attribute*')?'active':''}}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link"
                                    href="{{route('admin.attribute.view')}}"
                                    title="{{\App\CPU\translate('Product_Attributes')}}">
@@ -383,7 +383,7 @@
                                     <span
                                         class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{\App\CPU\translate('Product_Attributes')}}</span>
                                 </a>
-                            </li>
+                            </li> --}}
                             <li class="navbar-vertical-aside-has-menu {{(Request::is('admin/product/list/in_house') || Request::is('admin/product/bulk-import') || (Request::is('admin/product/add-new')) || (Request::is('admin/product/view/*')) || (Request::is('admin/product/barcode/*')))?'active':''}}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
                                    href="javascript:" title="{{\App\CPU\translate('InHouse Products')}}">
@@ -487,7 +487,7 @@
                                         class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">إعدادات البانر الرئيسي</span>
                                 </a>
                             </li>
-                            <li class="navbar-vertical-aside-has-menu {{(Request::is('admin/coupon*') || Request::is('admin/deal*'))?'active':''}}">
+                            {{-- <li class="navbar-vertical-aside-has-menu {{(Request::is('admin/coupon*') || Request::is('admin/deal*'))?'active':''}}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
                                    href="javascript:" title="{{\App\CPU\translate('Offers_&_Deals')}}">
                                     <i class="tio-users-switch nav-icon"></i>
@@ -535,8 +535,8 @@
                                         </a>
                                     </li>
                                 </ul>
-                            </li>
-                            <li class="navbar-vertical-aside-has-menu {{Request::is('admin/budget-filter*')?'active':''}}">
+                            </li> --}}
+                            {{-- <li class="navbar-vertical-aside-has-menu {{Request::is('admin/budget-filter*')?'active':''}}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link"
                                    href="{{route('admin.budget-filter.view')}}"
                                    title="التسوق حسب الميزانية">
@@ -544,7 +544,7 @@
                                     <span
                                         class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">التسوق حسب الميزانية</span>
                                 </a>
-                            </li>
+                            </li> --}}
 
 
                             {{--                        <li class="navbar-vertical-aside-has-menu {{Request::is('admin/notification*')?'active':''}}">--}}
@@ -805,13 +805,13 @@
                                     {{--                                </li>--}}
                                 </ul>
                             </li>
-                            <li class="navbar-vertical-aside-has-menu {{Request::is('admin/customer/subscriber-list')?'active':''}}">
+                            {{-- <li class="navbar-vertical-aside-has-menu {{Request::is('admin/customer/subscriber-list')?'active':''}}">
                                 <a class="nav-link " href="{{route('admin.customer.subscriber-list')}}"
                                    title="{{\App\CPU\translate('subscribers')}}">
                                     <span class="tio-user nav-icon"></span>
                                     <span class="text-truncate">{{\App\CPU\translate('subscribers')}} </span>
                                 </a>
-                            </li>
+                            </li> --}}
 
                             {{--                        <li class="navbar-vertical-aside-has-menu {{Request::is('admin/delivery-man*')?'active':''}}">--}}
                             {{--                            <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"--}}
@@ -873,7 +873,7 @@
                                 <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                             </li>
 
-                            <li class="navbar-vertical-aside-has-menu {{(Request::is('admin/business-settings/web-config') || Request::is('admin/currency/view') || Request::is('admin/business-settings/web-config/app-settings') || Request::is('admin/product-settings/inhouse-shop') || Request::is('admin/business-settings/seller-settings') || Request::is('admin/customer/customer-settings') || Request::is('admin/refund-section/refund-index') || Request::is('admin/business-settings/shipping-method/setting') || Request::is('admin/business-settings/order-settings/index') || Request::is('admin/product-settings') || Request::is('admin/business-settings/web-config/delivery-restriction') || Request::is('admin/business-settings/cookie-settings'))?'active':''}}">
+                            {{-- <li class="navbar-vertical-aside-has-menu {{(Request::is('admin/business-settings/web-config') || Request::is('admin/currency/view') || Request::is('admin/business-settings/web-config/app-settings') || Request::is('admin/product-settings/inhouse-shop') || Request::is('admin/business-settings/seller-settings') || Request::is('admin/customer/customer-settings') || Request::is('admin/refund-section/refund-index') || Request::is('admin/business-settings/shipping-method/setting') || Request::is('admin/business-settings/order-settings/index') || Request::is('admin/product-settings') || Request::is('admin/business-settings/web-config/delivery-restriction') || Request::is('admin/business-settings/cookie-settings'))?'active':''}}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link"
                                    href="{{route('admin.business-settings.web-config.index')}}"
                                    title="{{\App\CPU\translate('Business_Setup')}}">
@@ -882,15 +882,15 @@
                                 {{\App\CPU\translate('Business_Setup')}}
                             </span>
                                 </a>
-                            </li>
+                            </li> --}}
 
-                            <li class="navbar-vertical-aside-has-menu {{(Request::is('admin/business-settings/mail') || Request::is('admin/business-settings/sms-module') || Request::is('admin/business-settings/captcha') || Request::is('admin/social-login/view') || Request::is('admin/social-media-chat/view') || Request::is('admin/business-settings/map-api') || Request::is('admin/business-settings/payment-method') || Request::is('admin/business-settings/fcm-index'))?'active':''}}">
+                            {{-- <li class="navbar-vertical-aside-has-menu {{(Request::is('admin/business-settings/mail') || Request::is('admin/business-settings/sms-module') || Request::is('admin/business-settings/captcha') || Request::is('admin/social-login/view') || Request::is('admin/social-media-chat/view') || Request::is('admin/business-settings/map-api') || Request::is('admin/business-settings/payment-method') || Request::is('admin/business-settings/fcm-index'))?'active':''}}">
                                 <a class="nav-link " href="{{route('admin.business-settings.sms-module')}}"
                                    title="{{\App\CPU\translate('3rd_party')}}">
                                     <span class="tio-key nav-icon"></span>
                                     <span class="text-truncate">{{\App\CPU\translate('3rd_party')}}</span>
                                 </a>
-                            </li>
+                            </li> --}}
 
                             <li class="navbar-vertical-aside-has-menu {{Request::is('admin/business-settings/terms-condition') || Request::is('admin/business-settings/page*') || Request::is('admin/business-settings/privacy-policy') || Request::is('admin/business-settings/about-us') || Request::is('admin/helpTopic/list') || Request::is('admin/business-settings/social-media') || Request::is('admin/file-manager*')?'active':''}}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
@@ -902,7 +902,7 @@
                                 </a>
                                 <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                     style="display: {{Request::is('admin/business-settings/terms-condition') || Request::is('admin/business-settings/page*') || Request::is('admin/business-settings/privacy-policy') || Request::is('admin/business-settings/about-us') || Request::is('admin/helpTopic/list') || Request::is('admin/business-settings/social-media') || Request::is('admin/file-manager*')?'block':'none'}}">
-                                    <li class="nav-item {{(Request::is('admin/static-pages*') )?'active':''}}">
+                                    {{-- <li class="nav-item {{(Request::is('admin/static-pages*') )?'active':''}}">
                                         <a class="nav-link" href="{{route('admin.static-pages.index')}}"
                                            title="صفحات الهبوط">
                                             <span class="tio-circle nav-indicator-icon"></span>
@@ -910,7 +910,7 @@
                                       صفحات الهبوط
                                     </span>
                                         </a>
-                                    </li>
+                                    </li> --}}
                                     <li class="nav-item {{(Request::is('admin/business-settings/terms-condition') || Request::is('admin/business-settings/page*') || Request::is('admin/business-settings/privacy-policy') || Request::is('admin/business-settings/about-us') || Request::is('admin/helpTopic/list'))?'active':''}}">
                                         <a class="nav-link" href="{{route('admin.business-settings.terms-condition')}}"
                                            title="{{\App\CPU\translate('pages')}}">
@@ -931,7 +931,7 @@
                                         </a>
                                     </li>
 
-                                    <li class="navbar-vertical-aside-has-menu {{Request::is('admin/file-manager*')?'active':''}}">
+                                    {{-- <li class="navbar-vertical-aside-has-menu {{Request::is('admin/file-manager*')?'active':''}}">
                                         <a class="js-navbar-vertical-aside-menu-link nav-link"
                                            href="{{route('admin.file-manager.index')}}"
                                            title="{{\App\CPU\translate('gallery')}}">
@@ -940,7 +940,7 @@
                                         {{\App\CPU\translate('gallery')}}
                                     </span>
                                         </a>
-                                    </li>
+                                    </li> --}}
                                 </ul>
                             </li>
 

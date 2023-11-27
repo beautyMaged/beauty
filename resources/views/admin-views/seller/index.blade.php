@@ -75,15 +75,15 @@
                                             <img width="50"
                                             class="aspect-1 rounded"
                                                 onerror="this.onerror=null;this.src='{{asset('assets/back-end/img/400x400/img2.jpg')}}'"
-                                                src="{{asset('storage/shop')}}/{{$seller->shop->image}}"
+                                                src="{{asset('storage/shop')}}/{{$seller->shop?->image}}"
                                                 alt="">
                                             <div>
-                                                <a class="title-color" href="{{ route('admin.sellers.view', ['id' => $seller->id]) }}">{{ \Str::limit($seller->shop->name, 20)}}</a>
+                                                <a class="title-color" href="{{ route('admin.sellers.view', ['id' => $seller->id]) }}">{{ \Str::limit($seller->shop?->name, 20)}}</a>
                                                 <br>
                                                 <span class="text-danger">
-                                                    @if($seller->shop->temporary_close)
+                                                    @if($seller->shop?->temporary_close)
                                                         {{ \App\CPU\translate('temporary_closed') }}
-                                                    @elseif($seller->shop->vacation_status && $current_date >= date('Y-m-d', strtotime($seller->shop->vacation_start_date)) && $current_date <= date('Y-m-d', strtotime($seller->shop->vacation_end_date)))
+                                                    @elseif($seller->shop?->vacation_status && $current_date >= date('Y-m-d', strtotime($seller->shop?->vacation_start_date)) && $current_date <= date('Y-m-d', strtotime($seller->shop?->vacation_end_date)))
                                                         {{ \App\CPU\translate('on_vacation') }}
                                                     @endif
                                                 </span>

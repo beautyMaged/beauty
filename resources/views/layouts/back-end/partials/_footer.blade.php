@@ -12,12 +12,12 @@
             <div class="d-flex justify-content-center justify-content-lg-end">
                 <!-- List Dot -->
                 <ul class="list-inline list-footer-icon justify-content-center justify-content-lg-start mb-0">
-                    <li class="list-inline-item">
+                    {{-- <li class="list-inline-item">
                         <a class="list-separator-link" href="{{route('admin.business-settings.web-config.index')}}">
                             <i class="tio-settings"></i>
                             {{\App\CPU\translate('Business Setup')}}
                         </a>
-                    </li>
+                    </li> --}}
 
                     <li class="list-inline-item">
                         <a class="list-separator-link"href="{{route('admin.profile.update',auth('admin')->user()->id)}}">

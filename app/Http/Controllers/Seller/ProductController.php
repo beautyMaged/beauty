@@ -919,7 +919,7 @@ class ProductController extends Controller
         $product ? $this->authorize('view', $product) : abort(404);
         Cart::where('product_id', $product->id)->delete();
         foreach (json_decode($product['images'], true) as $image)
-            ImageManager::delete('/product/' . $image);
+        is_string($image) && ImageManager::delete('/product/' . $image);
         ImageManager::delete('/product/thumbnail/' . $product['thumbnail']);
         $product->delete();
         FlashDealProduct::where(['product_id' => $id])->delete();

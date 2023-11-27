@@ -12,9 +12,22 @@
  */
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Seller\Shopify\OAuthController as ShopifyOAuthController;
+use App\Http\Controllers\Seller\Salla\OAuthController as SallaOAuthController;
+use App\Http\Controllers\Seller\Zid\OAuthController as ZidOAuthController;
+use Salla\WebhookController as SallaWebhookController;
+use Zid\WebhookController as ZidWebhookController;
+use Shopify\WebhookController as ShopifyWebhookController;
 
 Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'], function () {
     Route::get('/', fn () => redirect()->route('seller.auth.login'));
+
+    // Salla Webhooks
+    Route::post('salla/webhook', SallaWebhookController::class)->name('salla.webhook');
+    // Zid Webhooks
+    Route::post('zid/webhook', ZidWebhookController::class)->name('zid.webhook');
+    // Shopify Webhooks
+    Route::post('shopify/webhook', ShopifyWebhookController::class)->name('shopify.webhook');
 
     /*authentication*/
     Route::group(['namespace' => 'Auth', 'prefix' => 'auth', 'as' => 'auth.'], function () {
@@ -31,10 +44,26 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
         Route::post('reset-password', 'ForgotPasswordController@reset_password_submit');
     });
 
+    Route::get('shopify/preferences', function () {
+        return 'settings';
+    })->name('shopify.preferences');
+
     /*authenticated*/
     Route::middleware('seller')->group(function () {
-        //dashboard routes
 
+        // Shopify Auth OAuth routes
+        Route::get('shopify/oauth/redirect', [ShopifyOAuthController::class, 'redirect'])->name('shopify.oauth.redirect');
+        Route::get('shopify/oauth/callback', [ShopifyOAuthController::class, 'callback'])->name('shopify.oauth.callback');
+
+        // Salla Auth OAuth routes
+        Route::get('salla/oauth/redirect', [SallaOAuthController::class, 'redirect'])->name('salla.oauth.redirect');
+        Route::get('salla/oauth/callback', [SallaOAuthController::class, 'callback'])->name('salla.oauth.callback');
+
+        // Zid Auth OAuth routes
+        Route::get('zid/oauth/redirect', [ZidOAuthController::class, 'redirect'])->name('zid.oauth.redirect');
+        Route::get('zid/oauth/callback', [ZidOAuthController::class, 'callback'])->name('zid.oauth.callback');
+
+        //dashboard routes
         Route::get('/get-order-data', 'SystemController@order_data')->name('get-order-data');
 
         Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {

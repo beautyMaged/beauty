@@ -3207,5 +3207,12 @@
   'For single vendor operation  deactive all seller!!' => 'For single vendor operation  deactive all seller!!',
   'Now  your multi vendor business mode is opening  you can add new seller !!' => 'Now  your multi vendor business mode is opening  you can add new seller !!',
   'Stock Left' => 'متبقي',
-
+  'install_salla' => 'تثبيت سله',
+  'install_zid' => 'تثبيت زد',
+  'install_shopify' => 'تثبيت شوبيفاي',
+  'Message_View' => 'Message View',
+  'User_details' => 'User details',
+  'check' => 'Check',
+  'Message_Log' => 'Message Log',
+  'Khaled Mohamed Mohamed Sayed Ahmed ElGharbawy' => 'Khaled Mohamed Mohamed Sayed Ahmed ElGharbawy',
 );

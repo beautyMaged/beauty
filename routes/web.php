@@ -24,9 +24,9 @@ Route::prefix('app')->group(function () {
         Route::get(...array_fill(0, 2, 'getCustomer'));
         Route::get(...array_fill(0, 2, 'isMultyCurrency'));
         Route::get(...array_fill(0, 2, 'wishlists'));
-        Route::post(...array_fill(0, 2, 'flash'));
         Route::get(...array_fill(0, 2, 'csrfToken'));
         Route::get(...array_fill(0, 2, 'test2'));
+        Route::post(...array_fill(0, 2, 'flash'));
         Route::get('translate/{locale}', 'translate');
         Route::get('banner/{type}', 'banner');
     });
@@ -34,6 +34,8 @@ Route::prefix('app')->group(function () {
     //for maintenance mode
     Route::get('maintenance-mode', 'Web\WebController@maintenance_mode')->name('maintenance-mode');
 
+    Route::get('sallaTest', SallaTestController::class);
+    Route::get('shopifyTest', ShopifyTestController::class);
 
     Route::get('tester', function () {
         $address_id = new \stdClass();

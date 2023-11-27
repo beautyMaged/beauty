@@ -1103,7 +1103,7 @@ class ProductController extends BaseController
         Wishlist::where('product_id', $product->id)->delete();
 
         foreach (json_decode($product['images'], true) as $image) {
-            ImageManager::delete('/product/' . $image);
+            is_string($image) && ImageManager::delete('/product/' . $image);
         }
         ImageManager::delete('/product/thumbnail/' . $product['thumbnail']);
         $product->delete();
