@@ -25,9 +25,9 @@ class ProductStockReportController extends Controller
         $category_id = $request['category_id'] ?? 'all';
 
         $stock_limit = \App\CPU\Helpers::get_business_settings('stock_limit');
-        $sellers = Seller::where(['status'=>'approved'])->get();
-        $categories = Category::where(['position'=>0])->get();
-        $query_param = ['search' => $search, 'sort' => $sort, 'seller_id' => $seller_id, 'category_id'=>$category_id];
+        $sellers = Seller::where(['status' => 'approved'])->get();
+        $categories = Category::where(['position' => 0])->get();
+        $query_param = ['search' => $search, 'sort' => $sort, 'seller_id' => $seller_id, 'category_id' => $category_id];
 
         $products = self::common_query($request)
             ->paginate(Helpers::pagination_limit())->appends($query_param);
@@ -51,11 +51,11 @@ class ProductStockReportController extends Controller
 
         $data = array();
         foreach ($products as $product) {
-            if($product['current_stock'] >= $stock_limit){
+            if ($product['current_stock'] >= $stock_limit) {
                 $stock_msg = 'In-Stock';
-            }elseif($product['current_stock']  == 0){
+            } elseif ($product['current_stock']  == 0) {
                 $stock_msg = 'Out of Stock';
-            }else{
+            } else {
                 $stock_msg = 'Soon Stock Out';
             }
             $data[] = array(
@@ -69,17 +69,20 @@ class ProductStockReportController extends Controller
         return (new FastExcel($data))->download('out_of_stock_product.xlsx');
     }
 
-    public function common_query($request){
+    public function common_query($request)
+    {
         $search = $request['search'];
         $seller_id = $request['seller_id'] ?? 'all';
         $sort = $request['sort'] ?? 'ASC';
         $category_id = $request['category_id'] ?? 'all';
 
         return Product::where(['product_type' => 'physical'])->when(empty($request['seller_id']) || $request['seller_id'] == 'all', function ($query) {
-                $query->whereIn('added_by', ['admin', 'seller']);
-            })
-            ->when($category_id && $category_id!='all', function($query) use($category_id) {
-                $query->whereJsonContains('category_ids', ["id" => $category_id]);
+            $query->whereIn('added_by', ['admin', 'seller']);
+        })
+            ->when($category_id && $category_id != 'all', function ($query) use ($category_id) {
+                $query->whereHas('categories', function ($query) use ($category_id) {
+                    $query->where('id', $category_id);
+                });
             })
             ->when($seller_id == 'in_house', function ($query) {
                 $query->where(['added_by' => 'admin']);
@@ -92,5 +95,4 @@ class ProductStockReportController extends Controller
             })
             ->orderBy('current_stock', $sort);
     }
-
 }

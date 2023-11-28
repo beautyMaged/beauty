@@ -203,7 +203,7 @@ class Helpers
         }
 
         $variation = [];
-        $data['category_ids'] = is_array($data['category_ids']) ? $data['category_ids'] : json_decode($data['category_ids']);
+        // $data['category_ids'] = is_array($data['category_ids']) ? $data['category_ids'] : json_decode($data['category_ids']);
         $data['images'] = is_array($data['images']) ? $data['images'] : json_decode($data['images']);
         $data['color_image'] = isset($data['color_image']) ? (is_array($data['color_image']) ? $data['color_image'] : json_decode($data['color_image'])) : null;
         $data['colors_formatted'] = $color_final;
@@ -241,7 +241,7 @@ class Helpers
                 }
                 $data = $storage;
             } else {
-                $data = Helpers::set_data_format($data);;
+                $data = Helpers::set_data_format($data);
             }
 
             return $data;

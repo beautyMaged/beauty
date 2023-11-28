@@ -150,16 +150,16 @@ class WebController extends Controller
             // colour && brands
             $products[0][$category->id] = Product::Select('colors', 'brand_id')
                 ->with(['brand'])
-                ->WhereJsonContains('category_ids', [
-                    ['id' => strval($category->id)],
-                ])
+                ->whereHas('categories', function ($query) use ($category) {
+                    $query->where('id', $category->id);
+                })
                 ->take(20)
                 ->inRandomOrder()
                 ->get();
             $products[1][$category->id] = Product::active()
-                ->WhereJsonContains('category_ids', [
-                    ['id' => strval($category->id)],
-                ])
+                ->whereHas('categories', function ($query) use ($category) {
+                    $query->where('id', $category->id);
+                })
                 ->take(4)
                 ->get();
         }
@@ -167,25 +167,17 @@ class WebController extends Controller
     }
     public function feedData()
     {
-        return Category::Select(['id', 'name'])
+        return Category::with(['products' => function ($query) {
+            $query
+                ->with(['reviews'])
+                ->inRandomOrder()
+                ->limit(21);
+        }])
+            ->select(['id', 'name'])
             ->where('position', 0)
             ->where('home_status', true)
             ->priority()
-            ->get()
-            ->map(
-                function ($category) {
-                    $category->products =
-                        Product::with(['reviews'])
-                        ->WhereJsonContains('category_ids', [
-                            ['id' => strval($category->id)],
-                        ])
-                        ->inRandomOrder()
-                        ->limit(21)
-                        ->get()
-                        ->chunk(7);
-                    return $category;
-                }
-            );
+            ->get();
     }
 
     public function home()
@@ -201,7 +193,9 @@ class WebController extends Controller
         $home_categories->map(function ($data) {
             $id = '"' . $data['id'] . '"';
             $data['products'] = Product::active()
-                ->where('category_ids', 'like', "%{$id}%")
+                ->whereHas('categories', function ($query) use ($id) {
+                    $query->where('id', $id);
+                })
                 /*->whereJsonContains('category_ids', ["id" => (string)$data['id']])*/
                 ->inRandomOrder()->take(12)->get();
         });
@@ -347,11 +341,7 @@ class WebController extends Controller
             ->map(
                 fn ($category) => [
                     'name' => $category->name,
-                    'products' => $category->products = Product::active()
-                        ->WhereJsonContains('category_ids', [
-                            ['id' => strval($category->id)],
-                        ])
-                        ->count()
+                    'products' => $category->products()->count()
                 ]
             );
         return response()->json($categories);
@@ -1177,34 +1167,11 @@ class WebController extends Controller
             $total_order = $seller->orders->where('seller_is', 'seller')->where('order_type', 'default_type')->count();
         }
 
-
         //finding category ids
         $products = Product::whereIn('id', $product_ids)->paginate(12);
-
-        $category_info = [];
-        foreach ($products as $product) {
-            array_push($category_info, $product['category_ids']);
-        }
-
-        $category_info_decoded = [];
-        foreach ($category_info as $info) {
-            array_push($category_info_decoded, json_decode($info));
-        }
-
-        $category_ids = [];
-        foreach ($category_info_decoded as $decoded) {
-            foreach ($decoded as $info) {
-                array_push($category_ids, $info->id);
-            }
-        }
-
-        $categories = [];
-        foreach ($category_ids as $category_id) {
-            $category = Category::with(['childes.childes'])->where('position', 0)->find($category_id);
-            if ($category != null) {
-                array_push($categories, $category);
-            }
-        }
+        foreach ($products as $product)
+            foreach ($product->categories as $category)
+                array_push($categories, $category->id);
         $categories = array_unique($categories);
         //end
 
@@ -1227,9 +1194,9 @@ class WebController extends Controller
                 }
             })
             ->when(!empty($request->category_id), function ($query) use ($request) {
-                $query->whereJsonContains('category_ids', [
-                    ['id' => strval($request->category_id)],
-                ]);
+                $query->whereHas('categories', function ($query) use ($request) {
+                    $query->where('id', $request->category_id);
+                });
             })->paginate(12);
 
         if ($id == 0) {
@@ -1286,9 +1253,9 @@ class WebController extends Controller
     {
         $products = Product::active()->with('shop')->where(['added_by' => 'seller'])
             ->where('user_id', $id)
-            ->whereJsonContains('category_ids', [
-                ['id' => strval($request->category_id)],
-            ])
+            ->whereHas('categories', function ($query) use ($request) {
+                $query->where('id', $request->category_id);
+            })
             ->paginate(12);
         $shop = Shop::where('seller_id', $id)->first();
         if ($request['sort_by'] == null) {
@@ -1312,11 +1279,12 @@ class WebController extends Controller
         $wishlists = Wishlist::where('product_id', $product->id)->get();
         $countOrder = count($order_details);
         $countWishlist = count($wishlists);
-        $relatedProducts = Product::with(['reviews'])->where('category_ids', $product->category_ids)->where(
-            'id',
-            '!=',
-            $product->id
-        )->limit(12)->get();
+        $relatedProducts = Product::with(['reviews'])
+            ->whereHas('categories', function ($query) use ($product) {
+                $query->whereIn('id', $product->categories->pluck('id'));
+            })
+            ->where('id', '!=', $product->id)
+            ->limit(12)->get();
         $current_date = date('Y-m-d');
         $seller_vacation_start_date = ($product->added_by == 'seller' && isset($product->seller->shop->vacation_start_date)) ? date(
             'Y-m-d',
@@ -1367,7 +1335,7 @@ class WebController extends Controller
             // $product->price = Helpers::currency_converter($product->unit_price - Helpers::get_product_discount($product, $product->unit_price));
             $product->priceRange = Helpers::get_price_range($product);
 
-            $categories = Category::Select('id', 'name')->WhereIn('id', array_map(fn ($category) => $category->id, json_decode($product->category_ids)))->get()->pluck('name', 'id');
+            $categories = $product->categories()->select('id', 'name')->get()->pluck('name', 'id');
             $countOrder = OrderDetail::where('product_id', $product->id)->count();
             $countWishlist = Wishlist::where('product_id', $product->id)->count();
             $relatedProducts = Product::with(['reviews'])->active()->where('user_id', $product->user_id)->where(
@@ -1449,7 +1417,7 @@ class WebController extends Controller
         $products = $porduct_data->get();
         $product_ids = [];
         foreach ($products as $product) {
-            foreach (json_decode($product['category_ids'], true) as $category) {
+            foreach ($product->categories as $category) {
                 if ($category['id'] == 'Cat id') {
                     array_push($product_ids, $product['id']);
                 }
@@ -1488,7 +1456,9 @@ class WebController extends Controller
                 //     $query = $query->WhereJsonContains("category_ids", ['id' => strval($request['id'])]);
                 break;
             case 'category':
-                $query = $porduct_data->WhereJsonContains("category_ids", ['id' => strval($request['id'])]);
+                $query = $porduct_data->whereHas('categories', function ($query) use ($request) {
+                    $query->where('id', $request['id']);
+                });
                 break;
             case 'brand':
                 $query = $porduct_data->where('brand_id', $request['id']);
@@ -1503,7 +1473,9 @@ class WebController extends Controller
                     array_push($product_ids, $review['product_id']);
                 $query = $porduct_data->whereIn('id', $product_ids);
                 if ($request['id'] != null && !empty($request['id']))
-                    $query = $query->WhereJsonContains("category_ids", ['id' => strval($request['id'])]);
+                    $query = $query->whereHas('categories', function ($query) use ($request) {
+                        $query->where('id', $request['id']);
+                    });
                 break;
             case 'best-selling':
                 $title = "top_sell_pro";
@@ -1520,7 +1492,9 @@ class WebController extends Controller
                 $query = $porduct_data->whereIn('id', $product_ids);
 
                 if ($request['id'] != null && !empty($request['id']))
-                    $query = $query->WhereJsonContains("category_ids", ['id' => strval($request['id'])]);
+                    $query = $query->whereHas('categories', function ($query) use ($request) {
+                        $query->where('id', $request['id']);
+                    });
                 break;
             case 'most-favorite':
                 $details = Wishlist::with('product')
@@ -1535,7 +1509,9 @@ class WebController extends Controller
                 $query = $porduct_data->whereIn('id', $product_ids);
 
                 if ($request['id'] != null && !empty($request['id']))
-                    $query = $query->WhereJsonContains("category_ids", ['id' => strval($request['id'])]);
+                    $query = $query->whereHas('categories', function ($query) use ($request) {
+                        $query->where('id', $request['id']);
+                    });
 
                 break;
             case 'featured':
@@ -1553,7 +1529,9 @@ class WebController extends Controller
                 $query = Product::with(['reviews'])->active()->whereIn('id', $featured_deal_product_ids);
 
                 if ($request['id'] != null && !empty($request['id']))
-                    $query = $query->WhereJsonContains("category_ids", ['id' => strval($request['id'])]);
+                    $query = $query->whereHas('categories', function ($query) use ($request) {
+                        $query->where('id', $request['id']);
+                    });
                 break;
             case 'search':
                 $query = ProductManager::search_products_web($request['name']);
@@ -1690,16 +1668,9 @@ class WebController extends Controller
         $porduct_data = Product::active()->with(['reviews']);
 
         if ($request['data_from'] == 'category') {
-            $products = $porduct_data->get();
-            $product_ids = [];
-            foreach ($products as $product) {
-                foreach (json_decode($product['category_ids'], true) as $category) {
-                    if ($category['id'] == $request['id']) {
-                        array_push($product_ids, $product['id']);
-                    }
-                }
-            }
-            $query = $porduct_data->whereIn('id', $product_ids);
+            $query = $porduct_data->whereHas('categories', function ($query) use ($request) {
+                $query->where('id', $request['id']);
+            });
         }
 
         if ($request['data_from'] == 'brand')

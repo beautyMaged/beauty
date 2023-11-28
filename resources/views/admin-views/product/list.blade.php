@@ -101,7 +101,7 @@
                             <tbody>
                                 @foreach ($pro as $k => $p)
                                     @php
-                                        $product_category = json_decode($p->category_ids);
+                                        $product_category = $p->categories;
                                     @endphp
                                     <tr>
                                         <th scope="row">{{ $pro->firstItem() + $k }}</th>

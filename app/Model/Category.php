@@ -55,9 +55,9 @@ class Category extends Model
         return $query->orderBy('priority', 'asc');
     }
 
-    public function banners()
+    public function products()
     {
-        return $this->hasMany(Banner::class, 'resource_id', 'id')->where('resource_type', 'category');
+        return $this->belongsToMany(Product::class);
     }
 
     protected static function boot()

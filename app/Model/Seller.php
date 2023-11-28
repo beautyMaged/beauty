@@ -37,14 +37,19 @@ class Seller extends Authenticatable
         return $this->hasMany(Order::class, 'seller_id');
     }
 
-    public function product()
+    public function products()
     {
         return $this->hasMany(Product::class, 'user_id')->where(['added_by' => 'seller']);
+    }
+
+    public function categories()
+    {
+        // belongsToMany through hasMany
+        return Category::whereHas('products', fn ($query) => $query->where('user_id', $this->id))->get();
     }
 
     public function wallet()
     {
         return $this->hasOne(SellerWallet::class);
     }
-    
 }

@@ -18,7 +18,8 @@ use Rap2hpoutre\FastExcel\FastExcel;
 class ProductReportController extends Controller
 {
 
-    public function all_product(Request $request){
+    public function all_product(Request $request)
+    {
         $search = $request['search'];
         $from = $request['from'];
         $to = $request['to'];
@@ -44,16 +45,16 @@ class ProductReportController extends Controller
             ->appends($query_param);
 
         $total_sales_value = 0;
-        foreach($products as $key=>$product){
+        foreach ($products as $key => $product) {
             $total_sales_value += (isset($product->order_details[0]->total_sold_amount) ? $product->order_details[0]->total_sold_amount : 0) / (isset($product->order_details[0]->product_quantity) ? $product->order_details[0]->product_quantity : 1);
         }
 
-        $total_product_sale_query = Product::with(['order_details'=>function($query){
-                $query->select(
-                    DB::raw("product_id, sum(qty*price) as total_sale_amount, sum(qty) as product_quantity, sum(discount) as total_discount")
-                );
-            }])
-            ->whereHas('order_details',function($query){
+        $total_product_sale_query = Product::with(['order_details' => function ($query) {
+            $query->select(
+                DB::raw("product_id, sum(qty*price) as total_sale_amount, sum(qty) as product_quantity, sum(discount) as total_discount")
+            );
+        }])
+            ->whereHas('order_details', function ($query) {
                 $query->where('delivery_status', 'delivered');
             })
             ->where(['user_id' => $seller_id, 'added_by' => 'seller']);
@@ -64,7 +65,7 @@ class ProductReportController extends Controller
         $total_product_sale = 0;
         $total_product_sale_amount = 0;
         $total_discount_given = 0;
-        if(count($total_product_sales) > 0) {
+        if (count($total_product_sales) > 0) {
             foreach ($total_product_sales as $sales) {
                 foreach ($sales->order_details as $sale) {
                     $total_product_sale += isset($sale->product_quantity) ? $sale->product_quantity : 0;
@@ -77,32 +78,44 @@ class ProductReportController extends Controller
         $reject_product_count_query = Product::where(['request_status' => 2, 'user_id' => $seller_id, 'added_by' => 'seller']);
         $reject_product_count = self::create_date_wise_common_filter($reject_product_count_query, $date_type, $from, $to)->count();
 
-        $pending_product_count_query = Product::where(['request_status'=>'0', 'user_id' => $seller_id, 'added_by' => 'seller']);
+        $pending_product_count_query = Product::where(['request_status' => '0', 'user_id' => $seller_id, 'added_by' => 'seller']);
         $pending_product_count = self::create_date_wise_common_filter($pending_product_count_query, $date_type, $from, $to)->count();
 
         $active_product_count_query = Product::where(['request_status' => 1, 'user_id' => $seller_id, 'added_by' => 'seller']);
         $active_product_count = self::create_date_wise_common_filter($active_product_count_query, $date_type, $from, $to)->count();
 
         $product_count = array(
-            'reject_product_count'=> $reject_product_count,
-            'active_product_count'=> $active_product_count,
-            'pending_product_count'=> $pending_product_count
+            'reject_product_count' => $reject_product_count,
+            'active_product_count' => $active_product_count,
+            'pending_product_count' => $pending_product_count
         );
 
         $top_product = OrderDetail::with('product')
             ->select(DB::raw("product_id, sum(qty*price) as total_amount"))
-            ->whereHas('product', function ($query) use($seller_id){
-                $query->where(['user_id' => $seller_id, 'added_by' => 'seller', 'delivery_status'=>'delivered']);
+            ->whereHas('product', function ($query) use ($seller_id) {
+                $query->where(['user_id' => $seller_id, 'added_by' => 'seller', 'delivery_status' => 'delivered']);
             })
-            ->where(['delivery_status'=>'delivered'])
+            ->where(['delivery_status' => 'delivered'])
             ->groupBy('product_id')
             ->orderBy("total_amount", 'desc')
             ->take(5)
             ->get();
 
 
-        return view('seller-views.report.all-product', compact('products', 'chart_data', 'total_sales_value',
-            'total_product_sale', 'total_product_sale_amount', 'top_product', 'total_discount_given', 'product_count', 'search', 'date_type', 'from', 'to'));
+        return view('seller-views.report.all-product', compact(
+            'products',
+            'chart_data',
+            'total_sales_value',
+            'total_product_sale',
+            'total_product_sale_amount',
+            'top_product',
+            'total_discount_given',
+            'product_count',
+            'search',
+            'date_type',
+            'from',
+            'to'
+        ));
     }
 
     public function all_product_chart_filter($request)
@@ -120,7 +133,6 @@ class ProductReportController extends Controller
 
             $this_year = self::all_product_same_year($current_start_year, $current_end_year, $from_year, $number, $default_inc);
             return $this_year;
-
         } elseif ($date_type == 'this_month') { //this month table
             $current_month_start = date('Y-m-01');
             $current_month_end = date('Y-m-t');
@@ -130,11 +142,9 @@ class ProductReportController extends Controller
 
             $this_month = self::all_product_same_month($current_month_start, $current_month_end, $month, $number, $inc);
             return $this_month;
-
         } elseif ($date_type == 'this_week') {
             $this_week = self::all_product_this_week();
             return $this_week;
-
         } elseif ($date_type == 'custom_date' && !empty($from) && !empty($to)) {
             $start_date = Carbon::parse($from)->format('Y-m-d 00:00:00');
             $end_date = Carbon::parse($to)->format('Y-m-d 23:59:59');
@@ -148,16 +158,13 @@ class ProductReportController extends Controller
             if ($from_year != $to_year) {
                 $different_year = self::all_product_different_year($start_date, $end_date, $from_year, $to_year);
                 return $different_year;
-
             } elseif ($from_month != $to_month) {
                 $same_year = self::all_product_same_year($start_date, $end_date, $from_year, $to_month, $from_month);
                 return $same_year;
-
             } elseif ($from_month == $to_month) {
                 $same_month = self::all_product_same_month($start_date, $end_date, $from_month, $to_day, $from_day);
                 return $same_month;
             }
-
         }
     }
 
@@ -262,7 +269,6 @@ class ProductReportController extends Controller
         return array(
             'total_product' => $total_product,
         );
-
     }
 
     public function all_product_date_common_query($start_date, $end_date)
@@ -293,7 +299,8 @@ class ProductReportController extends Controller
             });
     }
 
-    public function all_product_export_excel(Request $request){
+    public function all_product_export_excel(Request $request)
+    {
         $search = $request['search'];
         $from = $request['from'];
         $to = $request['to'];
@@ -305,7 +312,7 @@ class ProductReportController extends Controller
                 $query->select(
                     DB::raw("product_id, SUM(price*qty) as total_sold_amount, sum(qty) as product_quantity")
                 )
-                ->where('delivery_status', 'delivered')->groupBy('product_id');
+                    ->where('delivery_status', 'delivered')->groupBy('product_id');
             }])
             ->when($search, function ($query) use ($search) {
                 $query->orWhere('name', 'like', "%{$search}%");
@@ -315,15 +322,15 @@ class ProductReportController extends Controller
         $products = self::create_date_wise_common_filter($product_query, $date_type, $from, $to)->latest('created_at')->get();
 
         $reportData = array();
-        foreach ($products as $key=>$product) {
-            $rating = count($product->rating)>0?number_format($product->rating[0]->average, 2, '.', ' '):0;
+        foreach ($products as $key => $product) {
+            $rating = count($product->rating) > 0 ? number_format($product->rating[0]->average, 2, '.', ' ') : 0;
             $reportData[$key] = array(
                 'Product Name' => Str::limit($product->name, 20),
                 'Product Unit Price' => BackEndHelper::set_symbol(BackEndHelper::usd_to_currency($product->unit_price)),
                 'Total Amount Sold' => BackEndHelper::set_symbol(BackEndHelper::usd_to_currency(isset($product->order_details[0]->total_sold_amount) ? $product->order_details[0]->total_sold_amount : 0)),
                 'Average Product Value' => BackEndHelper::set_symbol(BackEndHelper::usd_to_currency((isset($product->order_details[0]->total_sold_amount) ? $product->order_details[0]->total_sold_amount : 0) / (isset($product->order_details[0]->product_quantity) ? $product->order_details[0]->product_quantity : 1))),
-                'Current Stock Amount' => $product->product_type == 'digital' ? ($product->status==1 ? \App\CPU\translate('available') : \App\CPU\translate('not_available')) : $product->current_stock,
-                'Average Ratings' => $rating.' ('.$product->reviews->count().')',
+                'Current Stock Amount' => $product->product_type == 'digital' ? ($product->status == 1 ? \App\CPU\translate('available') : \App\CPU\translate('not_available')) : $product->current_stock,
+                'Average Ratings' => $rating . ' (' . $product->reviews->count() . ')',
             );
         }
 
@@ -335,14 +342,14 @@ class ProductReportController extends Controller
         $search = $request['search'];
         $sort = $request['sort'] ?? 'ASC';
         $category_id = $request['category_id'] ?? 'all';
-        $query_param = ['search' => $search, 'sort' => $sort, 'category_id'=>$category_id];
+        $query_param = ['search' => $search, 'sort' => $sort, 'category_id' => $category_id];
 
         $stock_limit = \App\CPU\Helpers::get_business_settings('stock_limit');
-        $categories = Category::where(['position'=>0])->get();
+        $categories = Category::where(['position' => 0])->get();
         $products = self::stock_product_common_query($request)
             ->paginate(Helpers::pagination_limit())->appends($query_param);
 
-        return view('seller-views.report.product-stock', compact('products', 'categories','search', 'stock_limit', 'sort','category_id'));
+        return view('seller-views.report.product-stock', compact('products', 'categories', 'search', 'stock_limit', 'sort', 'category_id'));
     }
 
     public function product_stock_export(Request $request)
@@ -352,11 +359,11 @@ class ProductReportController extends Controller
 
         $data = array();
         foreach ($products as $product) {
-            if($product['current_stock'] >= $stock_limit){
+            if ($product['current_stock'] >= $stock_limit) {
                 $stock_msg = 'In-Stock';
-            }elseif($product['current_stock']  == 0){
+            } elseif ($product['current_stock']  == 0) {
                 $stock_msg = 'Out of Stock';
-            }else{
+            } else {
                 $stock_msg = 'Soon Stock Out';
             }
             $data[] = array(
@@ -370,12 +377,15 @@ class ProductReportController extends Controller
         return (new FastExcel($data))->download('out_of_stock_product.xlsx');
     }
 
-    public function stock_product_common_query($request){
+    public function stock_product_common_query($request)
+    {
         $sort = $request['sort'] ?? 'ASC';
         $category_id = $request['category_id'] ?? 'all';
-        return Product::where(['product_type' => 'physical', 'added_by'=>'seller','user_id'=>auth()->id()])
-            ->when($category_id && $category_id!='all', function($query) use($category_id) {
-                $query->whereJsonContains('category_ids', ["id" => $category_id]);
+        return Product::where(['product_type' => 'physical', 'added_by' => 'seller', 'user_id' => auth()->id()])
+            ->when($category_id && $category_id != 'all', function ($query) use ($category_id) {
+                $query->whereHas('categories', function ($query) use ($category_id) {
+                    $query->where('id', $category_id);
+                });
             })
             ->when($request['search'], function ($q) use ($request) {
                 $q->where('name', 'Like', '%' . $request['search'] . '%');

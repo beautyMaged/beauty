@@ -185,7 +185,6 @@ class ProductController extends Controller
             }
         }
 
-        $product->category_ids          = $service->update_categories($request->category_id, $request->sub_category_id, $request->sub_sub_category_id);
         $product->brand_id              = $request->brand_id;
         $product->unit                  = $request->product_type == 'physical' ? $request->unit : null;
         $product->digital_product_type  = $request->product_type == 'digital' ? $request->digital_product_type : null;
@@ -306,6 +305,14 @@ class ProductController extends Controller
             $product->meta_description = $request->meta_description;
             $product->meta_image = ImageManager::upload('product/meta/', 'png', $request->meta_image);
             $product->save();
+
+            $categories = array_filter([
+                $request->category_id,
+                $request->sub_category_id,
+                $request->sub_sub_category_id,
+                $request->sub_sub_sub_category_id
+            ]);
+            $product->categories()->sync($categories);
 
             $tag_ids = [];
             if ($request->tags != null) {
@@ -527,7 +534,7 @@ class ProductController extends Controller
     {
         $product = Product::withoutGlobalScopes()->with('translations')->find($id);
         $product ? $this->authorize('view', $product) : abort(404);
-        $product_category = json_decode($product->category_ids);
+        $product_category = $product->categories;
         $product->colors = json_decode($product->colors);
         $categories = Category::where(['parent_id' => 0])->get();
         $br = Brand::orderBY('name', 'ASC')->get();
@@ -688,7 +695,6 @@ class ProductController extends Controller
             ]);
         }
 
-        $product->category_ids          = $service->update_categories($request->category_id, $request->sub_category_id, $request->sub_sub_category_id);
         $product->product_type          = $request->product_type;
         $product->brand_id              = isset($request->brand_id) ? $request->brand_id : null;
         $product->unit                  = $request->product_type == 'physical' ? $request->unit : null;
@@ -825,6 +831,14 @@ class ProductController extends Controller
 
             $product->save();
 
+            $categories = array_filter([
+                $request->category_id,
+                $request->sub_category_id,
+                $request->sub_sub_category_id,
+                $request->sub_sub_sub_category_id
+            ]);
+            $product->categories()->sync($categories);
+
             $tag_ids = [];
             if ($request->tags != null)
                 $tags = explode(",", $request->tags);
@@ -919,7 +933,7 @@ class ProductController extends Controller
         $product ? $this->authorize('view', $product) : abort(404);
         Cart::where('product_id', $product->id)->delete();
         foreach (json_decode($product['images'], true) as $image)
-        is_string($image) && ImageManager::delete('/product/' . $image);
+            is_string($image) && ImageManager::delete('/product/' . $image);
         ImageManager::delete('/product/thumbnail/' . $product['thumbnail']);
         $product->delete();
         FlashDealProduct::where(['product_id' => $id])->delete();
@@ -962,7 +976,7 @@ class ProductController extends Controller
             array_push($data, [
                 'name' => $collection['name'],
                 'slug' => Str::slug($collection['name'], '-') . '-' . Str::random(6),
-                'category_ids' => json_encode([['id' => (string)$collection['category_id'], 'position' => 1], ['id' => (string)$collection['sub_category_id'], 'position' => 2], ['id' => (string)$collection['sub_sub_category_id'], 'position' => 3]]),
+                // 'category_ids' => json_encode([['id' => (string)$collection['category_id'], 'position' => 1], ['id' => (string)$collection['sub_category_id'], 'position' => 2], ['id' => (string)$collection['sub_sub_category_id'], 'position' => 3]]),
                 'brand_id' => $collection['brand_id'],
                 'unit' => $collection['unit'],
                 'min_qty' => $collection['min_qty'],
@@ -1002,7 +1016,7 @@ class ProductController extends Controller
             $category_id = 0;
             $sub_category_id = 0;
             $sub_sub_category_id = 0;
-            foreach (json_decode($item->category_ids, true) as $category) {
+            foreach ($item->categories as $category) {
                 if ($category['position'] == 1) {
                     $category_id = $category['id'];
                 } else if ($category['position'] == 2) {

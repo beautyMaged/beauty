@@ -16,7 +16,7 @@
     <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&amp;display=swap" rel="stylesheet">
     <!-- CSS Implementing Plugins -->
-    <link rel="stylesheet" href="{{asset('assets/back-end')}}/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/back-end') }}/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ asset('assets/back-end') }}/css/vendor.min.css">
     <link rel="stylesheet" href="{{ asset('assets/back-end') }}/css/custom.css">
 
@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="{{ asset('assets/back-end') }}/vendor/icon-set/style.css">
     <!-- CSS Front Template -->
     <link rel="stylesheet" href="{{ asset('assets/back-end') }}/css/theme.minc619.css?v=1.0">
-    <link rel="stylesheet" href="{{asset('assets/back-end')}}/css/style.css">
+    <link rel="stylesheet" href="{{ asset('assets/back-end') }}/css/style.css">
     @if (Session::get('direction') === 'rtl')
         <link rel="stylesheet" href="{{ asset('assets/back-end') }}/css/menurtl.css">
     @endif
@@ -40,8 +40,7 @@
             direction: {{ Session::get('direction') }};
         }
     </style> -->
-    <script
-        src="{{ asset('assets/back-end') }}/vendor/hs-navbar-vertical-aside/hs-navbar-vertical-aside-mini-cache.js">
+    <script src="{{ asset('assets/back-end') }}/vendor/hs-navbar-vertical-aside/hs-navbar-vertical-aside-mini-cache.js">
     </script>
     <link rel="stylesheet" href="{{ asset('assets/back-end') }}/css/toastr.css">
 </head>
@@ -250,7 +249,7 @@
             audio.pause();
         }
 
-        $("#reset").on('click', function (){
+        $("#reset").on('click', function() {
             let placeholderImg = $("#placeholderImg").data('img');
             console.log(placeholderImg)
             $('#viewer').attr('src', placeholderImg);

@@ -153,12 +153,12 @@
                             class="fa-solid fa-chevron-{{session('direction') == 'rtl' ? 'left' : 'right'}} mt-1  px-1 "></i>
                     </div>
                     @php
-                        if (count(json_decode($product->category_ids)) == 3) {
-                            $brand = \App\Model\Category::find(json_decode($product->category_ids)[2]->id);
-                        } else if (count(json_decode($product->category_ids)) == 2) {
-                            $brand = \App\Model\Category::find(json_decode($product->category_ids)[1]->id);
+                        if (count($product->categories) == 3) {
+                            $brand = \App\Model\Category::find($product->categories[2]->id);
+                        } else if (count($product->categories) == 2) {
+                            $brand = \App\Model\Category::find($product->categories[1]->id);
                         } else {
-                            $brand = \App\Model\Category::find(json_decode($product->category_ids)[0]->id);
+                            $brand = \App\Model\Category::find($product->categories[0]->id);
                         }
                     @endphp
                     <a href="{{route('home')}}/products?id={{$brand->id}}&data_from=category&page=1"
@@ -1098,7 +1098,7 @@ position: relative;
 
                     <div class="view_all d-flex justify-content-center align-items-center">
                         <div>
-                            @php($category=json_decode($product['category_ids']))
+                            @php($category=$product->categories)
                             @if($category)
                                 <a class="text-capitalize view-all-text"
                                    style="color:{{$web_config['primary_color']}} !important;{{Session::get('direction') === "ltr" ? 'margin-left:10px;' : 'margin-right: 8px;'}}"

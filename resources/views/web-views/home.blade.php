@@ -449,7 +449,7 @@
                 @php($id = $main->id)
                 @php($caro_products_ids = [])
                 @foreach ($all_products as $all_product)
-                    @foreach (json_decode($all_product['category_ids'], true) as $product_cat)
+                    @foreach ($all_product->categories as $product_cat)
                         @if ($product_cat['id'] == $id)
                             @php(array_push($caro_products_ids, $all_product['id']))
                         @endif
@@ -835,7 +835,7 @@
                                         @php($id = $cat->id)
                                         @php($caro_products_ids = [])
                                         @foreach ($all_products as $all_product)
-                                            @foreach (json_decode($all_product['category_ids'], true) as $product_cat)
+                                            @foreach ($all_product->categories as $product_cat)
                                                 @if ($product_cat['id'] == $id)
                                                     @php(array_push($caro_products_ids, $all_product['id']))
                                                 @endif

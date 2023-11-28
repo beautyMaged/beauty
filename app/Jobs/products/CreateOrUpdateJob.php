@@ -33,7 +33,7 @@ class CreateOrUpdateJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $shop = Shop::where('name' , $this->product['vendor'])->first();
+        $shop = Shop::where('name', $this->product['vendor'])->first();
         $this->user_id = $shop->seller_id;
         try {
             $p = \App\Model\Product::where('slug', $this->product['id'])->first();
@@ -41,8 +41,8 @@ class CreateOrUpdateJob implements ShouldQueue
                 $p = new \App\Model\Product();
                 $p->user_id = $this->user_id;
                 $p->added_by = "seller";
-                $category = json_decode('[{"id":"36","position":0}]', true);
-                $p->category_ids = json_encode($category);
+                // $category = json_decode('[{"id":"36","position":0}]', true);
+                // $p->category_ids = json_encode($category);
                 $p->brand_id = 13;
                 $p->slug = Str::slug($this->product['id']);
                 $p->colors = json_encode([]);
@@ -58,7 +58,7 @@ class CreateOrUpdateJob implements ShouldQueue
             foreach ($this->product['options'] as $key => $option) {
                 array_push(
                     $choice_options,
-                    ['name' => 'choice_'.$key, 'title' => $option['name'], 'options' => $option['values']]
+                    ['name' => 'choice_' . $key, 'title' => $option['name'], 'options' => $option['values']]
                 );
             }
             $p->choice_options = json_encode($choice_options);
@@ -83,13 +83,13 @@ class CreateOrUpdateJob implements ShouldQueue
             if (isset($this->product['images']) && isset($this->product['image'])) {
                 foreach ($this->product['images'] as $image) {
                     array_push($images, ['cdn' => $image['src']]);
-//                    $image_name = ImageManager::upload('product/', 'png', $image['src']);
-//                    $images[] = $image_name;
+                    //                    $image_name = ImageManager::upload('product/', 'png', $image['src']);
+                    //                    $images[] = $image_name;
                 }
                 $p->images = json_encode($images);
 
-//                $thumbnail = ImageManager::upload('product/thumbnail/', 'png', $this->product['image']['src']);
-//                $p->thumbnail = $thumbnail;
+                //                $thumbnail = ImageManager::upload('product/thumbnail/', 'png', $this->product['image']['src']);
+                //                $p->thumbnail = $thumbnail;
                 $p->thumbnail = json_encode(['cdn' => $this->product['image']['src']]);
             }
             $p->save();

@@ -80,10 +80,10 @@ class SyncProductsJob implements ShouldQueue
         $p->user_id = $this->user_id;
         $p->added_by = "seller";
         $p->name = $product['title'];
-//        $p->slug = Str::slug($product['title'], '-') . '-' . Str::random(6);
+        //        $p->slug = Str::slug($product['title'], '-') . '-' . Str::random(6);
         $p->slug = Str::slug($product['id']);
-        $category = json_decode('[{"id":"37","position":0}]', true);
-        $p->category_ids = json_encode($category);
+        // $category = json_decode('[{"id":"37","position":0}]', true);
+        // $p->category_ids = json_encode($category);
         $p->collection = $product['tags'];
         $p->brand_id = 13;
         $p->details = $product['body_html'];
@@ -123,13 +123,13 @@ class SyncProductsJob implements ShouldQueue
         $images = [];
         foreach ($product['images'] as $image) {
             array_push($images, ['cdn' => $image['src']]);
-//            $image_name = ImageManager::upload('product/', 'png', $image['src']);
-//            $images[] = $image_name;
+            //            $image_name = ImageManager::upload('product/', 'png', $image['src']);
+            //            $images[] = $image_name;
         }
         $p->images = json_encode($images);
 
-//        $thumbnail = ImageManager::upload('product/thumbnail/', 'png', $product['image']['src']);
-//        $p->thumbnail = $thumbnail;
+        //        $thumbnail = ImageManager::upload('product/thumbnail/', 'png', $product['image']['src']);
+        //        $p->thumbnail = $thumbnail;
         $p->thumbnail = json_encode(['cdn' => isset($product['image']) ? $product['image']['src'] : []]);
         $p->save();
 

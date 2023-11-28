@@ -587,7 +587,7 @@ class CartManager
 
         if ($shipping_type == 'category_wise') {
             $categoryID = 0;
-            foreach (json_decode($product->category_ids) as $ct) {
+            foreach ($product->categories as $ct) {
                 if ($ct->position == 1) {
                     $categoryID = $ct->id;
                 }

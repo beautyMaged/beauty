@@ -23,34 +23,4 @@ class ProductService
         }
         return $res;
     }
-
-    public function update_categories($category, $sub_category, $sub_sub_category, $sub_sub_sub_category)
-    {
-        $ids = [];
-        if ($category != null) {
-            array_push($ids, [
-                'id' => $category,
-                'position' => 1,
-            ]);
-        }
-        if ($sub_category != null) {
-            array_push($ids, [
-                'id' => $sub_category,
-                'position' => 2,
-            ]);
-        }
-        if ($sub_sub_category != null) {
-            array_push($ids, [
-                'id' => $sub_sub_category,
-                'position' => 3,
-            ]);
-        }
-        if ($sub_sub_sub_category != null) {
-            array_push($ids, [
-                'id' => $sub_sub_sub_category,
-                'position' => 4,
-            ]);
-        }
-        return json_encode($ids);
-    }
 }

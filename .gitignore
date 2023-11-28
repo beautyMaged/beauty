@@ -17,3 +17,5 @@ composer-setup.php
 composer.json
 .gitignore
 rsync
+resources/views/layouts/front-end/partials/_header.blade.php
+tinker.php

@@ -101,7 +101,10 @@ class ProductManager
     public static function get_related_products($product_id)
     {
         $product = Product::find($product_id);
-        return Product::active()->with(['rating', 'tags'])->where('category_ids', $product->category_ids)
+        return Product::active()->with(['rating', 'tags', 'categories'])
+            ->whereHas('categories', function ($query) use ($product) {
+                $query->whereIn('id', $product->categories->pluck('id'));
+            })
             ->where('id', '!=', $product->id)
             ->limit(10)
             ->get();

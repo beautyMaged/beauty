@@ -3,7 +3,6 @@
 namespace App\Model;
 
 use App\CPU\Helpers;
-use App\Model\Tag;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
@@ -51,7 +50,7 @@ class Product extends Model
             $product_type = ['physical'];
         else
             $product_type = ['digital', 'physical'];
-        
+
 
         return $query->when($brand_setting, function ($q) {
             $q->whereHas('brand', function ($query) {
@@ -71,7 +70,6 @@ class Product extends Model
         })->orWhere(function ($query) {
             $query->where(['added_by' => 'admin', 'status' => 1]);
         });
-
     }
 
     public function stocks()
@@ -104,6 +102,16 @@ class Product extends Model
         return $this->belongsTo(Seller::class, 'user_id');
     }
 
+    public function banners()
+    {
+        return $this->belongsToMany(Banner::class);
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
     public function rating()
     {
         return $this->hasMany(Review::class)
@@ -122,7 +130,6 @@ class Product extends Model
     {
         return $this->hasMany(OrderDetail::class)
             ->where('delivery_status', 'delivered');
-
     }
 
     public function wish_list()
@@ -160,9 +167,9 @@ class Product extends Model
                 } else {
                     return $query->where('locale', Helpers::default_lang());
                 }
-            }, 'reviews'=>function($query){
+            }, 'reviews' => function ($query) {
                 $query->whereNull('delivery_man_id');
-            }])->withCount(['reviews'=>function($query){
+            }])->withCount(['reviews' => function ($query) {
                 $query->whereNull('delivery_man_id');
             }]);
         });

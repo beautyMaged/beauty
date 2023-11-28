@@ -6,7 +6,6 @@ use App\CPU\BackEndHelper;
 use App\CPU\Helpers;
 use App\CPU\ImageManager;
 use App\Http\Controllers\BaseController;
-use App\Jobs\products\DeleteJob;
 use App\Jobs\SyncProductsJob;
 use App\Model\Brand;
 use App\Model\BusinessSetting;
@@ -196,36 +195,6 @@ class ProductController extends BaseController
             }
         }
 
-
-        $category = [];
-
-        if ($request->category_id != null) {
-            array_push($category, [
-                'id' => $request->category_id,
-                'position' => 1,
-            ]);
-        }
-        if ($request->sub_category_id != null) {
-            array_push($category, [
-                'id' => $request->sub_category_id,
-                'position' => 2,
-            ]);
-        }
-        if ($request->sub_sub_category_id != null) {
-            array_push($category, [
-                'id' => $request->sub_sub_category_id,
-                'position' => 3,
-            ]);
-        }
-
-        if ($request->sub_sub_sub_category_id != null) {
-            array_push($category, [
-                'id' => $request->sub_sub_sub_category_id,
-                'position' => 4,
-            ]);
-        }
-
-        $p->category_ids = json_encode($category);
         $p->brand_id = $request->brand_id;
         $p->unit = $request->product_type == 'physical' ? $request->unit : null;
         $p->digital_product_type = $request->product_type == 'digital' ? $request->digital_product_type : null;
@@ -357,6 +326,14 @@ class ProductController extends BaseController
             $p->meta_image = ImageManager::upload('product/meta/', 'png', $request->meta_image);
             $p->save();
 
+            $categories = array_filter([
+                $request->category_id,
+                $request->sub_category_id,
+                $request->sub_sub_category_id,
+                $request->sub_sub_sub_category_id
+            ]);
+            $p->categories()->sync($categories);
+
             $tag_ids = [];
             if ($request->tags != null) {
                 $tags = explode(",", $request->tags);
@@ -427,12 +404,11 @@ class ProductController extends BaseController
         $sub_sub_ = [];
         $sub_sub_sub_ = [];
         foreach ($pro as $p) {
-            $category_ids = json_decode($p->category_ids);
-            //dd($p->id);
-            $_[] = [0, $category_ids[0]->id];
-            $sub_[] = [$category_ids[0]->id, isset($category_ids[1]) ? $category_ids[1]->id : null];
-            $sub_sub_[] = [isset($category_ids[1]) ? $category_ids[1]->id : null, isset($category_ids[2]) ? $category_ids[2]->id : null];
-            $sub_sub_sub_[] = [isset($category_ids[2]) ? $category_ids[2]->id : null, isset($category_ids[3]) ? $category_ids[3]->id : null];
+            $category_ids = $p->categories->pluck('id');
+            $_[] = [0, isset($category_ids[0]) ? $category_ids[0] : null];
+            $sub_[] = [isset($category_ids[0]) ? $category_ids[0] : null, isset($category_ids[1]) ? $category_ids[1] : null];
+            $sub_sub_[] = [isset($category_ids[1]) ? $category_ids[1] : null, isset($category_ids[2]) ? $category_ids[2] : null];
+            $sub_sub_sub_[] = [isset($category_ids[2]) ? $category_ids[2] : null, isset($category_ids[3]) ? $category_ids[3] : null];
         }
         $categories = $service->get_categories($_);
         $sub_categories = $service->get_categories($sub_);
@@ -459,7 +435,7 @@ class ProductController extends BaseController
             $category_id = 0;
             $sub_category_id = 0;
             $sub_sub_category_id = 0;
-            foreach (json_decode($item->category_ids, true) as $category) {
+            foreach ($item->categories as $category) {
                 if ($category['position'] == 1) {
                     $category_id = $category['id'];
                 } else {
@@ -684,7 +660,7 @@ class ProductController extends BaseController
     public function edit($id)
     {
         $product = Product::withoutGlobalScopes()->with('translations')->find($id);
-        $product_category = json_decode($product->category_ids);
+        $product_category = $product->categories;
         $product->colors = json_decode($product->colors);
         $categories = Category::where(['parent_id' => 0])->get();
         $br = Brand::orderBY('name', 'ASC')->get();
@@ -697,15 +673,21 @@ class ProductController extends BaseController
         );
     }
 
-    public function update_categories(updateCategories $request, $id, ProductService $service)
+    public function update_categories(updateCategories $request, $id)
     {
         $product = Product::find($id);
-        $product->category_ids = $service->update_categories($request->category_id, $request->sub_category_id, $request->sub_sub_category_id, $request->sub_sub_sub_category_id);
+        $categories = array_filter([
+            $request->category_id,
+            $request->sub_category_id,
+            $request->sub_sub_category_id,
+            $request->sub_sub_sub_category_id
+        ]);
+        $product->categories()->sync($categories);
         $product->save();
         return response()->noContent();
     }
 
-    public function update(Request $request, Product $product, ProductService $service)
+    public function update(Request $request, Product $product)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -843,7 +825,6 @@ class ProductController extends BaseController
             }
         }
 
-        $product->category_ids = $service->update_categories($request->category_id, $request->sub_category_id, $request->sub_sub_category_id, $request->sub_sub_sub_category_id);
         $product->name = $request->name[array_search('en', $request->lang)];
         $product->product_type = $request->product_type;
         $product->brand_id = isset($request->brand_id) ? $request->brand_id : null;
@@ -1003,6 +984,13 @@ class ProductController extends BaseController
             }
             $product->save();
 
+            $categories = array_filter([
+                $request->category_id,
+                $request->sub_category_id,
+                $request->sub_sub_category_id,
+                $request->sub_sub_sub_category_id
+            ]);
+            $product->categories()->sync($categories);
             $tag_ids = [];
             if ($request->tags != null)
                 $tags = explode(",", $request->tags);
@@ -1170,13 +1158,13 @@ class ProductController extends BaseController
             array_push($data, [
                 'name' => $collection['name'],
                 'slug' => Str::slug($collection['name'], '-') . '-' . Str::random(6),
-                'category_ids' => json_encode(
-                    [
-                        ['id' => (string)$collection['category_id'], 'position' => 1],
-                        ['id' => (string)$collection['sub_category_id'], 'position' => 2],
-                        ['id' => (string)$collection['sub_sub_category_id'], 'position' => 3]
-                    ]
-                ),
+                // 'category_ids' => json_encode(
+                //     [
+                //         ['id' => (string)$collection['category_id'], 'position' => 1],
+                //         ['id' => (string)$collection['sub_category_id'], 'position' => 2],
+                //         ['id' => (string)$collection['sub_sub_category_id'], 'position' => 3]
+                //     ]
+                // ),
                 'brand_id' => $collection['brand_id'],
                 'unit' => $collection['unit'],
                 'min_qty' => $collection['min_qty'],
@@ -1217,7 +1205,7 @@ class ProductController extends BaseController
             $category_id = 0;
             $sub_category_id = 0;
             $sub_sub_category_id = 0;
-            foreach (json_decode($item->category_ids, true) as $category) {
+            foreach ($item->categories as $category) {
                 if ($category['position'] == 1) {
                     $category_id = $category['id'];
                 } else {
