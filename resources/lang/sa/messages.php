@@ -3217,4 +3217,7 @@
     'marketing_banner' => 'بانر اعلاني',
     'start_at' => 'تاريخ البدايه',
     'end_at' => 'تاريخ الانتهاء',
+    'product with banner' => 'المنتجات المرتبطه بالبانر',
+    'specific product' => 'منتجات محدده',
+    'chose product' => 'حدد المنتجات',
 );

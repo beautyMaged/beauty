@@ -111,6 +111,17 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
             Route::any('set-date', 'ReportController@set_date')->name('set-date');
         });
 
+        Route::group(
+            ['prefix' => 'banner', 'as' => 'banner.'],
+            function () {
+                Route::post('add-new', 'BannerController@store')->name('store');
+                Route::get('list', 'BannerController@list')->name('list');
+                Route::post('delete', 'BannerController@delete')->name('delete');
+                Route::get('edit/{id}', 'BannerController@edit')->name('edit');
+                Route::put('update/{id}', 'BannerController@update')->name('update');
+            }
+        );
+
         Route::group(['prefix' => 'coupon', 'as' => 'coupon.'], function () {
             Route::get('add-new', 'CouponController@add_new')->name('add-new')->middleware('actch');
             Route::post('store-coupon', 'CouponController@store')->name('store-coupon');

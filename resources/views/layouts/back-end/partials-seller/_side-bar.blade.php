@@ -340,10 +340,10 @@
                         </li>
 
                         <li
-                            class="navbar-vertical-aside-has-menu {{ Request::is('seller/coupon*') ? 'active' : '' }}">
+                            class="navbar-vertical-aside-has-menu {{ Request::is('seller/banner*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
-                                href="{{ route('seller.coupon.add-new') }}"
-                                title="{{ \App\CPU\translate('coupon') }}">
+                                href="{{ route('seller.banner.list') }}"
+                                title="{{ \App\CPU\translate('banners') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span
                                     class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ \App\CPU\translate('marketing_banner') }}</span>

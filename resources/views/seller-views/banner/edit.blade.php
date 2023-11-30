@@ -1,4 +1,4 @@
-@extends('layouts.back-end.app')
+@extends('layouts.back-end.app-seller')
 
 @section('title', \App\CPU\translate('Banner'))
 
@@ -31,28 +31,22 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{ route('admin.banner.update', [$banner['id']]) }}" method="post"
+                        <form action="{{ route('seller.banner.update', [$banner['id']]) }}" method="post"
                             enctype="multipart/form-data" class="banner_form">
                             @csrf
                             @method('put')
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     @php
-                                        $seller = $banner->seller;
-                                        if ($seller) {
-                                            $products = $seller->products;
-                                            $categories = $seller->categories();
-                                        } else {
-                                            $products = auth()->user()->products;
-                                            $categories = auth()
-                                                ->user()
-                                                ->categories();
-                                        }
+                                        $products = auth()->user()->products;
                                         $target_products = $banner
                                             ->products()
                                             ->select('id')
                                             ->get()
                                             ->pluck('id');
+                                        $categories = auth()
+                                            ->user()
+                                            ->categories();
                                     @endphp
                                     <div class="form-group">
                                         <label for="title"
@@ -115,6 +109,19 @@
                                         </select>
                                     </div>
 
+                                    {{-- <div class="form-group mb-0" id="resource-product"
+                                        style="display: {{ $banner['resource_type'] == 'product' ? 'block' : 'none' }}">
+                                        <label for="product_id"
+                                            class="title-color text-capitalize">{{ \App\CPU\translate('product') }}</label>
+                                        <select class="js-example-responsive form-control w-100" name="product_id">
+                                            @foreach (\App\Model\Product::active()->get() as $product)
+                                                <option value="{{ $product['id'] }}"
+                                                    {{ $banner['resource_id'] == $product['id'] ? 'selected' : '' }}>
+                                                    {{ $product['name'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div> --}}
+
                                     <div class="form-group mb-0" id="resource-category"
                                         style="display: {{ $banner['resource_type'] == 'category' ? 'block' : 'none' }}">
                                         <label for="name"
@@ -127,6 +134,32 @@
                                             @endforeach
                                         </select>
                                     </div>
+
+                                    {{-- <div class="form-group mb-0" id="resource-shop"
+                                        style="display: {{ $banner['resource_type'] == 'shop' ? 'block' : 'none' }}">
+                                        <label for="shop_id"
+                                            class="title-color text-capitalize">{{ \App\CPU\translate('shop') }}</label>
+                                        <select class="js-example-responsive form-control w-100" name="shop_id">
+                                            @foreach (\App\Model\Shop::active()->get() as $shop)
+                                                <option value="{{ $shop['id'] }}"
+                                                    {{ $banner['resource_id'] == $shop['id'] ? 'selected' : '' }}>
+                                                    {{ $shop['name'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div> --}}
+
+                                    {{-- <div class="form-group mb-0" id="resource-brand"
+                                        style="display: {{ $banner['resource_type'] == 'brand' ? 'block' : 'none' }}">
+                                        <label for="brand_id"
+                                            class="title-color text-capitalize">{{ \App\CPU\translate('brand') }}</label>
+                                        <select class="js-example-responsive form-control w-100" name="brand_id">
+                                            @foreach (\App\Model\Brand::all() as $brand)
+                                                <option value="{{ $brand['id'] }}"
+                                                    {{ $banner['resource_id'] == $brand['id'] ? 'selected' : '' }}>
+                                                    {{ $brand['name'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div> --}}
 
                                     <div class="form-group d-flex gap-2">
                                         <div class="w-50">
@@ -142,7 +175,6 @@
                                                 class="form-control" id="end_at" required>
                                         </div>
                                     </div>
-
                                     <div class="form-group" id="banner-target">
                                         <label for="banner-target-input"
                                             class="title-color text-capitalize">{{ \App\CPU\translate('product with banner') }}</label>
@@ -164,7 +196,6 @@
                                             @endforeach
                                         </select>
                                     </div>
-
                                 </div>
                                 <div class="col-md-6 d-flex flex-column justify-content-end">
                                     <div>
@@ -179,8 +210,7 @@
                                         <br>
                                         <div class="custom-file text-left">
                                             <input type="file" name="image" id="mbimageFileUploader"
-                                                class="custom-file-input"
-                                                accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                                class="custom-file-input" accept="image/*">
                                             <label class="custom-file-label"
                                                 for="mbimageFileUploader">{{ \App\CPU\translate('choose') }}
                                                 {{ \App\CPU\translate('file') }}</label>
@@ -238,7 +268,6 @@
         $('#banner-target-input').trigger('change')
         $('#banner-target-products-input').val({{ $target_products->toJSON() }}).trigger('change')
 
-
         function display_data(data) {
 
             // $('#resource-product').hide()
@@ -248,14 +277,15 @@
 
             // if (data === 'product') {
             //     $('#resource-product').show()
-            // } else if (data === 'brand') {
+            // } else 
+            // if (data === 'brand') {
             //     $('#resource-brand').show()
-            // } else
+            // } else 
             if (data === 'category') {
                 $('#resource-category').show()
                 $('#category-positions').show()
             }
-            //  else if (data === 'shop') {
+            // else if (data === 'shop') {
             //     $('#resource-shop').show()
             // }
         }

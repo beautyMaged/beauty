@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
 use App\CPU\Helpers;
-use App\CPU\ImageManager;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\homeBannerSettingUpdateRequest;
 use App\Model\Banner;
-use App\Model\HomeBannerSetting;
+use App\CPU\ImageManager;
 use App\Model\Translation;
-use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
+use App\Http\Requests\Banner\StoreRequest;
+use App\Http\Requests\Banner\UpdateRequest;
+use App\Model\HomeBannerSetting;
+use App\Http\Controllers\Controller;
+use Brian2694\Toastr\Facades\Toastr;
+use App\Http\Requests\homeBannerSettingUpdateRequest;
 
 class BannerController extends Controller
 {
@@ -22,40 +25,37 @@ class BannerController extends Controller
             $key = explode(' ', $request['search']);
             $banners = Banner::where(function ($q) use ($key) {
                 foreach ($key as $value) {
-                    $q->Where('banner_type', 'like', "%{$value}%");
+                    $q->Where('title', 'like', "%{$value}%");
                 }
             })->orderBy('id', 'desc');
             $query_param = ['search' => $request['search']];
-        } else {
+        } else
             $banners = Banner::orderBy('id', 'desc');
-        }
+
         $banners = $banners->paginate(Helpers::pagination_limit())->appends($query_param);
         return view('admin-views.banner.view', compact('banners', 'search'));
     }
 
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $request->validate([
-            'url' => 'required',
-            'image' => 'required',
-        ], [
-            'url.required' => 'url is required!',
-            'image.required' => 'Image is required!',
-
-        ]);
-        //return $request;
         $banner = new Banner;
-        $banner->main_title = $request->main_title;
         $banner->title = $request->title;
         $banner->description = $request->description;
         $banner->banner_type = $request->banner_type;
-        $banner->resource_type = $request->resource_type;
-        $banner->resource_id = $request[$request->resource_type . '_id'];
-        $banner->url = $request->url;
+        $banner->target = $request->target_type;
+        $banner->start_at = Carbon::parse($request->start_at)->format('Y-m-d\TH:i');
+        $banner->end_at = Carbon::parse($request->end_at)->format('Y-m-d\TH:i');
         $banner->photo = ImageManager::upload('banner/', 'png', $request->file('image'));
+        switch ($request->resource_type) {
+            case 'category':
+                $banner->category_id = $request->category_id;
+                // brand, product, shop
+        }
         $banner->save();
+        if ($request->target_type == 'products')
+            $banner->products()->sync($request->target);
         Toastr::success('Banner added successfully!');
-        return back();
+        return redirect()->route('admin.banner.list');
     }
 
     public function status(Request $request)
@@ -75,34 +75,36 @@ class BannerController extends Controller
         return view('admin-views.banner.edit', compact('banner'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
-        $request->validate([
-            'url' => 'required',
-        ], [
-            'url.required' => 'url is required!',
-        ]);
-
         $banner = Banner::find($id);
+        $banner->title = $request->title;
+        $banner->description = $request->description;
         $banner->banner_type = $request->banner_type;
-        $banner->resource_type = $request->resource_type;
-        $banner->resource_id = $request[$request->resource_type . '_id'];
-        $banner->url = $request->url;
-        if ($request->file('image')) {
-            $banner->photo = ImageManager::update('banner/', $banner['photo'], 'png', $request->file('image'));
+        $banner->target = $request->target_type;
+        $banner->start_at = Carbon::parse($request->start_at)->format('Y-m-d\TH:i');
+        $banner->end_at = Carbon::parse($request->end_at)->format('Y-m-d\TH:i');
+        if ($request->hasFile('image')) {
+            ImageManager::delete("banner/{$banner->photo}");
+            $banner->photo = ImageManager::upload('banner/', 'png', $request->file('image'));
         }
+        switch ($request->resource_type) {
+            case 'category':
+                $banner->category_id = $request->category_id;
+                // brand, product, shop
+        }
+        if ($request->target_type == 'products')
+            $banner->products()->sync($request->target);
         $banner->save();
-
         Toastr::success('Banner updated successfully!');
-        return back();
+        return redirect()->route('admin.banner.list');
     }
 
     public function delete(Request $request)
     {
-        $br = Banner::find($request->id);
-        ImageManager::delete('/banner/' . $br['photo']);
-        Banner::where('id', $request->id)->delete();
-        return response()->json();
+        $banner = Banner::find($request->id);
+        ImageManager::delete("banner/{$banner->photo}");
+        return response()->json($banner->delete());
     }
 
 

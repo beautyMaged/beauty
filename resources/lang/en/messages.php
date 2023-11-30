@@ -3190,4 +3190,7 @@
     'marketing_banner' => 'Marketing banner',
     'start_at' => 'Start at',
     'end_at' => 'End at',
+    'product with banner' => 'Product with banner',
+    'specific product' => 'Specific product',
+    'chose product' => 'Chose product',
 );

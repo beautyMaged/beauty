@@ -14,15 +14,21 @@ class UpdateBannersTable extends Migration
     public function up()
     {
         Schema::table('banners', function (Blueprint $table) {
-            $table->bigInteger('seller_id')->unsigned();
+            $table->bigInteger('seller_id')->unsigned()->nullable();
+            $table->bigInteger('category_id')->unsigned()->nullable();
             $table->enum('target', ['products', 'all', 'home']);
             $table->dropColumn('url');
+            $table->dropColumn('main_title');
+            $table->dropColumn('resource_id');
+            $table->dropColumn('resource_type');
             $table->dropTimestamps();
             $table->timestamp('start_at');
             $table->timestamp('end_at');
 
             $table->foreign('seller_id')->references('id')
                 ->on('sellers')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')
+                ->on('categories')->onDelete('cascade');
         });
     }
 

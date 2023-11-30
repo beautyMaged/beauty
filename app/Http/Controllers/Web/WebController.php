@@ -2,61 +2,62 @@
 
 namespace App\Http\Controllers\Web;
 
-use App\CPU\Helpers;
-use App\CPU\OrderManager;
-use App\CPU\ProductManager;
-use App\CPU\CartManager;
-use App\CPU\BrandManager;
-use App\Helpers\Shopify;
-use App\Http\Controllers\Controller;
-use App\Model\Admin;
-use App\Model\AdminWallet;
-use App\Model\Banner;
-use App\Model\Brand;
-use App\Model\BusinessSetting;
+use App\User;
 use App\Model\Cart;
-use App\Model\CartShipping;
-use App\Model\Category;
+use App\Model\Shop;
+use App\CPU\Convert;
+use App\CPU\Helpers;
+use App\Model\Admin;
+use App\Model\Brand;
 use App\Model\Color;
-use App\Model\Contact;
+use App\Model\Order;
+use App\Model\Banner;
 use App\Model\Coupon;
-use App\Model\DealOfTheDay;
-use App\Model\DeliveryCountryCode;
-use App\Model\DeliveryZipCode;
-use App\Model\FlashDeal;
-use App\Model\FlashDealProduct;
-use App\Model\HelpTopic;
-use App\Model\OrderDetail;
-use App\Model\Product;
 use App\Model\Review;
 use App\Model\Seller;
-use App\Model\ShippingAddress;
+use App\Model\Contact;
+use App\Model\Product;
+use GuzzleHttp\Client;
+use App\Model\Category;
+use App\Model\Wishlist;
+use App\CPU\CartManager;
+use App\Helpers\Shopify;
+use App\Model\FlashDeal;
+use App\Model\HelpTopic;
+use App\CPU\BrandManager;
+use App\CPU\OrderManager;
 use App\Model\StaticPage;
-use App\Model\Subscription;
-use App\Model\ShippingMethod;
-use App\Model\Shop;
-use App\Model\Order;
+use App\Model\AdminWallet;
+use App\Model\OrderDetail;
 use App\Model\Transaction;
 use App\Model\Translation;
+use App\CPU\ProductManager;
+use App\Model\CartShipping;
+use App\Model\DealOfTheDay;
+use App\Model\ShippingType;
+use App\Model\Subscription;
 use App\Traits\CommonTrait;
-use App\User;
-use App\Model\Wishlist;
-use Brian2694\Toastr\Facades\Toastr;
-use GuzzleHttp\Client;
+use App\CPU\CustomerManager;
 use Illuminate\Http\Request;
+use App\Model\ShippingMethod;
+use App\Model\BusinessSetting;
+use App\Model\DeliveryZipCode;
+use App\Model\ShippingAddress;
+use App\Model\FlashDealProduct;
+use function App\CPU\translate;
+use function React\Promise\all;
+use App\Model\DeliveryCountryCode;
+use Gregwar\Captcha\PhraseBuilder;
 use Illuminate\Support\Facades\DB;
+use Gregwar\Captcha\CaptchaBuilder;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Mail;
+use Facade\FlareClient\Http\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
-use function App\CPU\translate;
-use App\Model\ShippingType;
-use Facade\FlareClient\Http\Response;
-use Gregwar\Captcha\PhraseBuilder;
-use Gregwar\Captcha\CaptchaBuilder;
-use App\CPU\CustomerManager;
-use App\CPU\Convert;
-use function React\Promise\all;
+use Illuminate\Database\Eloquent\Collection;
 
 class WebController extends Controller
 {
@@ -1540,6 +1541,16 @@ class WebController extends Controller
                 break;
             case 'discounted':
                 $query = Product::with(['reviews'])->active()->where('discount', '!=', 0);
+                break;
+            case 'banner':
+                $banner = Banner::find($request['id']);
+                if ($banner->published == 1) {
+                    if ($banner->target == 'products')
+                        $query = $banner->products()->with(['reviews'])->active();
+                    if ($banner->target == 'all')
+                        $query = $banner->seller->products()->with(['reviews'])->active();
+                } else
+                    $query = new Collection();
                 break;
         }
 

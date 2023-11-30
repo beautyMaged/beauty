@@ -68,11 +68,11 @@ class SellerController extends Controller
                 }
             })->pluck('id')->toArray();
 
-            $reviews = Review::whereHas('product', function($query) use($seller){
+            $reviews = Review::whereHas('product', function ($query) use ($seller) {
                 $query->where('added_by', 'seller')->where('user_id', $seller->id);
             })
                 ->with(['product'])
-                ->where(function($q) use($product_id, $customer_id){
+                ->where(function ($q) use ($product_id, $customer_id) {
                     $q->whereIn('product_id', $product_id)->orWhereIn('customer_id', $customer_id);
                 });
 
@@ -115,7 +115,7 @@ class SellerController extends Controller
         $reviews = Review::find($request->id);
         $reviews->status = $request->status;
         $reviews->save();
-        return response()->json(['message'=>translate('status updated successfully!!')],200);
+        return response()->json(['message' => translate('status updated successfully!!')], 200);
     }
 
     public function seller_info(Request $request)
@@ -168,7 +168,7 @@ class SellerController extends Controller
             'branch' => $request['branch'],
             'account_no' => $request['account_no'],
             'holder_name' => $request['holder_name'],
-            'phone'=> $request['phone'],
+            'phone' => $request['phone'],
             'password' => $request['password'] != null ? bcrypt($request['password']) : Seller::where(['id' => $seller['id']])->first()->password,
             'image' => $imageName,
             'updated_at' => now()
@@ -198,7 +198,7 @@ class SellerController extends Controller
 
         $data['method_name'] = $method->method_name;
         foreach ($fields as $field) {
-            if(key_exists($field, $values)) {
+            if (key_exists($field, $values)) {
                 $data[$field] = $values[$field];
             }
         }
@@ -222,7 +222,7 @@ class SellerController extends Controller
             $wallet->save();
             return response()->json(translate('Withdraw request sent successfully!'), 200);
         }
-        return response()->json(['message'=>translate('Invalid withdraw request')], 400);
+        return response()->json(['message' => translate('Invalid withdraw request')], 400);
     }
 
     public function close_withdraw_request(Request $request)
@@ -246,21 +246,21 @@ class SellerController extends Controller
     public function transaction(Request $request)
     {
         $status = $request->status;
-        if($status == 'pending'){
+        if ($status == 'pending') {
             $status = 0;
-        }elseif($status == 'approve'){
+        } elseif ($status == 'approve') {
             $status = 1;
-        }elseif($status == 'deny'){
+        } elseif ($status == 'deny') {
             $status = 2;
         }
 
         $seller = $request->seller;
         $transaction = WithdrawRequest::where('seller_id', $seller['id'])
-            ->when(in_array($status, ['0',1,2]), function ($query) use($status){
+            ->when(in_array($status, ['0', 1, 2]), function ($query) use ($status) {
                 $query->where('approved', $status);
             })
-            ->when(($request->from && $request->to),function($query)use($request){
-                $query->whereBetween('created_at', [$request->from.' 00:00:00', $request->to.' 23:59:59']);
+            ->when(($request->from && $request->to), function ($query) use ($request) {
+                $query->whereBetween('created_at', [$request->from . ' 00:00:00', $request->to . ' 23:59:59']);
             })
             ->latest()->get();
 
@@ -344,32 +344,32 @@ class SellerController extends Controller
     {
         $seller = $request->seller;
 
-        if($seller->id){
+        if ($seller->id) {
             ImageManager::delete('/seller/' . $seller['image']);
 
             $seller->delete();
-            return response()->json(['message' => translate('Your_account_deleted_successfully!!')],200);
-
-        }else{
-            return response()->json(['message' =>'access_denied!!'],403);
+            return response()->json(['message' => translate('Your_account_deleted_successfully!!')], 200);
+        } else {
+            return response()->json(['message' => 'access_denied!!'], 403);
         }
     }
 
-    public function get_earning_statitics(Request $request){
+    public function get_earning_statitics(Request $request)
+    {
         $seller = $request->seller;
         $dateType = $request->type;
         $seller_data_final = array();
 
         $seller_data = array();
-        if($dateType == 'yearEarn') {
+        if ($dateType == 'yearEarn') {
             $number = 12;
             $from = \Carbon\Carbon::now()->startOfYear()->format('Y-m-d');
             $to = Carbon::now()->endOfYear()->format('Y-m-d');
 
             $seller_earnings = OrderTransaction::where([
-                'seller_is'=>'seller',
-                'seller_id'=>$seller->id,
-                'status'=>'disburse'
+                'seller_is' => 'seller',
+                'seller_id' => $seller->id,
+                'status' => 'disburse'
             ])->select(
                 DB::raw('IFNULL(sum(seller_amount),0) as sums'),
                 DB::raw('YEAR(created_at) year, MONTH(created_at) month')
@@ -385,11 +385,10 @@ class SellerController extends Controller
             }
 
             $seller_data_final = array_values($seller_data);
-
-        }elseif($dateType == 'MonthEarn') {
+        } elseif ($dateType == 'MonthEarn') {
             $from = date('Y-m-01');
             $to = date('Y-m-t');
-            $number = date('d',strtotime($to));
+            $number = date('d', strtotime($to));
             $key_range = range(1, $number);
 
             $seller_earnings = OrderTransaction::where([
@@ -411,14 +410,13 @@ class SellerController extends Controller
             }
 
             $seller_data_final = array_values($seller_data);
-
-        }elseif($dateType == 'WeekEarn') {
+        } elseif ($dateType == 'WeekEarn') {
 
             $from = Carbon::now()->startOfWeek()->format('Y-m-d');
             $to = Carbon::now()->endOfWeek()->format('Y-m-d');
 
-            $number_start =date('d',strtotime($from));
-            $number_end =date('d',strtotime($to));
+            $number_start = date('d', strtotime($from));
+            $number_end = date('d', strtotime($to));
 
             $seller_earnings = OrderTransaction::where([
                 'seller_is' => 'seller',
@@ -441,15 +439,15 @@ class SellerController extends Controller
         }
 
         $commission_data = array();
-        if($dateType == 'yearEarn') {
+        if ($dateType == 'yearEarn') {
             $number = 12;
             $from = Carbon::now()->startOfYear()->format('Y-m-d');
             $to = Carbon::now()->endOfYear()->format('Y-m-d');
 
             $commission_earnings = OrderTransaction::where([
-                'seller_is'=>'seller',
-                'seller_id'=>$seller->id,
-                'status'=>'disburse'
+                'seller_is' => 'seller',
+                'seller_id' => $seller->id,
+                'status' => 'disburse'
             ])->select(
                 DB::raw('IFNULL(sum(admin_commission),0) as sums'),
                 DB::raw('YEAR(created_at) year, MONTH(created_at) month')
@@ -465,11 +463,10 @@ class SellerController extends Controller
             }
 
             $commission_data_final = array_values($commission_data);
-
-        }elseif($dateType == 'MonthEarn') {
+        } elseif ($dateType == 'MonthEarn') {
             $from = date('Y-m-01');
             $to = date('Y-m-t');
-            $number = date('d',strtotime($to));
+            $number = date('d', strtotime($to));
             $key_range = range(1, $number);
 
             $commission_earnings = OrderTransaction::where([
@@ -491,14 +488,13 @@ class SellerController extends Controller
             }
 
             $commission_data_final = array_values($commission_data);
-
-        }elseif($dateType == 'WeekEarn') {
+        } elseif ($dateType == 'WeekEarn') {
 
             $from = Carbon::now()->startOfWeek()->format('Y-m-d');
             $to = Carbon::now()->endOfWeek()->format('Y-m-d');
 
-            $number_start =date('d',strtotime($from));
-            $number_end =date('d',strtotime($to));
+            $number_start = date('d', strtotime($from));
+            $number_end = date('d', strtotime($to));
 
             $commission_earnings = OrderTransaction::where([
                 'seller_is' => 'seller',

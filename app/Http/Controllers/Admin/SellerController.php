@@ -28,7 +28,7 @@ class SellerController extends Controller
         $search = $request['search'];
         $current_date = date('Y-m-d');
 
-        $sellers = Seller::with(['orders', 'product'])
+        $sellers = Seller::with(['orders', 'products'])
             ->when($search, function ($query) use ($search) {
                 $key = explode(' ', $search);
                 foreach ($key as $value) {
