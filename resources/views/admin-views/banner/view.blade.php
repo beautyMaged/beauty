@@ -57,9 +57,9 @@
 
 
                                     <div class="form-group">
-                                        <label for="resource_id"
+                                        <label for="resource_type"
                                             class="title-color text-capitalize">{{ \App\CPU\translate('resource_type') }}</label>
-                                        <select onchange="display_data(this.value)"
+                                        <select id="resource_type" onchange="display_data(this.value)"
                                             class="select2-no-search form-control w-100" name="resource_type" required>
                                             <option value="home">{{ \App\CPU\translate('Home') }}</option>
                                             {{-- @if (!$products->isEmpty())
@@ -73,17 +73,30 @@
                                         </select>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="name"
+                                    <div class="form-group d--none" id="home-positions">
+                                        <label for="banner_type_home"
                                             class="title-color text-capitalize">{{ \App\CPU\translate('banner_type') }}</label>
-                                        <select class="select2-no-search form-control w-100 banner_type" name="banner_type"
-                                            required>
-                                            <option value="Main Banner">{{ \App\CPU\translate('Main Banner') }}</option>
-                                            <option value="Footer Banner">{{ \App\CPU\translate('Footer Banner') }}
-                                            </option>
-                                            <option value="Popup Banner">{{ \App\CPU\translate('Popup Banner') }}</option>
-                                            {{-- <option value="Main Section Banner">
-                                                {{ \App\CPU\translate('Main Section Banner') }}</option> --}}
+                                        <select id="banner_type_home"
+                                            class="select2-no-search form-control w-100 banner_type"
+                                            name="home_banner_position" required>
+                                            @foreach (config('services.banner.positions.home') as $position)
+                                                <option value="{{ $position['name'] }}">
+                                                    {{ \App\CPU\translate($position['name']) }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group d--none" id="category-positions">
+                                        <label for="banner_type_category"
+                                            class="title-color text-capitalize">{{ \App\CPU\translate('banner_type') }}</label>
+                                        <select id="banner_type_category"
+                                            class="select2-no-search form-control w-100 banner_type"
+                                            name="category_banner_position" required>
+                                            @foreach (config('services.banner.positions.category') as $position)
+                                                <option value="{{ $position['name'] }}">
+                                                    {{ \App\CPU\translate($position['name']) }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
 
@@ -136,14 +149,13 @@
                                         <div class="w-50">
                                             <label for="start_at"
                                                 class="title-color text-capitalize">{{ \App\CPU\translate('start_at') }}</label>
-                                            <input type="datetime-local" name="main_title" class="form-control"
+                                            <input type="datetime-local" name="start_at" class="form-control"
                                                 id="start_at">
                                         </div>
                                         <div class="w-50">
                                             <label for="end_at"
                                                 class="title-color text-capitalize">{{ \App\CPU\translate('end_at') }}</label>
-                                            <input type="datetime-local" name="end_at" class="form-control"
-                                                id="main_title">
+                                            <input type="datetime-local" name="end_at" class="form-control" id="end_at">
                                         </div>
                                     </div>
 
@@ -151,7 +163,7 @@
                                         <label for="banner-target-input"
                                             class="title-color text-capitalize">{{ \App\CPU\translate('product with banner') }}</label>
                                         <select onchange="banner_target(this.value)" id="banner-target-input"
-                                            class="select2-no-search form-control w-100" name="banner-target">
+                                            class="select2-no-search form-control w-100" name="target_type">
                                             <option value="all">{{ \App\CPU\translate('All Products') }}</option>
                                             <option value="products">{{ \App\CPU\translate('specific product') }}</option>
                                             <option value="home">{{ \App\CPU\translate('Home') }}</option>
@@ -160,7 +172,7 @@
 
                                     <div class="form-group d--none" id="banner-target-products">
                                         <select id="banner-target-products-input"
-                                            class="select2-multiple form-control w-100" name="banner-target">
+                                            class="select2-multiple form-control w-100" name="target[]">
                                             @foreach ($products as $product)
                                                 <option value="{{ $product['id'] }}">{{ $product['name'] }}</option>
                                             @endforeach
@@ -191,8 +203,7 @@
                                             )</span>
                                         <div class="custom-file text-left">
                                             <input type="file" name="image" id="mbimageFileUploader"
-                                                class="custom-file-input"
-                                                accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                                class="custom-file-input" accept="image/*">
                                             <label class="custom-file-label title-color"
                                                 for="mbimageFileUploader">{{ \App\CPU\translate('choose') }}
                                                 {{ \App\CPU\translate('file') }}</label>
@@ -266,11 +277,12 @@
                                 <tr>
                                     <th class="pl-xl-5">{{ \App\CPU\translate('SL') }}</th>
                                     <th class="pl-xl-5">{{ \App\CPU\translate('Seller') }}</th>
-                                    <th class="text-center"> {{ \App\CPU\translate('Title') }}</th>
-                                    <th class="text-center"> {{ \App\CPU\translate('Description') }}</th>
-                                    <th>{{ \App\CPU\translate('banner_type') }}</th>
+                                    <th> {{ \App\CPU\translate('Title') }}</th>
+                                    <th> {{ \App\CPU\translate('Description') }}</th>
+                                    <th> {{ \App\CPU\translate('resource_type') }}</th>
+                                    <th> {{ \App\CPU\translate('banner_type') }}</th>
                                     <th>{{ \App\CPU\translate('image') }}</th>
-                                    <th>{{ \App\CPU\translate('published') }}</th>
+                                    <th class="text-center">{{ \App\CPU\translate('published') }}</th>
                                     <th class="text-center">{{ \App\CPU\translate('action') }}</th>
                                 </tr>
                             </thead>
@@ -285,10 +297,18 @@
                                             @if ($seller)
                                                 <a
                                                     href="{{ route('admin.sellers.view', ['id' => $seller->id]) }}">{{ \Str::limit($seller->shop?->name, 20) }}</a>
+                                            @else
+                                                {{ \App\CPU\translate('Admin') }}
                                             @endif
                                         </td>
                                         <td class="pl-xl-5">{{ $banner->title }}</td>
                                         <td class="pl-xl-5">{{ $banner->description }}</td>
+                                        <td class="pl-xl-5">
+                                            <a target="_blank"
+                                                href="{{ $banner->category ? Str::finish(url('products'), '?') . Arr::query(['data_from' => 'category', 'id' => $banner->category->id]) : url('') }}">
+                                                {{ $banner->category ? $banner->category->translations[0]->value ?? $banner->category->name : \App\CPU\translate('Home') }}
+                                            </a>
+                                        </td>
                                         <td>{{ \App\CPU\translate(str_replace('_', ' ', $banner->banner_type)) }}</td>
                                         <td>
                                             <img class="ratio-4:1" width="80"
@@ -306,6 +326,14 @@
                                         </td>
                                         <td>
                                             <div class="d-flex gap-10 justify-content-center">
+                                                <a target="_blank"
+                                                    style="{{ $banner->published == 1 ? '' : 'display: none;' }}"
+                                                    id="view-banner-{{ $banner->id }}"
+                                                    class="btn btn-outline--primary btn-sm cursor-pointer edit"
+                                                    title="{{ \App\CPU\translate('View') }}"
+                                                    href="{{ Str::finish(url('products'), '?') . Arr::query(['data_from' => 'banner', 'id' => $banner['id']]) }}">
+                                                    <i class="tio-invisible"></i>
+                                                </a>
                                                 <a class="btn btn-outline--primary btn-sm cursor-pointer edit"
                                                     title="{{ \App\CPU\translate('Edit') }}"
                                                     href="{{ route('admin.banner.edit', [$banner['id']]) }}">
@@ -380,49 +408,64 @@
 
         }
 
+        $('#resource_type').val(null).trigger('change')
+        $('#banner-target-input').trigger('change')
+
         function display_data(data) {
             let first_data = $('select.banner_type').val();
 
-            $('#resource-product').hide()
-            $('#resource-brand').hide()
-            $('#resource-category').hide()
-            $('#resource-shop').hide()
+            // $('#resource-product').hide()
+            // $('#resource-brand').hide()
+            // $('#resource-category').hide()
+            // $('#resource-shop').hide()
             $('.rat_2_1').hide();
             $('.rat_3_5_1').hide();
             $('.rat_4_1').hide();
 
 
-            if (data === 'product') {
-                $('#resource-product').show()
-                if (first_data === 'Main Banner') {
-                    $('.rat_2_1').show();
-                    $('.main_title_div').show();
+            // if (data === 'product') {
+            //     $('#resource-product').show()
+            //     if (first_data === 'Main Banner') {
+            //         $('.rat_2_1').show();
+            //         $('.main_title_div').show();
 
-                } else if (first_data === 'Main Section Banner' || first_data === 'Footer Banner') {
-                    $('.rat_4_1').show();
-                    $('.main_title_div').hide();
+            //     } else if (first_data === 'Main Section Banner' || first_data === 'Footer Banner') {
+            //         $('.rat_4_1').show();
+            //         $('.main_title_div').hide();
 
-                }
+            //     }
 
-            } else if (data === 'brand') {
-                $('#resource-brand').show()
-            } else if (data === 'category') {
+            // } else if (data === 'brand') {
+            //     $('#resource-brand').show()
+            // } else 
+            if (data === 'category') {
+                $('#home-positions').hide()
                 $('#resource-category').show()
+                $('#category-positions').show()
+
                 if (first_data === 'Main Banner') {
                     $('.rat_2_1').show();
-                    $('.main_title_div').show();
+                    // $('.main_title_div').show();
                 } else if (first_data === 'Main Section Banner') {
                     $('.rat_3_5_1').show();
-                    $('.main_title_div').hide();
+                    // $('.main_title_div').hide();
 
                 } else {
                     $('.rat_2_1').show();
-                    $('.main_title_div').hide();
+                    // $('.main_title_div').hide();
 
                 }
-            } else if (data === 'shop') {
-                $('#resource-shop').show()
             }
+            if (data === 'home') {
+                $('#resource-category').hide()
+                $('#category-positions').hide()
+
+                $('#home-positions').show()
+            }
+
+            // else if (data === 'shop') {
+            //     $('#resource-shop').show()
+            // }
         }
     </script>
     <script>
@@ -506,8 +549,10 @@
                 },
                 success: function(data) {
                     if (data == 1) {
+                        $(`#view-banner-${id}`).show()
                         toastr.success('{{ \App\CPU\translate('Banner_published_successfully') }}');
                     } else {
+                        $(`#view-banner-${id}`).hide()
                         toastr.success('{{ \App\CPU\translate('Banner_unpublished_successfully') }}');
                     }
                 }

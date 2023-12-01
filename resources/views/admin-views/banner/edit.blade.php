@@ -72,13 +72,13 @@
                                             class="title-color text-capitalize">{{ \App\CPU\translate('resource_type') }}</label>
                                         <select id="resource_type" onchange="display_data(this.value)"
                                             class="select2-no-search form-control w-100" name="resource_type" required>
-                                            <option {{ !$banner->category_id ? 'selected' : '' }} value="home">
+                                            <option {{ $banner->category ? '' : 'selected' }} value="home">
                                                 {{ \App\CPU\translate('Home') }}</option>
                                             {{-- @if (!$products->isEmpty())
                                                 <option value="product">{{ \App\CPU\translate('Product') }}</option>
                                             @endif --}}
                                             @if (!$categories->isEmpty())
-                                                <option {{ !$banner->category_id ? 'selected' : '' }} value="category">
+                                                <option {{ $banner->category ? 'selected' : '' }} value="category">
                                                     {{ \App\CPU\translate('category') }}</option>
                                             @endif
                                             {{--                                            <option value="shop">{{ \App\CPU\translate('Shop')}}</option> --}}
@@ -86,44 +86,42 @@
                                         </select>
                                     </div>
 
+                                    <div class="form-group" id="resource-category"
+                                        style="display: {{ $banner->category ? 'block' : 'none' }}">
+                                        <label for="name"
+                                            class="title-color text-capitalize">{{ \App\CPU\translate('category') }}</label>
+                                        <select class="js-example-responsive form-control w-100" name="category_id">
+                                            @foreach ($categories as $category)
+                                                <option value="{{ $category['id'] }}"
+                                                    {{ $banner->category && $banner->category->id == $category['id'] ? 'selected' : '' }}>
+                                                    {{ $category->translations[0]->value ?? $category->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
                                     <div class="form-group d--none" id="home-positions">
                                         <label for="banner_type_home"
                                             class="title-color text-capitalize">{{ \App\CPU\translate('banner_type') }}</label>
                                         <select id="banner_type_home"
-                                            class="select2-no-search form-control w-100 banner_type" name="banner_type"
-                                            required>
-                                            <option value="Main Banner">{{ \App\CPU\translate('Main Banner') }}</option>
-                                            <option value="Footer Banner">{{ \App\CPU\translate('Footer Banner') }}
-                                            </option>
-                                            <option value="Popup Banner">{{ \App\CPU\translate('Popup Banner') }}</option>
-                                            {{-- <option value="Main Section Banner">
-                                                {{ \App\CPU\translate('Main Section Banner') }}</option> --}}
+                                            class="select2-no-search form-control w-100 banner_type"
+                                            name="home_banner_position" required>
+                                            @foreach (config('services.banner.positions.home') as $position)
+                                                <option value="{{ $position }}">
+                                                    {{ \App\CPU\translate($position['name']) }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="form-group d--none" id="category-positions">
                                         <label for="banner_type_category"
                                             class="title-color text-capitalize">{{ \App\CPU\translate('banner_type') }}</label>
                                         <select id="banner_type_category"
-                                            class="select2-no-search form-control w-100 banner_type" name="banner_type"
-                                            required>
-                                            <option value="Main Banner">{{ \App\CPU\translate('Main Banner') }}</option>
-                                            <option value="Footer Banner">{{ \App\CPU\translate('Footer Banner') }}
-                                            </option>
-                                            <option value="Popup Banner">{{ \App\CPU\translate('Popup Banner') }}</option>
-                                            {{-- <option value="Main Section Banner">
-                                                {{ \App\CPU\translate('Main Section Banner') }}</option> --}}
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group mb-0" id="resource-category"
-                                        style="display: {{ $banner['resource_type'] == 'category' ? 'block' : 'none' }}">
-                                        <label for="name"
-                                            class="title-color text-capitalize">{{ \App\CPU\translate('category') }}</label>
-                                        <select class="js-example-responsive form-control w-100" name="category_id">
-                                            @foreach ($categories as $category)
-                                                <option value="{{ $category['id'] }}"
-                                                    {{ $banner['resource_id'] == $category['id'] ? 'selected' : '' }}>
-                                                    {{ $category->translations[0]->value ?? $category->name }}</option>
+                                            class="select2-no-search form-control w-100 banner_type"
+                                            name="category_banner_position" required>
+                                            @foreach (config('services.banner.positions.category') as $position)
+                                                <option value="{{ $position }}">
+                                                    {{ \App\CPU\translate($position['name']) }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -152,7 +150,8 @@
                                                 {{ \App\CPU\translate('All Products') }}</option>
                                             <option {{ $banner['target'] == 'products' ? 'selected' : '' }}
                                                 value="products">{{ \App\CPU\translate('chose product') }}</option>
-                                            {{-- <option value="home">{{ \App\CPU\translate('Home') }}</option> --}}
+                                            <option {{ $banner['target'] == 'home' ? 'selected' : '' }} value="home">
+                                                {{ \App\CPU\translate('Home') }}</option>
                                         </select>
                                     </div>
 
@@ -241,19 +240,22 @@
 
         function display_data(data) {
 
-            // $('#resource-product').hide()
-            // $('#resource-brand').hide()
-            $('#resource-category').hide()
-            // $('#resource-shop').hide()
-
             // if (data === 'product') {
             //     $('#resource-product').show()
             // } else if (data === 'brand') {
             //     $('#resource-brand').show()
             // } else
             if (data === 'category') {
+                $('#home-positions').hide()
+
                 $('#resource-category').show()
                 $('#category-positions').show()
+            }
+            if (data === 'home') {
+                $('#resource-category').hide()
+                $('#category-positions').hide()
+
+                $('#home-positions').show()
             }
             //  else if (data === 'shop') {
             //     $('#resource-shop').show()

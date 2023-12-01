@@ -24,21 +24,19 @@ class UpdateRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $positions = [];
+        foreach (config('services.banner.positions') as $place => $position)
+            $positions[$place . '_banner_position'] = Rule::in($position['name']);
+        return array_merge($positions, [
             'title' => ['string'],
             'description' => ['string'],
             'resource_type' => ['required', 'in:home,category'],
-            'banner_type' => ['required', Rule::in([
-                'Main Banner',
-                'Footer Banner',
-                'Popup Banner'
-            ])],
             'start_at' => ['required', 'date_format:Y-m-d\TH:i'],
             'end_at' => ['required', 'date_format:Y-m-d\TH:i'],
             'target_type' => ['required', 'in:all,products,home'],
             'target' => ['array'],
             'target.*' => ['integer'],
             'image' => ['mimes:png,jpeg,jpg,gif,svg'],
-        ];
+        ]);
     }
 }

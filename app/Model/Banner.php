@@ -22,4 +22,9 @@ class Banner extends Model
     {
         return $this->belongsTo(Seller::class);
     }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

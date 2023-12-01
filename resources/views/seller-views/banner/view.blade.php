@@ -73,28 +73,26 @@
                                         <label for="banner_type_home"
                                             class="title-color text-capitalize">{{ \App\CPU\translate('banner_type') }}</label>
                                         <select id="banner_type_home"
-                                            class="select2-no-search form-control w-100 banner_type" name="banner_type"
-                                            required>
-                                            <option value="Main Banner">{{ \App\CPU\translate('Main Banner') }}</option>
-                                            <option value="Footer Banner">{{ \App\CPU\translate('Footer Banner') }}
-                                            </option>
-                                            <option value="Popup Banner">{{ \App\CPU\translate('Popup Banner') }}</option>
-                                            {{-- <option value="Main Section Banner">
-                                                {{ \App\CPU\translate('Main Section Banner') }}</option> --}}
+                                            class="select2-no-search form-control w-100 banner_type"
+                                            name="home_banner_position" required>
+                                            @foreach (config('services.banner.positions.home') as $position)
+                                                <option value="{{ $position['name'] }}">
+                                                    {{ \App\CPU\translate($position['name']) }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="form-group d--none" id="category-positions">
                                         <label for="banner_type_category"
                                             class="title-color text-capitalize">{{ \App\CPU\translate('banner_type') }}</label>
                                         <select id="banner_type_category"
-                                            class="select2-no-search form-control w-100 banner_type" name="banner_type"
-                                            required>
-                                            <option value="Main Banner">{{ \App\CPU\translate('Main Banner') }}</option>
-                                            <option value="Footer Banner">{{ \App\CPU\translate('Footer Banner') }}
-                                            </option>
-                                            <option value="Popup Banner">{{ \App\CPU\translate('Popup Banner') }}</option>
-                                            {{-- <option value="Main Section Banner">
-                                                {{ \App\CPU\translate('Main Section Banner') }}</option> --}}
+                                            class="select2-no-search form-control w-100 banner_type"
+                                            name="category_banner_position" required>
+                                            @foreach (config('services.banner.positions.category') as $position)
+                                                <option value="{{ $position['name'] }}">
+                                                    {{ \App\CPU\translate($position['name']) }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
 
@@ -275,11 +273,12 @@
                             <thead class="thead-light thead-50 text-capitalize">
                                 <tr>
                                     <th class="pl-xl-5">{{ \App\CPU\translate('SL') }}</th>
-                                    <th class="text-center"> {{ \App\CPU\translate('Title') }}</th>
-                                    <th class="text-center"> {{ \App\CPU\translate('Description') }}</th>
+                                    <th> {{ \App\CPU\translate('Title') }}</th>
+                                    <th> {{ \App\CPU\translate('Description') }}</th>
+                                    <th> {{ \App\CPU\translate('resource_type') }}</th>
                                     <th>{{ \App\CPU\translate('banner_type') }}</th>
                                     <th>{{ \App\CPU\translate('image') }}</th>
-                                    <th>{{ \App\CPU\translate('published') }}</th>
+                                    <th class="text-center">{{ \App\CPU\translate('published') }}</th>
                                     <th class="text-center">{{ \App\CPU\translate('action') }}</th>
                                 </tr>
                             </thead>
@@ -289,6 +288,12 @@
                                         <td class="pl-xl-5">{{ $banners->firstItem() + $key }}</td>
                                         <td class="pl-xl-5">{{ $banner->title }}</td>
                                         <td class="pl-xl-5">{{ $banner->description }}</td>
+                                        <td class="pl-xl-5">
+                                            <a target="_blank"
+                                                href="{{ $banner->category ? Str::finish(url('products'), '?') . Arr::query(['data_from' => 'category', 'id' => $banner->category->id]) : url('') }}">
+                                                {{ $banner->category ? $banner->category->translations[0]->value ?? $banner->category->name : \App\CPU\translate('Home') }}
+                                            </a>
+                                        </td>
                                         <td>{{ \App\CPU\translate(str_replace('_', ' ', $banner->banner_type)) }}</td>
                                         <td>
                                             <img class="ratio-4:1" width="80"
@@ -307,6 +312,13 @@
                                         </td>
                                         <td>
                                             <div class="d-flex gap-10 justify-content-center">
+                                                <a target="_blank"
+                                                    style="{{ $banner->published == 1 ? '' : 'display: none;' }}"
+                                                    class="view-banner btn btn-outline--primary btn-sm cursor-pointer edit"
+                                                    title="{{ \App\CPU\translate('View') }}"
+                                                    href="{{ Str::finish(url('products'), '?') . Arr::query(['data_from' => 'banner', 'id' => $banner['id']]) }}">
+                                                    <i class="tio-invisible"></i>
+                                                </a>
                                                 <a class="btn btn-outline--primary btn-sm cursor-pointer edit"
                                                     title="{{ \App\CPU\translate('Edit') }}"
                                                     href="{{ route('seller.banner.edit', [$banner['id']]) }}">
@@ -382,19 +394,18 @@
         }
 
         $('#resource_type').val(null).trigger('change')
+        $('#banner-target-input').trigger('change')
 
         function display_data(data) {
             let first_data = $('select.banner_type').val();
 
-            $('#resource-product').hide()
-            $('#resource-brand').hide()
-            $('#resource-category').hide()
-            $('#resource-shop').hide()
+            // $('#resource-product').hide()
+            // $('#resource-brand').hide()
+            // $('#resource-category').hide()
+            // $('#resource-shop').hide()
             $('.rat_2_1').hide();
             $('.rat_3_5_1').hide();
             $('.rat_4_1').hide();
-            $('#category-positions').hide()
-            $('#home-positions').hide()
 
 
 
@@ -417,6 +428,7 @@
             // }
             // else
             if (data === 'category') {
+                $('#home-positions').hide()
                 $('#resource-category').show()
                 $('#category-positions').show()
                 if (first_data === 'Main Banner') {
@@ -433,6 +445,9 @@
                 }
             } else
             if (data === 'home') {
+                $('#resource-category').hide()
+                $('#category-positions').hide()
+
                 $('#home-positions').show()
             }
             // else

@@ -41,7 +41,7 @@ class BannerController extends Controller
         $banner = new Banner;
         $banner->title = $request->title;
         $banner->description = $request->description;
-        $banner->banner_type = $request->banner_type;
+        $banner->banner_type = $request->{$request->resource_type . '_banner_position'};
         $banner->target = $request->target_type;
         $banner->start_at = Carbon::parse($request->start_at)->format('Y-m-d\TH:i');
         $banner->end_at = Carbon::parse($request->end_at)->format('Y-m-d\TH:i');
@@ -49,7 +49,10 @@ class BannerController extends Controller
         switch ($request->resource_type) {
             case 'category':
                 $banner->category_id = $request->category_id;
+                break;
                 // brand, product, shop
+            default:
+                $banner->category_id = null;
         }
         $banner->save();
         if ($request->target_type == 'products')
@@ -80,7 +83,7 @@ class BannerController extends Controller
         $banner = Banner::find($id);
         $banner->title = $request->title;
         $banner->description = $request->description;
-        $banner->banner_type = $request->banner_type;
+        $banner->banner_type = $request->{$request->resource_type . '_banner_position'};
         $banner->target = $request->target_type;
         $banner->start_at = Carbon::parse($request->start_at)->format('Y-m-d\TH:i');
         $banner->end_at = Carbon::parse($request->end_at)->format('Y-m-d\TH:i');
@@ -91,7 +94,10 @@ class BannerController extends Controller
         switch ($request->resource_type) {
             case 'category':
                 $banner->category_id = $request->category_id;
+                break;
                 // brand, product, shop
+            default:
+                $banner->category_id = null;
         }
         if ($request->target_type == 'products')
             $banner->products()->sync($request->target);

@@ -68,6 +68,36 @@ return [
         'client_id'          => env('ZID_OAUTH_CLIENT_ID'),
         'client_secret'      => env('ZID_OAUTH_CLIENT_SECRET'),
         // 'webhook_secret'     => env('ZID_WEBHOOK_SECRET'),
-    ]
+    ],
+
+    // aspectRatio: a proportional relationship between an image's width and height
+    'banner' => [
+        'positions' => [
+            'home' => [
+                [
+                    'name' => 'Main Banner',
+                    'aspectRatio' => [4, 1],
+                ],
+                [
+                    'name' => 'Popup Banner',
+                    'aspectRatio' => [1, 1],
+                ],
+                [
+                    'name' => 'Footer Banner',
+                    'aspectRatio' => [3.5, 1],
+                ],
+            ],
+            'category' => [
+                [
+                    'name' => 'Main Banner',
+                    'aspectRatio' => [4, 1],
+                ],
+                [
+                    'name' => 'Footer Banner',
+                    'aspectRatio' => [3.5, 1],
+                ],
+            ],
+        ]
+    ],
 
 ];
