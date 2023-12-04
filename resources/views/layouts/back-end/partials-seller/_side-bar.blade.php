@@ -350,32 +350,16 @@
                             </a>
                         </li>
 
-                        {{-- <li class="nav-item">
-                            <small class="nav-subtitle">{{\App\CPU\translate('promotion_management')}}</small>
-                            <small class="tio-more-horizontal nav-subtitle-replacer"></small>
-                        </li> --}}
-
-
-                        {{-- <li class="navbar-vertical-aside-has-menu {{Request::is('seller/coupon*')?'active':''}}">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
-                               href="javascript:" title="{{\App\CPU\translate('Offers_&_Deals')}}">
-                                <i class="tio-users-switch nav-icon"></i>
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('seller/coupon*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                href="{{ route('seller.coupon.list') }}"
+                                title="{{ \App\CPU\translate('coupon') }}">
+                                <span class="tio-circle nav-indicator-icon"></span>
                                 <span
-                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{\App\CPU\translate('Offers_&_Deals')}}</span>
+                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ \App\CPU\translate('codes & coupons') }}</span>
                             </a>
-                            <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                                style="display: {{Request::is('seller/coupon*')?'block':'none'}}">
-                                <li class="navbar-vertical-aside-has-menu {{Request::is('seller/coupon*')?'active':''}}">
-                                    <a class="js-navbar-vertical-aside-menu-link nav-link"
-                                       href="{{route('seller.coupon.add-new')}}"
-                                       title="{{\App\CPU\translate('coupon')}}">
-                                        <span class="tio-circle nav-indicator-icon"></span>
-                                        <span
-                                            class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{\App\CPU\translate('coupon')}}</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li> --}}
+                        </li>
 
                         {{-- <li class="nav-item">
                             <small class="nav-subtitle">{{\App\CPU\translate('Help_&_Support_Section')}}</small>

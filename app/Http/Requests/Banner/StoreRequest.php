@@ -26,11 +26,11 @@ class StoreRequest extends FormRequest
     {
         $positions = [];
         foreach (config('services.banner.positions') as $place => $position)
-            $positions[$place . '_banner_position'] = Rule::in($position['name']);
+            $positions[$place . '_banner_position'] = Rule::in(array_map(fn ($p) => $p['name'], $position));
         return array_merge($positions, [
             'title' => ['string'],
             'description' => ['string'],
-            'resource_type' => ['required', 'in:home,category'],
+            'resource_type' => ['required', Rule::in(['home', 'category'])],
             'start_at' => ['required', 'date_format:Y-m-d\TH:i'],
             'end_at' => ['required', 'date_format:Y-m-d\TH:i'],
             'target_type' => ['required', 'in:all,products,home'],

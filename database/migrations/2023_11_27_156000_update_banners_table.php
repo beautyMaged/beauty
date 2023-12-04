@@ -26,9 +26,9 @@ class UpdateBannersTable extends Migration
             $table->timestamp('end_at');
 
             $table->foreign('seller_id')->references('id')
-                ->on('sellers')->onDelete('cascade');
+                ->on('sellers')->cascadeOnDelete();
             $table->foreign('category_id')->references('id')
-                ->on('categories')->onDelete('cascade');
+                ->on('categories')->cascadeOnDelete();
         });
     }
 

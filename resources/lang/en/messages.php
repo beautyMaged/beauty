@@ -3193,4 +3193,5 @@
     'product with banner' => 'Product with banner',
     'specific product' => 'Specific product',
     'chose product' => 'Chose product',
+    'codes & coupons' => 'Codes and Coupons',
 );

@@ -48,6 +48,12 @@ class Seller extends Authenticatable
         return Category::whereHas('products', fn ($query) => $query->where('user_id', $this->id))->get();
     }
 
+    public function brands()
+    {
+        // belongsToMany through hasMany
+        return Brand::whereHas('products', fn ($query) => $query->where('user_id', $this->id))->get();
+    }
+
     public function wallet()
     {
         return $this->hasOne(SellerWallet::class);

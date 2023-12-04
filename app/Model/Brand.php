@@ -23,7 +23,7 @@ class Brand extends Model
         return $this->where('status', 1);
     }
 
-    public function brandProducts()
+    public function products()
     {
         return $this->hasMany(Product::class)->active();
     }

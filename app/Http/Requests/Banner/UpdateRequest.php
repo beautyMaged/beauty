@@ -26,7 +26,7 @@ class UpdateRequest extends FormRequest
     {
         $positions = [];
         foreach (config('services.banner.positions') as $place => $position)
-            $positions[$place . '_banner_position'] = Rule::in($position['name']);
+            $positions[$place . '_banner_position'] = Rule::in(array_map(fn ($p) => $p['name'], $position));
         return array_merge($positions, [
             'title' => ['string'],
             'description' => ['string'],

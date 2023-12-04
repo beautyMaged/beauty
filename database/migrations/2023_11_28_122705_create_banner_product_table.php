@@ -19,9 +19,9 @@ class CreateBannerProductTable extends Migration
 
             $table->unique(['banner_id', 'product_id']);
             $table->foreign('product_id')->references('id')
-                ->on('products')->onDelete('cascade');
+                ->on('products')->cascadeOnDelete();
             $table->foreign('banner_id')->references('id')
-                ->on('banners')->onDelete('cascade');
+                ->on('banners')->cascadeOnDelete();
         });
     }
 

@@ -123,12 +123,13 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
         );
 
         Route::group(['prefix' => 'coupon', 'as' => 'coupon.'], function () {
-            Route::get('add-new', 'CouponController@add_new')->name('add-new')->middleware('actch');
+            Route::get('list', 'CouponController@list')->name('list')->middleware('actch');
+            Route::get('create', 'CouponController@create')->name('create')->middleware('actch');
             Route::post('store-coupon', 'CouponController@store')->name('store-coupon');
             Route::get('update/{id}', 'CouponController@edit')->name('update')->middleware('actch');
             Route::post('update/{id}', 'CouponController@update');
-            Route::get('quick-view-details', 'CouponController@quick_view_details')->name('quick-view-details');
-            Route::get('status/{id}/{status}', 'CouponController@status_update')->name('status');
+            // Route::get('quick-view-details', 'CouponController@quick_view_details')->name('quick-view-details');
+            Route::post('status', 'CouponController@status')->name('status');
             Route::delete('delete/{id}', 'CouponController@delete')->name('delete');
         });
         Route::group(['prefix' => 'transaction', 'as' => 'transaction.'], function () {

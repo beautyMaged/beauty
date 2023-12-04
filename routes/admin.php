@@ -251,19 +251,19 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             }
         );
 
-        Route::group(
-            ['prefix' => 'coupon', 'as' => 'coupon.', 'middleware' => ['module:promotion_management']],
-            function () {
-                Route::get('add-new', 'CouponController@add_new')->name('add-new')->middleware('actch');
-                Route::post('store-coupon', 'CouponController@store')->name('store-coupon');
-                Route::get('update/{id}', 'CouponController@edit')->name('update')->middleware('actch');
-                Route::post('update/{id}', 'CouponController@update');
-                Route::get('quick-view-details', 'CouponController@quick_view_details')->name('quick-view-details');
-                Route::get('status/{id}/{status}', 'CouponController@status')->name('status');
-                Route::delete('delete/{id}', 'CouponController@delete')->name('delete');
-                Route::post('ajax-get-seller', 'CouponController@ajax_get_seller')->name('ajax-get-seller');
-            }
-        );
+        // Route::group(
+        //     ['prefix' => 'coupon', 'as' => 'coupon.', 'middleware' => ['module:promotion_management']],
+        //     function () {
+        //         Route::get('add-new', 'CouponController@add_new')->name('add-new')->middleware('actch');
+        //         Route::post('store-coupon', 'CouponController@store')->name('store-coupon');
+        //         Route::get('update/{id}', 'CouponController@edit')->name('update')->middleware('actch');
+        //         Route::post('update/{id}', 'CouponController@update');
+        //         Route::get('quick-view-details', 'CouponController@quick_view_details')->name('quick-view-details');
+        //         Route::get('status/{id}/{status}', 'CouponController@status')->name('status');
+        //         Route::delete('delete/{id}', 'CouponController@delete')->name('delete');
+        //         Route::post('ajax-get-seller', 'CouponController@ajax_get_seller')->name('ajax-get-seller');
+        //     }
+        // );
 
         Route::group(['prefix' => 'shiprocket', 'as' => 'shiprocket.'], function () {
             Route::post('login', 'ShipRocketController@login')->name('login');
