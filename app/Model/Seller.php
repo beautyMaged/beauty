@@ -37,6 +37,16 @@ class Seller extends Authenticatable
         return $this->hasMany(Order::class, 'seller_id');
     }
 
+    public function banners()
+    {
+        return $this->hasMany(Banner::class);
+    }
+
+    public function coupons()
+    {
+        return $this->hasMany(Coupon::class);
+    }
+
     public function products()
     {
         return $this->hasMany(Product::class, 'user_id')->where(['added_by' => 'seller']);

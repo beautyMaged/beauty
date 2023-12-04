@@ -29,9 +29,11 @@ class CouponController extends Controller
     }
     public function list(Request $request)
     {
+        /** @var Seller $seller */
+        $seller = auth()->user();
         $query_param = [];
         $search = $request['search'];
-        $coupons = Coupon::whereIn('seller_id', [auth()->user()->id, '0'])
+        $coupons = $seller->coupons()
             ->when(isset($request['search']) && !empty($request['search']), function ($query) use ($request) {
                 $key = explode(' ', $request['search']);
                 foreach ($key as $value) {
@@ -41,10 +43,7 @@ class CouponController extends Controller
                 }
             })
             ->withCount('order')->latest()->paginate(Helpers::pagination_limit())->appends($query_param);
-
-        $customers = User::where('id', '<>', '0')->get();
-
-        return view('seller-views.coupon.list', compact('coupons', 'customers',  'search'));
+        return view('seller-views.coupon.list', compact('coupons',  'search'));
     }
 
     public function store(StoreRequest $request, CouponService $service)
@@ -61,7 +60,9 @@ class CouponController extends Controller
     public function edit($id, CouponService $service)
     {
         $seller = auth()->user();
-        $coupon = $service->parse(Coupon::findOrFail($id));
+        $coupon = Coupon::findOrFail($id);
+        $this->authorize('update', $coupon);
+        $coupon = $service->parse($coupon);
         $view = 'edit';
         return view('seller-views.coupon.form', compact('view', 'seller', 'coupon'));
     }
@@ -70,6 +71,7 @@ class CouponController extends Controller
     {
         $service->request = $request;
         $coupon = Coupon::find($id);
+        $this->authorize('update', $coupon);
         $coupon->update($request->all());
         $coupon->categories()->sync($service->merge('categories'));
         $coupon->products()->sync($service->merge('products'));
@@ -81,6 +83,7 @@ class CouponController extends Controller
     public function status(Request $request)
     {
         $coupon = Coupon::findOrFail($request->id);
+        $this->authorize('update', $coupon);
         $coupon->status = $request->status;
         return $coupon->save() ? response()->json($request->status) : '"error"';
     }
@@ -88,6 +91,7 @@ class CouponController extends Controller
     public function delete($id)
     {
         $coupon = Coupon::findOrFail($id);
+        $this->authorize('delete', $coupon);
         return response()->json($coupon->delete());
     }
 }

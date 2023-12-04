@@ -7,6 +7,7 @@ use App\CPU\ImageManager;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\homeBannerSettingUpdateRequest;
 use App\Model\Banner;
+use App\Model\Seller;
 use App\Model\HomeBannerSetting;
 use App\Model\Translation;
 use Brian2694\Toastr\Facades\Toastr;
@@ -19,18 +20,20 @@ class BannerController extends Controller
 {
     function list(Request $request)
     {
+        /** @var Seller $seller */
+        $seller = auth()->user();
         $query_param = [];
         $search = $request['search'];
         if ($request->has('search')) {
             $key = explode(' ', $request['search']);
-            $banners = Banner::where(function ($q) use ($key) {
+            $banners = $seller->banners()->where(function ($q) use ($key) {
                 foreach ($key as $value) {
                     $q->Where('title', 'like', "%{$value}%");
                 }
             })->orderBy('id', 'desc');
             $query_param = ['search' => $request['search']];
         } else
-            $banners = Banner::orderBy('id', 'desc');
+            $banners = $seller->banners()->orderBy('id', 'desc');
         $banners = $banners->paginate(Helpers::pagination_limit())->appends($query_param);
         return view('seller-views.banner.view', compact('banners', 'search'));
     }
@@ -63,13 +66,15 @@ class BannerController extends Controller
 
     public function edit($id)
     {
-        $banner = Banner::where('id', $id)->first();
+        $banner = Banner::findOrFail($id);
+        $this->authorize('update', $banner);
         return view('seller-views.banner.edit', compact('banner'));
     }
 
     public function update(UpdateRequest $request, $id)
     {
-        $banner = Banner::find($id);
+        $banner = Banner::findOrFail($id);
+        $this->authorize('update', $banner);
         $banner->title = $request->title;
         $banner->description = $request->description;
         $banner->banner_type = $request->{$request->resource_type . '_banner_position'};
@@ -102,7 +107,8 @@ class BannerController extends Controller
 
     public function delete(Request $request)
     {
-        $banner = Banner::find($request->id);
+        $banner = Banner::findOrFail($request->id);
+        $this->authorize('update', $banner);
         ImageManager::delete("banner/{$banner->photo}");
         return response()->json($banner->delete());
     }
