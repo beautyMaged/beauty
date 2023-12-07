@@ -40,15 +40,16 @@ class StaticDataController extends Controller
 
     public function banner($type)
     {
+        $banner = [];
         switch ($type) {
             case 'popUp':
-                return Banner::where(['banner_type' => 'Popup Banner', 'published' => 1])->inRandomOrder()->first();
+                $banner = Banner::where(['banner_type' => 'Popup Banner', 'published' => 1])->inRandomOrder()->first();
             case 'main':
-                return Banner::where(['banner_type' => 'Main Banner', 'published' => 1])->orderBy('id', 'desc')->get();
+                $banner = Banner::where(['banner_type' => 'Main Banner', 'published' => 1])->orderBy('id', 'desc')->get();
             case 'setting':
-                return HomeBannerSetting::first();
+                $banner = HomeBannerSetting::first();
             case 'footerProducts':
-                return Banner::with('product')
+                $banner = Banner::with('product')
                     ->where('resource_type', 'product')
                     ->where(
                         'banner_type',
@@ -62,6 +63,7 @@ class StaticDataController extends Controller
                         return $out;
                     });
         }
+        return response()->json($banner);
     }
 
     public function socialMedia()

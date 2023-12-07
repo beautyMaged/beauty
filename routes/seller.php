@@ -48,6 +48,8 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
         return 'settings';
     })->name('shopify.preferences');
 
+    Route::post('partner', 'PartnerController@store');
+
     /*authenticated*/
     Route::middleware('seller')->group(function () {
 
