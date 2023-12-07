@@ -21,20 +21,28 @@ class UpdateCustomerController extends Controller
     {
         
         $user = Auth::user();
-        $user->email = $request->email;
-        $user->f_name = $request->f_name;
-        $user->l_name = $request->l_name;
-        $user->phone = $request->phone;
+        if (Hash::check($request->password, $user->password)) {
 
-        // Check image is provided
-        if ($request->hasFile('image')) {
-            
-            $imagePath = $request->file('image')->store('images', 'public');
-            $user->image = $imagePath;
+
+            $user->email = $request->email;
+            $user->f_name = $request->f_name;
+            $user->l_name = $request->l_name;
+            $user->phone = $request->phone;
+
+            // Check image is provided
+            if ($request->hasFile('image')) {
+                
+                $imagePath = $request->file('image')->store('images', 'public');
+                $user->image = $imagePath;
+            }
+
+            $user->save();
+            return response()->json(['status' => 'success', 'message' => 'Account data updated successfully'], 200);
+        }else{
+
+            return response()->json(['status' => 'error', 'message' => 'Invalid old password'], 422);
         }
-
-        $user->save();
-        return response()->json(['status' => 'success', 'message' => 'Account data updated successfully'], 200);
+        
 
 
     }

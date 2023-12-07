@@ -25,9 +25,10 @@ class UpdateCustomerRequest extends FormRequest
     {
         
         return [
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|unique:users,email,' . auth()->id(),
             'f_name' => 'required|min:2',
             'l_name' => 'required|min:2',
+            'password' => 'required|min:8',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', 
 
@@ -61,6 +62,9 @@ class UpdateCustomerRequest extends FormRequest
             'image.image' => 'The uploaded file must be an image.',
             'image.mimes' => 'The image must be of type: :mimes.',
             'image.max' => 'The image size must not exceed :max kilobytes.',
+            // password
+            'password.required' => 'The password field is required.',
+            'password.min' => 'The password must be at least :min characters.'
         ];
     }
 }
