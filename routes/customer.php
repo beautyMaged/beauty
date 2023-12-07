@@ -11,7 +11,12 @@
 |
 */
 
+use App\Http\Controllers\Customer\Auth\UpdateCustomerController;
 use Illuminate\Support\Facades\Route;
+
+// Route::get('/',function (){return 7;});
+Route::post('app/customer/updateInfo',[UpdateCustomerController::class,"update"]);
+Route::post('app/customer/updatePassword',[UpdateCustomerController::class,"updatePassword"]);
 
 Route::prefix('app')->group(function () {
     /*Auth::routes();*/
