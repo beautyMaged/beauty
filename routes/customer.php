@@ -30,6 +30,14 @@ Route::prefix('app')->group(function () {
 
     Route::group(['namespace' => 'Customer', 'prefix' => 'customer', 'as' => 'customer.'], function () {
 
+        // routes for addresses
+        Route::resource('shipping-addresses', ShippingAddressController::class);
+        //GET        shipping-addresses ............................... shipping-addresses.index › ShippingAddressController@index
+        //POST       shipping-addresses ............................... shipping-addresses.store › ShippingAddressController@store
+        //GET|HEAD   shipping-addresses/{shipping-address} ............. shipping-addresses.show › ShippingAddressController@show
+        //PUT|PATCH  shipping-addresses/{shipping-address} ............. shipping-addresses.update › ShippingAddressController@update
+        //DELETE     shipping-addresses/{shipping-address} ..............shipping-addresses.destroy › ShippingAddressController@destroy
+
         Route::group(['namespace' => 'Auth', 'prefix' => 'auth', 'as' => 'auth.'], function () {
             Route::get('/code/captcha/{tmp}', 'LoginController@captcha')->name('default-captcha');
             Route::get('login', 'LoginController@login')->name('login');

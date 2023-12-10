@@ -3243,4 +3243,6 @@
   'coupon_updated_successfully' => 'Coupon updated successfully',
   'coupon_deleted_successfully' => 'Coupon deleted successfully',
   'Are_you_sure_delete_this_coupon' => 'هل أنت متأكد من حذف هذا الكوبون',
+  'Yes  Change it!' => 'Yes  Change it!',
+  'Order is already delivered  You can not change it !!' => 'Order is already delivered  You can not change it !!',
 );

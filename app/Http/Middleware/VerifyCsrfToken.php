@@ -27,6 +27,9 @@ class VerifyCsrfToken extends Middleware
         '/seller/zid/webhook',
         '/seller/shopify/webhook',
         "app/customer/updateInfo",
-        "app/customer/updatePassword"
+        "app/customer/updatePassword",
+        '/seller/partner',
+        'app/customer/auth/loginFromModal/',
+        'app/customer/*'
     ];
 }

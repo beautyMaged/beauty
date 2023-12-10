@@ -60,9 +60,9 @@ class User extends Authenticatable
         return $this->belongsTo(User::class, 'customer_id');
     }
 
-    public function shipping()
+    public function shippingAddresses()
     {
-        return $this->belongsTo(ShippingAddress::class, 'shipping_address');
+        return $this->hasMany(ShippingAddress::class, 'customer_id');
     }
 
 }

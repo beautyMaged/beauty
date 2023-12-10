@@ -1336,7 +1336,7 @@ class WebController extends Controller
             // $product->price = Helpers::currency_converter($product->unit_price - Helpers::get_product_discount($product, $product->unit_price));
             $product->priceRange = Helpers::get_price_range($product);
 
-            $categories = $product->categories()->select('id', 'name')->get()->pluck('name', 'id');
+            $categories = $product->categories()->select(['id', 'name'])->get();
             $countOrder = OrderDetail::where('product_id', $product->id)->count();
             $countWishlist = Wishlist::where('product_id', $product->id)->count();
             $relatedProducts = Product::with(['reviews'])->active()->where('user_id', $product->user_id)->where(
@@ -1543,7 +1543,7 @@ class WebController extends Controller
                 $query = Product::with(['reviews'])->active()->where('discount', '!=', 0);
                 break;
             case 'banner':
-                $banner = Banner::find($request['id']);
+                $banner = Banner::findOrFail($request['id']);
                 if ($banner->published == 1) {
                     if ($banner->target == 'products')
                         $query = $banner->products()->with(['reviews'])->active();

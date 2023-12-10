@@ -12,7 +12,6 @@ class UpdateCustomerController extends Controller
 {
     //
     function __construct(){
-        // handle authentication here
         $this->middleware('auth:customer');
     }
 

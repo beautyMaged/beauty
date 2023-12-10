@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddCmFirebaseTokenToUsers extends Migration
+class CreatePartnersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class AddCmFirebaseTokenToUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('cm_firebase_token')->nullable();
+        Schema::create('partners', function (Blueprint $table) {
+            $table->id();
+            $table->json('data');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +27,6 @@ class AddCmFirebaseTokenToUsers extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('partners');
     }
 }
