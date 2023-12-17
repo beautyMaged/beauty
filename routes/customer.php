@@ -12,6 +12,7 @@
 */
 
 use App\Http\Controllers\Customer\Auth\UpdateCustomerController;
+// use App\Http\Controllers\Customer\OrderController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/',function (){return 7;});
@@ -30,6 +31,16 @@ Route::prefix('app')->group(function () {
 
     Route::group(['namespace' => 'Customer', 'prefix' => 'customer', 'as' => 'customer.'], function () {
 
+        // Route::get('orders', 'OrderController@index');
+        Route::resource('orders', OrderController::class);
+
+        // notifications
+        Route::post('allow_notifications', 'NotificationController@allow_notifications');
+        Route::post('block_notifications', 'NotificationController@block_notifications');
+
+        // refund request 
+        Route::post('refund', 'RefundRequestController@store');
+
         // routes for addresses
         Route::resource('shipping-addresses', ShippingAddressController::class);
         //GET        shipping-addresses ............................... shipping-addresses.index › ShippingAddressController@index
@@ -44,6 +55,11 @@ Route::prefix('app')->group(function () {
             Route::post('login', 'LoginController@submit');
             Route::post('loginFromModal', 'LoginController@submitFromModal')->name('loginFromModal');
             Route::get('logout', 'LoginController@logout')->name('logout');
+
+            // google authentication
+            Route::get('google/redirect', 'GoogleLoginController@redirect');
+             
+            Route::get('google/callback', 'GoogleLoginController@callback');
 
             Route::get('sign-up', 'RegisterController@register')->name('sign-up');
             Route::post('sign-up', 'RegisterController@submit');
