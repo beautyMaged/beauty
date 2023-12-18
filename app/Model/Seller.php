@@ -71,4 +71,7 @@ class Seller extends Authenticatable
     public function sellerPolicy(){
         return $this->hasOne(SellerPolicy::class);
     }
+    public function country(){
+        return $this->belongsTo(Country::class);
+    }
 }
