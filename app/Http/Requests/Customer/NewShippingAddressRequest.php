@@ -27,12 +27,11 @@ class NewShippingAddressRequest extends FormRequest
             'is_billing' => 'sometimes|nullable|boolean',
             'zip' => 'required|nullable|string',
             'apartment_number' => 'required|nullable|numeric',
-            'country' => 'required|string',
-            'city' => 'required|string',
-            'zip' => 'required|numeric',
-            'street_address' => 'required|string',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
+            'head_country' => 'required|string',
+            'head_city' => 'required|string',
+            'head_address' => 'required|string',
+            'head_new_lat' => 'required|numeric',
+            'head_new_long' => 'required|numeric',
             'default_address'=>'required|nullable|boolean'
         ];
     }

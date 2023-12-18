@@ -23,6 +23,16 @@ class RefundRequest extends Model
         'payment_info'=>'string',
         'change_by'=>'string'
     ];
+    protected $fillable=[
+        'order_details_id',
+        'customer_id',
+        'status',
+        'amount',
+        'product_id',
+        'order_id',
+        'refund_reason',
+        'bill_image'
+    ];
 
     public function customer()
     {

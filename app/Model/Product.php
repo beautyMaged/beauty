@@ -141,7 +141,10 @@ class Product extends Model
     {
         return $this->belongsToMany(Tag::class);
     }
-
+    public function options()
+    {
+        return $this->hasMany(Option::class, 'product_id');
+    }
     public function getNameAttribute($name)
     {
         if (strpos(url()->current(), '/admin') || strpos(url()->current(), '/seller'))

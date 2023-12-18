@@ -69,7 +69,7 @@ class AppServiceProvider extends ServiceProvider
             \App\CPU\Helpers::currency_load();
 
             View::share(['web_config' => $web_config, 'language' => $language]);
-
+            View::addLocation(resource_path('views/email-templates'));
             Schema::defaultStringLength(191);
         } catch (\Exception $ex) {
 

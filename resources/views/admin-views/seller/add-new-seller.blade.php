@@ -116,6 +116,44 @@
                 </div>
             </div>
         </div>
+    {{-- start policies --}}
+    <div class="card mt-3">
+        <div class="card-body">
+            <input type="hidden" name="status" value="approved">
+            <h5 class="mb-0 text-capitalize d-flex align-items-center gap-2 border-bottom pb-3 mb-4 pl-4">
+                <img src="{{asset('/assets/back-end/img/seller-information.png')}}" class="mb-1" alt="">
+                {{-- {{\App\CPU\translate('account_information')}} --}}
+                سياسات التاجر
+            </h5>
+            <div class="row">
+                <div class="col-lg-4 form-group">
+                    <h5 class="title-color d-flex gap-1 align-items-center">{{--\App\CPU\translate('email')--}}وقت شحن الطلبية إلى وصولها للعميل</h5>
+{{--                        <input type="email" class="form-control form-control-user" id="exampleInputEmail" name="email" value="{{old('email')}}" placeholder="{{\App\CPU\translate('Ex')}}: Jhone@company.com" required>--}}
+                    <div class="d-flex ">
+                        <label class="px-2" for="shipping_min">من</label>
+                        <input class="w-25 form-control form-control-user" name="shipping_min" type="number" min=1 value="{{old('shipping_min')}}" required>
+                        <label class="px-2" for="shipping_max">إلى</label>
+                        <input class="w-25 form-control form-control-user" name="shipping_max" type="number" min=1 value="{{old('shipping_max')}}" required>
+                        <span class="px-2">يوم عمل</span>
+                    </div>
+                </div>
+                
+                <div class="col-lg-8 form-group">
+                    <h5 for="exampleInputPassword" class="title-color d-flex gap-1 align-items-center">{{--\App\CPU\translate('password')--}}سياسة الاسترجاع والاستبدال</h5>
+                    <div class="d-flex">
+                        <label class="px-1" for="refund_max">السماح باسترجاع السلعة في خلال</label>
+                        <input class="w-25 form-control form-control-user" name="refund_max" type="number" value="{{old('refund_max')}}" required>
+                        <span class="">يوم عمل</span>
+                        <label class="px-1" for="substitution_max">السماح باستبدال السلعة في خلال</label>
+                        <input class="w-25 form-control form-control-user" name="substitution_max" type="number" value="{{old('substitution_max')}}" required>
+                        <span class="">يوم عمل</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- end policies --}}
+
 
         <div class="card mt-3">
             <div class="card-body">

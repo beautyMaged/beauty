@@ -59,8 +59,8 @@ class ShippingAddressController extends Controller
         $customer_id = Auth::user()->id;
 
         // if address already exists
-        $existingAddress = ShippingAddress::where('latitude', $request->latitude)
-                                        ->where('longitude', $request->longitude)
+        $existingAddress = ShippingAddress::where('latitude', $request->head_new_lat)
+                                        ->where('longitude', $request->head_new_long)
                                         ->first();
 
         if ($existingAddress) {
@@ -90,11 +90,11 @@ class ShippingAddressController extends Controller
             'is_billing' => $request->is_billing,
             'zip' => $request->zip,
             'apartment_number' => $request->apartment_number,
-            'country' => $request->country,
-            'city' => $request->city,
-            'street_address' => $request->street_address,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
+            'country' => $request->head_country,
+            'city' => $request->head_city,
+            'street_address' => $request->head_address,
+            'latitude' => $request->head_new_lat,
+            'longitude' => $request->head_new_long,
             'default_address' => $is_default,
             'customer_id' => $customer_id,
         ]);

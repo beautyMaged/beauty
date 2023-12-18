@@ -19,6 +19,7 @@ class OrderDetail extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'refund_request'=>'integer',
+        'variant_id'=>'integer',
     ];
 
     public function product()
@@ -50,4 +51,9 @@ class OrderDetail extends Model
     {
         return $this->belongsTo(ShippingAddress::class, 'shipping_address');
     }
+    public function variant()
+    {
+        return $this->belongsTo(Variant::class, 'variant_id');
+    }
+
 }

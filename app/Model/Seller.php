@@ -68,4 +68,7 @@ class Seller extends Authenticatable
     {
         return $this->hasOne(SellerWallet::class);
     }
+    public function sellerPolicy(){
+        return $this->hasOne(SellerPolicy::class);
+    }
 }

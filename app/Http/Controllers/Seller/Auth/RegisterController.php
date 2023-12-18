@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use App\CPU\Helpers;
 use Illuminate\Support\Facades\Session;
 use App\Model\Cron;
+use App\Model\SellerPolicy;
 
 use function App\CPU\translate;
 
@@ -20,17 +21,18 @@ class RegisterController extends Controller
 {
     public function create()
     {
-        $business_mode = Helpers::get_business_settings('business_mode');
-        $seller_registration = Helpers::get_business_settings('seller_registration');
-        if ((isset($business_mode) && $business_mode == 'single') || (isset($seller_registration) && $seller_registration == 0)) {
-            Toastr::warning(translate('access_denied!!'));
-            return redirect('/');
-        }
+        // $business_mode = Helpers::get_business_settings('business_mode');
+        // $seller_registration = Helpers::get_business_settings('seller_registration');
+        // if ((isset($business_mode) && $business_mode == 'single') || (isset($seller_registration) && $seller_registration == 0)) {
+        //     Toastr::warning(translate('access_denied!!'));
+        //     return redirect('/');
+        // }
         return view('seller-views.auth.register');
     }
 
     public function store(Request $request)
     {
+        // dd($request);
         $this->validate($request, [
             'image' => 'required|mimes:jpg,jpeg,png,gif',
             'logo' => 'required|mimes:jpg,jpeg,png,gif',
@@ -42,7 +44,13 @@ class RegisterController extends Controller
             'shop_name' => 'required',
             'phone' => 'required',
             'password' => 'required|min:8',
-            'platform' => 'in:shopify,salla,zid'
+            'platform' => 'in:shopify,salla,zid',
+            'shipping_min'=>'required|integer|min:1',
+            'shipping_max'=>'required|integer|min:1',
+            'refund_max'=>'required|integer',
+            'substitution_max'=>'required|integer',
+
+
         ]);
 
         if ($request['from_submit'] != 'admin') {
@@ -94,6 +102,14 @@ class RegisterController extends Controller
             $shop->image = ImageManager::upload('shop/', 'png', $request->file('logo'));
             $shop->banner = ImageManager::upload('shop/banner/', 'png', $request->file('banner'));
             $shop->save();
+
+            $seller->sellerPolicy()->create([
+                'shipping_min' => $request->shipping_min,
+                'shipping_max' => $request->shipping_max,
+                'refund_max' => $request->refund_max,
+                'substitution_max' => $request->substitution_max,
+            ]);
+        
 
             DB::table('seller_wallets')->insert([
                 'seller_id' => $seller->id,

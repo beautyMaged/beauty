@@ -77,12 +77,13 @@ class WebController extends Controller
         //        return $request;
         if (auth('customer')->check()) {
             $user = auth('customer')->user();
-            $user->country = $request->head_country;
-            $user->city = $request->head_city;
-            $user->street_address = $request->head_address;
-            $user->lat = $request->head_new_lat;
-            $user->long = $request->head_new_long;
-            $user->save();
+            // $user->country = $request->head_country;
+            // $user->city = $request->head_city;
+            // $user->street_address = $request->head_address;
+            // $user->lat = $request->head_new_lat;
+            // $user->long = $request->head_new_long;
+            // $user->save();
+            return redirect()->route('shipping-addresses.store');
         } else {
             session::forget('current_location');
             session::forget('current_city');
@@ -105,18 +106,20 @@ class WebController extends Controller
     public function confirmLocationAjax(Request $request)
     {
         if (auth('customer')->check()) {
-            $user = auth('customer')->user();
-            $user->country = $request->country;
-            $user->city = $request->city;
-            $user->street_address = $request->address;
-            $user->lat = $request->new_lat;
-            $user->long = $request->new_long;
-            $user->save();
+            // $user = auth('customer')->user();
+            // $user->country = $request->country;
+            // $user->city = $request->city;
+            // $user->street_address = $request->address;
+            // $user->lat = $request->new_lat;
+            // $user->long = $request->new_long;
+            // $user->save();
             // Toastr::success(translate('Location Confirmed'));
-            return response()->json([
-                'success' => true,
-                'message' => translate('Location Confirmed')
-            ]);
+            // return response()->json([
+            //     'success' => true,
+            //     'message' => translate('Location Confirmed')
+            // ]);
+            return redirect()->route('shipping-addresses.store');
+
         }
         session::forget('current_location');
         session::forget('current_city');
