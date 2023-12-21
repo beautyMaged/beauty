@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\Order;
 use App\Http\Resources\OrdersResource;
+use Exception;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Validation\ValidationException;
@@ -15,7 +17,7 @@ class OrderController extends Controller
 {
     function __construct(){
 
-        $this->middleware('auth:customer');
+        // $this->middleware('auth:customer');
     }
     /**
      * Display a listing of the resource.
@@ -143,7 +145,24 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //update the status of the order to delivered
+        $order = Order::where("customer_id", Auth::user()->id)->find($id);
+
+        if ($order) {
+            // $orderDetails = $order->details;
+            try{
+                $order->order_status = 'delivered';
+                $order->save();
+            }catch(Exception $e){
+                return response()->json(['error'=>$e->getMessage()],500);
+            }
+            return response()->json([
+                "message" => "Order edited successfully"
+            ], 200);
+        } else {
+            return response()->json(["message" => "Order not found"], 404);
+        }
+
     }
 
     /**
@@ -154,6 +173,24 @@ class OrderController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //delete the order if it was within 24 hours
+        $order = Order::where("customer_id", 5)->find($id);
+
+        if ($order) {
+            $createdAt = Carbon::parse($order->created_at);
+            $currentTime = Carbon::now();
+            $hoursDifference = $createdAt->diffInHours($currentTime);
+    
+            if ($hoursDifference <= 24) {
+
+                $order->delete();
+    
+                return response()->json(['message' => 'Order deleted successfully']);
+            } else {
+                return response()->json(['message' => 'Order is older than 24 hours']);
+            }
+        } else {
+            return response()->json(["message" => "Order not found"], 404);
+        }
     }
 }

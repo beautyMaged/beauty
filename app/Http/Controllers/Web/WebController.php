@@ -53,6 +53,7 @@ use Gregwar\Captcha\CaptchaBuilder;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
+use Exception;
 use Illuminate\Support\Facades\Mail;
 use Facade\FlareClient\Http\Response;
 use Illuminate\Support\Facades\Session;
@@ -72,75 +73,75 @@ class WebController extends Controller
         return redirect()->route('home');
     }
 
-    public function confirmLocation(Request $request)
-    {
-        //        return $request;
-        if (auth('customer')->check()) {
-            $user = auth('customer')->user();
-            // $user->country = $request->head_country;
-            // $user->city = $request->head_city;
-            // $user->street_address = $request->head_address;
-            // $user->lat = $request->head_new_lat;
-            // $user->long = $request->head_new_long;
-            // $user->save();
-            return redirect()->route('shipping-addresses.store');
-        } else {
-            session::forget('current_location');
-            session::forget('current_city');
-            session::forget('current_country');
-            session::forget('new_lat');
-            session::forget('new_long');
+    // public function confirmLocation(Request $request)
+    // {
+    //     //        return $request;
+    //     if (auth('customer')->check()) {
+    //         $user = auth('customer')->user();
+    //         // $user->country = $request->head_country;
+    //         // $user->city = $request->head_city;
+    //         // $user->street_address = $request->head_address;
+    //         // $user->lat = $request->head_new_lat;
+    //         // $user->long = $request->head_new_long;
+    //         // $user->save();
+    //         return redirect()->route('shipping-addresses.store');
+    //     } else {
+    //         session::forget('current_location');
+    //         session::forget('current_city');
+    //         session::forget('current_country');
+    //         session::forget('new_lat');
+    //         session::forget('new_long');
 
-            session::put('current_location', $request->head_address);
-            session::put('current_city', $request->head_city);
-            session::put('current_country', $request->head_country);
-            session::put('new_lat', $request->head_new_lat);
-            session::put('new_long', $request->head_new_long);
-            //                return $request->city . session('current_city');
+    //         session::put('current_location', $request->head_address);
+    //         session::put('current_city', $request->head_city);
+    //         session::put('current_country', $request->head_country);
+    //         session::put('new_lat', $request->head_new_lat);
+    //         session::put('new_long', $request->head_new_long);
+    //         //                return $request->city . session('current_city');
 
-        }
-        Toastr::success(translate('Location Confirmed'));
-        return back();
-    }
+    //     }
+    //     Toastr::success(translate('Location Confirmed'));
+    //     return back();
+    // }
 
-    public function confirmLocationAjax(Request $request)
-    {
-        if (auth('customer')->check()) {
-            // $user = auth('customer')->user();
-            // $user->country = $request->country;
-            // $user->city = $request->city;
-            // $user->street_address = $request->address;
-            // $user->lat = $request->new_lat;
-            // $user->long = $request->new_long;
-            // $user->save();
-            // Toastr::success(translate('Location Confirmed'));
-            // return response()->json([
-            //     'success' => true,
-            //     'message' => translate('Location Confirmed')
-            // ]);
-            return redirect()->route('shipping-addresses.store');
+    // public function confirmLocationAjax(Request $request)
+    // {
+    //     if (auth('customer')->check()) {
+    //         // $user = auth('customer')->user();
+    //         // $user->country = $request->country;
+    //         // $user->city = $request->city;
+    //         // $user->street_address = $request->address;
+    //         // $user->lat = $request->new_lat;
+    //         // $user->long = $request->new_long;
+    //         // $user->save();
+    //         // Toastr::success(translate('Location Confirmed'));
+    //         // return response()->json([
+    //         //     'success' => true,
+    //         //     'message' => translate('Location Confirmed')
+    //         // ]);
+    //         return redirect()->route('shipping-addresses.store');
 
-        }
-        session::forget('current_location');
-        session::forget('current_city');
-        session::forget('current_country');
-        session::forget('new_lat');
-        session::forget('new_long');
+    //     }
+    //     session::forget('current_location');
+    //     session::forget('current_city');
+    //     session::forget('current_country');
+    //     session::forget('new_lat');
+    //     session::forget('new_long');
 
-        session::put('current_location', $request->address);
-        session::put('current_city', $request->city);
-        session::put('current_country', $request->country);
-        session::put('new_lat', $request->new_lat);
-        session::put('new_long', $request->new_long);
+    //     session::put('current_location', $request->address);
+    //     session::put('current_city', $request->city);
+    //     session::put('current_country', $request->country);
+    //     session::put('new_lat', $request->new_lat);
+    //     session::put('new_long', $request->new_long);
 
-        //                return 'test';
-        // Toastr::success(translate('Location Confirmed'));
+    //     //                return 'test';
+    //     // Toastr::success(translate('Location Confirmed'));
 
-        return response()->json([
-            'success' => true,
-            'message' => translate('Location Confirmed')
-        ]);
-    }
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => translate('Location Confirmed')
+    //     ]);
+    // }
 
     public function level1_products()
     {
@@ -2382,4 +2383,75 @@ class WebController extends Controller
         //        dd($web_url);
         return redirect($web_url);
     }
+    // function that filter products with their origin country
+    private function product_origin_filter($country_code, $products){
+        
+    try{    
+        if($country_code == 'imported'){
+            return $products->filter(function($product){
+                return $product->seller->country->code != 'SU'; 
+            });
+        }else if($country_code){
+            return $products->filter(function($product){
+                return $product->seller->country->code == $country_code; 
+            });
+        }else{
+            return $products;
+        }
+    }catch(Exception $e){
+            return response()->json(["error"=>$e->getMessage()],500);
+    }
+
+    }
+
+    // function that return minimum and maimum prices of a product
+    private function min_and_max($products) {
+        try {
+            if(empty($products)){
+                return [];
+            }
+            $prices = $products->pluck('unit_price'); 
+    
+            // Sort the prices array
+            sort($prices);
+    
+            // Calculate the minimum, maximum, and step
+            $min = reset($prices);
+            $max = end($prices);
+            $step = ($max - $min) / 5;
+    
+            $min = round($min);
+            $max = round($max);
+    
+            // Calculate the price categories
+            $price_categories = [];
+            for ($i = 1; $i < 6; $i++) {
+                $categ = round($min + ($step * $i));
+                array_push($price_categories, $categ);
+            }
+    
+            return array_unique($price_categories);
+        } catch (Exception $e) {
+            return response()->json(["error" => $e->getMessage()], 500);
+        }
+    }
+
+    // products of customized prices
+    private function products_between_prices($products, $min = 0, $max = 0){
+        if(empty($products) || $min == $max){
+            return [];
+        }
+        try{
+            $choosed_products = $products->
+                filter(function($product){
+                        if($product->unit_price >= $min && $product->unit_price <= $max){//change the price later
+                            return $product;
+                        }
+                });
+            return $choosed_products;
+        }catch (Exception $e) {
+            return response()->json(["error" => $e->getMessage()], 500);
+        }
+    }
+    
 }

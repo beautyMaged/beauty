@@ -39,7 +39,8 @@ Route::prefix('app')->group(function () {
         Route::post('block_notifications', 'NotificationController@block_notifications');
 
         // refund request 
-        Route::post('refund', 'RefundRequestController@store');
+        // Route::post('refund', 'RefundRequestController@store');
+        Route::resource('refundRequests', RefundRequestController::class);
 
         // routes for addresses
         Route::resource('shipping-addresses', ShippingAddressController::class);

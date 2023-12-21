@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Customer\RefundRequestRequest;
+use App\Http\Resources\RefundRequestResource;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SellerRefundRequestMail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Model\RefundRequest;
 use App\Model\OrderDetail;
 use App\Model\Seller;
@@ -27,7 +30,9 @@ class RefundRequestController extends Controller
      */
     public function index()
     {
-        //
+        $refundRequests = RefundRequest::all();
+        // return $refundRequests;
+        return response()->json(RefundRequestResource::collection($refundRequests)[0]);
     }
 
     /**
@@ -68,6 +73,7 @@ class RefundRequestController extends Controller
         $billImage = $request->file('bill_image');
         $billImagePath = $billImage->store('refund_request_images', 'public');
         try{
+            DB::beginTransaction();
             RefundRequest::create([
                 'order_details_id' => $order_details->id,
                 'customer_id'=> $customerId,
@@ -79,6 +85,8 @@ class RefundRequestController extends Controller
                 'refund_request_reason'=> $request->refund_request_reason,
                 'bill_image'=> $billImagePath
             ]);
+            $order_details->order->order_status = 'refundReview';
+            $order_details->order->save();
             // Send email to the seller
             Mail::to($seller->email)->send(new SellerRefundRequestMail([
                 'seller' => $seller,
@@ -92,8 +100,10 @@ class RefundRequestController extends Controller
                 'refund_request_reason'=> $request->refund_request_reason,
                 'bill_image'=> $billImagePath
             ]));
+            DB::commit();
             return response()->json(['message'=>'refund request has been submitted, under review'],200);
         }catch(Exception $e){
+            DB::rollBack();
             return response()->json(['message'=>'database error', 'error'=>$e->getMessage()],500);
 
         }
@@ -108,7 +118,17 @@ class RefundRequestController extends Controller
      */
     public function show($id)
     {
-        //
+        
+        $refundRequest = RefundRequest::where("customer_id", Auth::user()->id)->find($id);
+        if ($refundRequest) {
+            $resource = new RefundRequestResource($refundRequest);
+            return response()->json([
+                "message" => "request found successfully",
+                "refund_request" => $resource
+            ], 200);
+        } else {
+            return response()->json(["message" => "Refund request not found"], 404);
+        }
     }
 
     /**

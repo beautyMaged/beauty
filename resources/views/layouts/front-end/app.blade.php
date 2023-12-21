@@ -130,7 +130,7 @@
 <div class="overlay">
 
 </div>
-@include('layouts.front-end.partials._header')
+{{-- @include('layouts.front-end.partials._header') --}}
 <!-- Page title-->
 
 <!-- Page Content-->

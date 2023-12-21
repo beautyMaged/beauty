@@ -55,5 +55,8 @@ class OrderDetail extends Model
     {
         return $this->belongsTo(Variant::class, 'variant_id');
     }
+    public function refundRequest(){
+        return $this->hasOne(RefundRequest::class, 'order_details_id');
+    }
 
 }

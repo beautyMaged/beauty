@@ -54,11 +54,20 @@ class OrdersResource extends JsonResource
                         'brand' => $detail->variant->values[0]->option->product->brand->name,
                         'refundable' => $detail->variant->values[0]->option->product->refundable,
                         'name' => $detail->variant->values[0]->option->product->name,
-                        'images' => $detail->variant->values[0]->option->product->images];
-                        
+                        'images' => $detail->variant->values[0]->option->product->images,
+                        'refund_status' =>$this->checkRefund($detail),
+                        'seller_policies'=>$detail->seller->sellerPolicy];
+                     
                 }),
                 
             
         ];
+    }
+    private function checkRefund($details){
+        if($details->refundRequest){
+            return $details->refundRequest->status;
+        }else{
+            return null;
+        }
     }
 }

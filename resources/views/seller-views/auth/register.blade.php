@@ -77,6 +77,76 @@
                 </div>
             </div>
         </div>
+        {{-- start policies --}}
+        {{-- start policies --}}
+        <div class="card mt-3 __card">
+            <div class="card-body">
+                <input type="hidden" name="status" value="approved">
+                <h5 class="mb-0 text-capitalize d-flex align-items-center gap-2 border-bottom pb-3 mb-4 pl-4">
+                    <img src="{{asset('/assets/back-end/img/seller-information.png')}}" class="m-1" alt="">
+                    {{-- {{\App\CPU\translate('account_information')}} --}}
+                    سياسات التاجر
+                </h5>
+                <div class="d-flex justify-content-between">
+                    <div class="col-lg-6 form-group w-100">
+                        <h5 class="title-color d-flex gap-1 align-items-center">{{--\App\CPU\translate('email')--}}وقت شحن الطلبية إلى وصولها للعميل</h5>
+                        <div class="">
+                            <label class="px-2" for="shipping_min">من</label>
+                            <input class="w-100 form-control form-control-user" name="shipping_min" type="number" min=1 value="{{old('shipping_min')}}" required>
+                            <label class="px-2" for="shipping_max">إلى</label>
+                            <input class="w-100 form-control form-control-user" name="shipping_max" type="number" min=1 value="{{old('shipping_max')}}" required>
+                            <span class="px-2">يوم عمل</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <h5 for="exampleInputPassword" class="title-color d-flex gap-1 align-items-center">{{--\App\CPU\translate('password')--}}سياسة الاسترجاع والاستبدال</h5>
+                        <div class="">
+                            <label class="px-1" for="refund_max">السماح باسترجاع السلعة في خلال</label>
+                            <input class="w-50 form-control form-control-user" name="refund_max" type="number" value="{{old('refund_max')}}" required>
+                            <span class="">يوم عمل</span>
+                            <label class="px-1" for="substitution_max">السماح باستبدال السلعة في خلال</label>
+                            <input class="w-50 form-control form-control-user" name="substitution_max" type="number" value="{{old('substitution_max')}}" required>
+                            <span class="">يوم عمل</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-8 form-group">
+                        <h5 class="title-color d-flex gap-1 align-items-center">مصدر منتجات التاجر</h5>
+                        <div class="d-flex">
+                            <select id="productTypeSelect" name="productType" class="form-control form-control-user mx-2" onchange="handleProductTypeChange()">
+                                <option value="local">محلي</option>
+                                <option value="imported">مستورد</option>
+                            </select>
+                            <div id="countrySelectContainer">
+                                <select id="countrySelect" name="country" class="d-none form-control form-control-user">
+                                    @foreach (App\Model\Country::all() as $country)
+                                        <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <script>
+                    function handleProductTypeChange() {
+                        var selectedValue = $('#productTypeSelect').val();
+                        var countrySelectContainer = $('#countrySelectContainer');
+                
+                        if (selectedValue === 'imported') {
+                            $('#countrySelect').removeClass('d-none');
+                        } else {
+                            $('#countrySelect').addClass('d-none');
+                        }
+                    }
+                </script>
+                
+                
+            </div>
+        </div>
+        {{-- end policies --}}
+        {{-- end policies --}}
         <div class="card __card">
             <div class="card-header">
                 <h5 class="card-title m-0">
@@ -144,6 +214,19 @@
                         </div>
                     </div>
                     @endif
+                    <div class="col-sm-6">
+                        
+                        <div class="form-group">
+                            <div class="custom-file">
+                                <label for="platform" >اختر نوع المتجر</label>
+                                <select name="platform" class="form-control form-control-user">
+                                    <option value="shopify">shopify</option>
+                                    <option value="salla">salla</option>
+                                    <option value="zid">zid</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-sm-12">
                         <div class="form-group mb-0 d-flex flex-wrap justify-content-between">
                             <label class="form-group mb-1 d-flex align-items-center">

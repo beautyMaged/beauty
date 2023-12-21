@@ -49,6 +49,8 @@ class RegisterController extends Controller
             'shipping_max'=>'required|integer|min:1',
             'refund_max'=>'required|integer',
             'substitution_max'=>'required|integer',
+            'productType' => 'required|string',
+            'country'=>'required|integer',
 
 
         ]);
@@ -91,6 +93,7 @@ class RegisterController extends Controller
             $seller->image = ImageManager::upload('seller/', 'png', $request->file('image'));
             $seller->password = bcrypt($request->password);
             $seller->status = $request->status == 'approved' ? 'approved' : "pending";
+            $seller->country_id = $request->country ?? 1;
             $seller->save();
 
             $shop = new Shop();

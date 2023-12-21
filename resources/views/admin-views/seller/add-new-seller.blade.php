@@ -128,7 +128,7 @@
             <div class="row">
                 <div class="col-lg-4 form-group">
                     <h5 class="title-color d-flex gap-1 align-items-center">{{--\App\CPU\translate('email')--}}وقت شحن الطلبية إلى وصولها للعميل</h5>
-{{--                        <input type="email" class="form-control form-control-user" id="exampleInputEmail" name="email" value="{{old('email')}}" placeholder="{{\App\CPU\translate('Ex')}}: Jhone@company.com" required>--}}
+                {{--<input type="email" class="form-control form-control-user" id="exampleInputEmail" name="email" value="{{old('email')}}" placeholder="{{\App\CPU\translate('Ex')}}: Jhone@company.com" required>--}}
                     <div class="d-flex ">
                         <label class="px-2" for="shipping_min">من</label>
                         <input class="w-25 form-control form-control-user" name="shipping_min" type="number" min=1 value="{{old('shipping_min')}}" required>
@@ -150,6 +150,38 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-lg-4 form-group">
+                    <h5 class="title-color d-flex gap-1 align-items-center">مصدر منتجات التاجر</h5>
+                    <div class="d-flex">
+                        <select id="productTypeSelect" name="productType" class="form-control form-control-user mx-2" onchange="handleProductTypeChange()">
+                            <option value="local">محلي</option>
+                            <option value="imported">مستورد</option>
+                        </select>
+                        <div id="countrySelectContainer">
+                            <select id="countrySelect" name="country" class="d-none form-control form-control-user">
+                                @foreach (App\Model\Country::all() as $country)
+                                    <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <script>
+                function handleProductTypeChange() {
+                    var selectedValue = $('#productTypeSelect').val();
+                    var countrySelectContainer = $('#countrySelectContainer');
+            
+                    if (selectedValue === 'imported') {
+                        $('#countrySelect').removeClass('d-none');
+                    } else {
+                        $('#countrySelect').addClass('d-none');
+                    }
+                }
+            </script>
+            
         </div>
     </div>
     {{-- end policies --}}

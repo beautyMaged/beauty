@@ -11,6 +11,10 @@ use App\User;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Brian2694\Toastr\Facades\Toastr;
+use function App\CPU\translate;
+
 
 
 class ShippingAddressController extends Controller
@@ -225,5 +229,76 @@ class ShippingAddressController extends Controller
         }
         
         return response()->json(['message' => 'address deleted successfully'], 200);
+    }
+    // copied///////////////////////////////////////////////////////////////////////
+    public function confirmLocation(NewShippingAddressRequest $request)
+    {
+        //        return $request;
+        if (auth('customer')->check()) {
+            $user = auth('customer')->user();
+            // $user->country = $request->head_country;
+            // $user->city = $request->head_city;
+            // $user->street_address = $request->head_address;
+            // $user->lat = $request->head_new_lat;
+            // $user->long = $request->head_new_long;
+            // $user->save();
+            $this->store($request);
+        } else {
+            session::forget('current_location');
+            session::forget('current_city');
+            session::forget('current_country');
+            session::forget('new_lat');
+            session::forget('new_long');
+
+            session::put('current_location', $request->head_address);
+            session::put('current_city', $request->head_city);
+            session::put('current_country', $request->head_country);
+            session::put('new_lat', $request->head_new_lat);
+            session::put('new_long', $request->head_new_long);
+            //                return $request->city . session('current_city');
+
+        }
+        Toastr::success(translate('Location Confirmed'));
+        return back();
+    }
+
+    // copied //////////////////////////////////////////////////////////////////////////////////
+    public function confirmLocationAjax(NewShippingAddressRequest $request)
+    {
+        if (auth('customer')->check()) {
+            // $user = auth('customer')->user();
+            // $user->country = $request->country;
+            // $user->city = $request->city;
+            // $user->street_address = $request->address;
+            // $user->lat = $request->new_lat;
+            // $user->long = $request->new_long;
+            // $user->save();
+            // Toastr::success(translate('Location Confirmed'));
+            // return response()->json([
+            //     'success' => true,
+            //     'message' => translate('Location Confirmed')
+            // ]);
+            $this->store($request);
+
+        }
+        session::forget('current_location');
+        session::forget('current_city');
+        session::forget('current_country');
+        session::forget('new_lat');
+        session::forget('new_long');
+
+        session::put('current_location', $request->address);
+        session::put('current_city', $request->city);
+        session::put('current_country', $request->country);
+        session::put('new_lat', $request->new_lat);
+        session::put('new_long', $request->new_long);
+
+        //                return 'test';
+        // Toastr::success(translate('Location Confirmed'));
+
+        return response()->json([
+            'success' => true,
+            'message' => translate('Location Confirmed')
+        ]);
     }
 }

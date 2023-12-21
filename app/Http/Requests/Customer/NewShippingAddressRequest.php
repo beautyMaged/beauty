@@ -25,7 +25,7 @@ class NewShippingAddressRequest extends FormRequest
     {
         return [
             'is_billing' => 'sometimes|nullable|boolean',
-            'zip' => 'required|nullable|string',
+            'zip' => 'required|nullable|numeric',
             'apartment_number' => 'required|nullable|numeric',
             'head_country' => 'required|string',
             'head_city' => 'required|string',

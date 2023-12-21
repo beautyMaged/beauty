@@ -12,6 +12,7 @@
  */
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Customer\ShippingAddressController;
 
 Route::prefix('app')->group(function () {
 
@@ -30,7 +31,9 @@ Route::prefix('app')->group(function () {
         Route::get('translate/{locale}', 'translate');
         Route::get('banner/{type}', 'banner');
     });
-
+    Route::resource('countries',CountryController::class);
+    Route::post('confirm-location', [ShippingAddressController::class,'confirmLocation'])->name('confirm.location');
+    Route::post('confirm-location-ajax', [ShippingAddressController::class,'confirmLocationAjax'])->name('confirm.location.ajax');
     //for maintenance mode
     Route::get('maintenance-mode', 'Web\WebController@maintenance_mode')->name('maintenance-mode');
 
@@ -56,8 +59,8 @@ Route::prefix('app')->group(function () {
         Route::get('/', 'WebController@home')->name('home');
 
         Route::get('static-page/{id}', 'WebController@staticPage')->name('static.page');
-        Route::post('confirm-location', 'WebController@confirmLocation')->name('confirm.location');
-        Route::post('confirm-location-ajax', 'WebController@confirmLocationAjax')->name('confirm.location.ajax');
+        // Route::post('confirm-location', 'WebController@confirmLocation')->name('confirm.location');
+        // Route::post('confirm-location-ajax', 'WebController@confirmLocationAjax')->name('confirm.location.ajax');
 
         Route::get('quick-view', 'WebController@quick_view')->name('quick-view');
         Route::get('searched-products', 'WebController@searched_products')->name('searched-products');
