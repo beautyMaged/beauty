@@ -49,7 +49,14 @@
                                         id="code" placeholder="{{ \App\CPU\translate('Ex: EID100') }}" required>
                                 </div>
                                 <div class="col-md-6 col-lg-4 form-group">
-                                    <label for="name"
+                                    <label for="title"
+                                        class="title-color font-weight-medium d-flex">{{ \App\CPU\translate('title') }}
+                                    </label>
+                                    <input type="text" name="title" value="{{ $coupon?->title }}" class="form-control"
+                                        id="title" placeholder="{{ \App\CPU\translate('title') }}" required>
+                                </div>
+                                <div class="col-md-6 col-lg-4 form-group">
+                                    <label for="discount_type"
                                         class="title-color font-weight-medium d-flex">{{ \App\CPU\translate('discount_type') }}</label>
                                     <select id="discount_type" class="select2-no-search form-control w-100"
                                         name="discount_type">

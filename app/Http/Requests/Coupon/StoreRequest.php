@@ -29,6 +29,7 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
+            'title' => ['required', 'max:191'],
             'code' => ['required', Rule::unique('coupons')],
             'discount_type' => ['required', Rule::in(["amount", "percentage"])],
             'discount' => ['required', 'numeric'],
@@ -113,6 +114,7 @@ class StoreRequest extends FormRequest
         ]);
         $this->replace($this->only([
             'seller_id',
+            'title',
             'code',
             'discount_type',
             'discount',

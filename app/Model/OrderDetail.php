@@ -18,7 +18,7 @@ class OrderDetail extends Model
         'seller_id' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'refund_request'=>'integer',
+        'refund_request' => 'integer',
     ];
 
     public function product()
@@ -49,5 +49,10 @@ class OrderDetail extends Model
     public function address()
     {
         return $this->belongsTo(ShippingAddress::class, 'shipping_address');
+    }
+
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class);
     }
 }

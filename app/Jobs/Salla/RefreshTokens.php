@@ -14,9 +14,10 @@ class RefreshTokens
     private $meta;
     private $cron;
     private $salla;
-    public function __construct($cron)
+    public function __construct($cron, $meta)
     {
         $this->cron = $cron;
+        $this->meta = $meta;
         $this->salla = new SallaAuthService();
     }
 

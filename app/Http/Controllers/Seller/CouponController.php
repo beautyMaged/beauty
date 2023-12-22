@@ -42,7 +42,7 @@ class CouponController extends Controller
                         ->orWhere('discount_type', 'like', "%{$value}%");
                 }
             })
-            ->withCount('order')->latest()->paginate(Helpers::pagination_limit())->appends($query_param);
+            ->withCount('orders')->latest()->paginate(Helpers::pagination_limit())->appends($query_param);
         return view('seller-views.coupon.list', compact('coupons',  'search'));
     }
 
@@ -53,7 +53,7 @@ class CouponController extends Controller
         $coupon->categories()->sync($service->merge('categories'));
         $coupon->products()->sync($service->merge('products'));
         $coupon->brands()->sync($service->merge('brands'));
-        Toastr::success(\App\CPU\translate('coupon_added_successfully!'));
+        Toastr::success(translate('coupon_added_successfully!'));
         return redirect()->route('seller.coupon.list');
     }
 

@@ -15,11 +15,11 @@ class Order extends Model
         'shipping_cost' => 'float',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'billing_address'=> 'integer',
-        'extra_discount'=>'float',
-        'delivery_man_id'=>'integer',
-        'shipping_method_id'=>'integer',
-        'seller_id'=>'integer'
+        'billing_address' => 'integer',
+        'extra_discount' => 'float',
+        'delivery_man_id' => 'integer',
+        'shipping_method_id' => 'integer',
+        'seller_id' => 'integer'
     ];
 
     public function details()
@@ -58,19 +58,16 @@ class Order extends Model
 
     public function delivery_man()
     {
-        return $this->belongsTo(DeliveryMan::class,'delivery_man_id');
+        return $this->belongsTo(DeliveryMan::class, 'delivery_man_id');
     }
 
     public function delivery_man_review()
     {
-        return $this->hasOne(Review::class,'order_id');
+        return $this->hasOne(Review::class, 'order_id');
     }
 
-    public function order_transaction(){
+    public function order_transaction()
+    {
         return $this->hasOne(OrderTransaction::class, 'order_id');
-    }
-
-    public function coupon(){
-        return $this->belongsTo(Coupon::class, 'coupon_code', 'code');
     }
 }
