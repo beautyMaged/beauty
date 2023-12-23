@@ -18,7 +18,6 @@ class UpdateInCouponsTable extends Migration
             $table->dropColumn('coupon_type');
             $table->dropColumn('coupon_bearer');
             $table->dropColumn('customer_id');
-            $table->dropColumn('title');
             $table->dropColumn('start_date');
             $table->dropColumn('expire_date');
             $table->dropColumn('limit');

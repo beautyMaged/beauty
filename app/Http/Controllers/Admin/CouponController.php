@@ -23,14 +23,14 @@ class CouponController extends Controller
         $search = $request['search'];
         $cou = Coupon::where(['added_by' => 'admin'])
             ->when(isset($request['search']) && !empty($request['search']), function ($query) use ($search) {
-                    $key = explode(' ', $search);
-                    foreach ($key as $value) {
-                        $query->where('title', 'like', "%{$value}%")
-                            ->orWhere('code', 'like', "%{$value}%")
-                            ->orWhere('discount_type', 'like', "%{$value}%");
-                    }
+                $key = explode(' ', $search);
+                foreach ($key as $value) {
+                    $query->where('title', 'like', "%{$value}%")
+                        ->orWhere('code', 'like', "%{$value}%")
+                        ->orWhere('discount_type', 'like', "%{$value}%");
+                }
             })
-            ->withCount('order')->latest()->paginate(Helpers::pagination_limit())->appends($query_param);
+            ->withCount('orders')->latest()->paginate(Helpers::pagination_limit())->appends($query_param);
 
         $sellers = Seller::with('shop')->approved()->get();
         $customers = User::where('id', '<>', '0')->get();
@@ -64,7 +64,7 @@ class CouponController extends Controller
 
         ]);
 
-        if($request->discount_type == 'amount' && $request->discount > $request->min_purchase){
+        if ($request->discount_type == 'amount' && $request->discount > $request->min_purchase) {
             Toastr::error('The minimum purchase amount must be greater than discount amount');
             return redirect()->back();
         }
@@ -103,7 +103,7 @@ class CouponController extends Controller
         $sellers = Seller::with('shop')->approved()->get();
         $customers = User::where('id', '<>', '0')->get();
         $c = Coupon::where(['added_by' => 'admin'])->find($id);
-        if(!$c){
+        if (!$c) {
             Toastr::error('Invalid Coupon!');
             return redirect()->route('admin.coupon.add-new');
         }
@@ -136,7 +136,7 @@ class CouponController extends Controller
 
         ]);
 
-        if($request->discount_type == 'amount' && $request->discount > $request->min_purchase){
+        if ($request->discount_type == 'amount' && $request->discount > $request->min_purchase) {
             Toastr::error('The minimum purchase amount must be greater than discount amount');
             return redirect()->back();
         }
@@ -211,14 +211,13 @@ class CouponController extends Controller
     public function ajax_get_seller(Request $request)
     {
         $sellers = Seller::with('shop')->approved()->get();
-        $output='<option value="" disabled selected>Select Seller</option>';
-        $output.='<option value="0">All Seller</option>';
-        if($request->coupon_bearer == 'inhouse') {
+        $output = '<option value="" disabled selected>Select Seller</option>';
+        $output .= '<option value="0">All Seller</option>';
+        if ($request->coupon_bearer == 'inhouse') {
             $output .= '<option value="inhouse">Inhouse</option>';
         }
-        foreach($sellers as $seller)
-        {
-            $output .= '<option value="'.$seller->id.'">'.$seller->shop->name.'</option>';
+        foreach ($sellers as $seller) {
+            $output .= '<option value="' . $seller->id . '">' . $seller->shop->name . '</option>';
         }
         echo $output;
     }

@@ -18,11 +18,11 @@ class CustomerMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::guard('customer')->check() && auth('customer')->user()->is_active) {
+        auth()->shouldUse('customer');
+        if (auth()->check() && auth()->user()->is_active)
             return $next($request);
-        }elseif (Auth::guard('customer')->check()){
-            auth()->guard('customer')->logout();
-        }
+        elseif (auth()->check())
+            auth()->logout();
         Toastr::info(translate('login_first_for_next_steps'));
         return redirect()->route('customer.auth.login');
     }

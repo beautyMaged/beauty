@@ -230,6 +230,7 @@ Route::prefix('app')->group(function () {
     //Seller shop apply
     Route::group(['prefix' => 'coupon', 'as' => 'coupon.', 'namespace' => 'Web'], function () {
         Route::post('apply', 'CouponController@apply')->name('apply');
+        Route::get('list', 'CouponController@list')->name('list');
     });
     //check done
 

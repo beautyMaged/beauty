@@ -35,6 +35,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'id' => ['required', Rule::exists('coupons')],
+            'title' => ['required', 'max:191'],
             'code' => ['required', Rule::unique('coupons')->ignore($this->id)],
             'discount_type' => ['required', Rule::in(["amount", "percentage"])],
             'discount' => ['required', 'numeric'],
@@ -120,6 +121,7 @@ class UpdateRequest extends FormRequest
         ]);
         $this->replace($this->only([
             'seller_id',
+            'title',
             'code',
             'discount_type',
             'discount',

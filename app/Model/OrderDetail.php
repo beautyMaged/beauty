@@ -18,8 +18,12 @@ class OrderDetail extends Model
         'seller_id' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+<<<<<<< HEAD
         'refund_request'=>'integer',
         'variant_id'=>'integer',
+=======
+        'refund_request' => 'integer',
+>>>>>>> main
     ];
 
     public function product()
@@ -59,4 +63,9 @@ class OrderDetail extends Model
         return $this->hasOne(RefundRequest::class, 'order_details_id');
     }
 
+
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class);
+    }
 }

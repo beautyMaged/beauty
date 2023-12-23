@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Coupon extends Model
@@ -18,9 +19,9 @@ class Coupon extends Model
     ];
     protected $guarded = ['id'];
 
-    public function order()
+    public function orderDetails()
     {
-        return $this->hasMany(Order::class, 'coupon_code', 'code');
+        return $this->hasMany(OrderDetail::class);
     }
 
     public function products()
@@ -36,5 +37,25 @@ class Coupon extends Model
     public function brands()
     {
         return $this->belongsToMany(Brand::class)->withPivot('state');
+    }
+
+    public function scopeActive($query, $user = null)
+    {
+        return $query
+            ->where('status', 1)
+            ->where('end_at', '>', DB::raw('NOW()'))
+            ->where('start_at', '<', DB::raw('NOW()'))
+            ->whereHas('orderDetails', function ($orders) {
+                $orders->groupBy('coupon_id')
+                    ->havingRaw('COUNT(*) < coupons.limit_all');
+            })
+            ->when($user, function ($coupon) use ($user) {
+                $coupon->whereHas('orderDetails.order', function ($order) use ($user) {
+                    $order
+                        ->where('customer_id', $user->id)
+                        ->groupBy('coupon_id')
+                        ->havingRaw('COUNT(*) < coupons.limit_once');
+                });
+            });
     }
 }
