@@ -49,6 +49,8 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
     })->name('shopify.preferences');
 
     Route::post('partner', 'PartnerController@store');
+    Route::post('register', [App\Http\Controllers\Seller\Auth\RegisterController::class,'store']);
+
 
     /*authenticated*/
     Route::middleware('seller')->group(function () {
