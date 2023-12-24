@@ -11,6 +11,16 @@ class Notification extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+    protected $fillable = [
+        'title',
+        'description',
+        'notification_count',
+        'image',
+        'status',
+        'url',
+        'customer_id',
+        'seller_id'	
+    ];
 
     public function scopeActive($query)
     {

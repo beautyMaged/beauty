@@ -11,7 +11,9 @@ use App\Mail\SellerRefundRequestMail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Model\RefundRequest;
+use App\Model\Notification;
 use App\Model\OrderDetail;
+use App\Model\Admin;
 use App\Model\Seller;
 use Carbon\Carbon;
 use Exception;
@@ -87,8 +89,22 @@ class RefundRequestController extends Controller
             ]);
             $order_details->order->order_status = 'refundReview';
             $order_details->order->save();
+            // add notification
+            Notification::create([
+                'title' => 'Refund Request',
+                'description' => 'refund request of product "'.$order_details->variant->values[0]->option->product->name.'"',
+                'image'=>null,
+                'status'=> 'pending',
+                'url' =>'/app/customer/refundRequests/'. RefundRequest::latest()->first()->id ,
+                'customer_id' => Auth::user()->id,
+                'seller_id' => $seller->id	
+            ]);
             // Send email to the seller
-            Mail::to($seller->email)->send(new SellerRefundRequestMail([
+            $recipients = [
+                $seller->email,
+                Admin::where('admin_role_id',1)->first()->email,
+            ];
+            Mail::to($recipients)->send(new SellerRefundRequestMail([
                 'seller' => $seller,
                 'order_details' => $order_details,
                 'order' => $order_details->order,
