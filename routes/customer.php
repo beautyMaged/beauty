@@ -34,6 +34,8 @@ Route::prefix('app')->group(function () {
         // Route::get('orders', 'OrderController@index');
         Route::resource('orders', OrderController::class);
 
+        // get wallet and loyalty points
+        Route::get('wallet','CustomerWalletController@show');
         // notifications
         Route::post('allow_notifications', 'NotificationController@allow_notifications');
         Route::post('block_notifications', 'NotificationController@block_notifications');

@@ -29,6 +29,7 @@ class VerifyCsrfToken extends Middleware
         '/seller/partner',
         '/seller/register',
         '/app/customer/*',
-        '/app/confirm-location', '/app/confirm-location-ajax'
+        '/app/confirm-location', '/app/confirm-location-ajax',
+        '/app/countries'
     ];
 }
