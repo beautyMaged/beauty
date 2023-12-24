@@ -108,4 +108,7 @@ class Seller extends Authenticatable
     public function country(){
         return $this->belongsTo(Country::class);
     }
+    public function notifications(){
+        return $this->hasMany(SellerNotification::class);
+    }
 }

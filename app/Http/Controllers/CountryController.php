@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Storage;
 
 class CountryController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth:admin')->only('store', 'update', 'destroy');
+    }
     /**
      * Display a listing of the resource.
      *

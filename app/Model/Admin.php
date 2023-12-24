@@ -25,4 +25,7 @@ class Admin extends Authenticatable
     {
         return $this->hasMany(Product::class, 'user_id')->where(['added_by' => 'seller']);
     }
+    public function notifications(){
+        return $this->hasMany(AdminNotification::class);
+    }
 }

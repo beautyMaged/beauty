@@ -5,6 +5,7 @@ namespace App;
 use App\Model\Order;
 use App\Model\ShippingAddress;
 use App\Model\Wishlist;
+use App\Model\CustomerNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
@@ -63,6 +64,10 @@ class User extends Authenticatable
     public function shippingAddresses()
     {
         return $this->hasMany(ShippingAddress::class, 'customer_id');
+    }
+    public function notifications()
+    {
+        return $this->hasMany(CustomerNotification::class);
     }
 
 }

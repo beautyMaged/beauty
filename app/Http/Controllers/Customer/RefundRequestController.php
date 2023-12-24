@@ -15,6 +15,8 @@ use App\Model\Notification;
 use App\Model\OrderDetail;
 use App\Model\Admin;
 use App\Model\Seller;
+use App\Model\SellerNotification;
+use App\Model\AdminNotification;
 use Carbon\Carbon;
 use Exception;
 
@@ -23,7 +25,6 @@ class RefundRequestController extends Controller
     function __construct()
     {
         $this->middleware('auth:customer');
-
     }
     /**
      * Display a listing of the resource.
@@ -32,9 +33,8 @@ class RefundRequestController extends Controller
      */
     public function index()
     {
-        $refundRequests = RefundRequest::all();
-        // return $refundRequests;
-        return response()->json(RefundRequestResource::collection($refundRequests)[0]);
+        $refundRequests = RefundRequest::all()->where("customer_id", Auth::user()->id);
+        return response()->json(RefundRequestResource::collection($refundRequests));
     }
 
     /**
@@ -89,15 +89,21 @@ class RefundRequestController extends Controller
             ]);
             $order_details->order->order_status = 'refundReview';
             $order_details->order->save();
-            // add notification
-            Notification::create([
-                'title' => 'Refund Request',
-                'description' => 'refund request of product "'.$order_details->variant->values[0]->option->product->name.'"',
-                'image'=>null,
-                'status'=> 'pending',
+
+            // send notifications
+            $title = 'refund Request of '. $order_details->variant->values[0]->option->product->name;
+            $description = 'user "'. Auth::user()->id. '" made a refund request';
+            SellerNotification::create([
+                'title' => $title,
+                'description' => $description,
                 'url' =>'/app/customer/refundRequests/'. RefundRequest::latest()->first()->id ,
-                'customer_id' => Auth::user()->id,
                 'seller_id' => $seller->id	
+            ]);
+            AdminNotification::create([
+                'title' => $title,
+                'description' => $description,
+                'url' =>'/app/customer/refundRequests/'. RefundRequest::latest()->first()->id ,
+                'admin_id' => Admin::where('admin_role_id',1)->first()->id,	
             ]);
             // Send email to the seller
             $recipients = [
