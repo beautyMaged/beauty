@@ -13,6 +13,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Customer\ShippingAddressController;
+use Aws\Middleware;
 
 Route::prefix('app')->group(function () {
 
@@ -32,6 +33,13 @@ Route::prefix('app')->group(function () {
         Route::get('banner/{type}', 'banner');
     });
     Route::resource('countries',CountryController::class);
+    // routes for static pages
+    Route::group(['namespace'=>'Admin'],function(){
+        Route::resource('pages',PageController::class);
+        Route::resource('page-categories',PageCategoryController::class);
+        Route::get('footer','PageCategoryController@listPages');
+    });
+
     Route::post('confirm-location', [ShippingAddressController::class,'confirmLocation'])->name('confirm.location');
     Route::post('confirm-location-ajax', [ShippingAddressController::class,'confirmLocationAjax'])->name('confirm.location.ajax');
     //for maintenance mode

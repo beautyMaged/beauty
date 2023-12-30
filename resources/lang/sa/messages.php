@@ -3246,4 +3246,5 @@
   'Yes  Change it!' => 'Yes  Change it!',
   'Order is already delivered  You can not change it !!' => 'Order is already delivered  You can not change it !!',
   'Khaled Mohamed Mohamed Sayed Ahmed ElGharbawy' => 'Khaled Mohamed Mohamed Sayed Ahmed ElGharbawy',
+  'no_billing_address_found' => 'No billing address found',
 );
