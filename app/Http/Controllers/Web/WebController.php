@@ -2392,7 +2392,7 @@ class WebController extends Controller
                 return $product->seller->country->code != 'SU'; 
             });
         }else if($country_code){
-            return $products->filter(function($product){
+            return $products->filter(function($product) use ($country_code){
                 return $product->seller->country->code == $country_code; 
             });
         }else{
@@ -2443,7 +2443,7 @@ class WebController extends Controller
         }
         try{
             $choosed_products = $products->
-                filter(function($product){
+                filter(function($product) use ($min, $max){
                         if($product->unit_price >= $min && $product->unit_price <= $max){//change the price later
                             return $product;
                         }
