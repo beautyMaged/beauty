@@ -1,8 +1,15 @@
 <?php
 
 use WebhookController as ShopifyWebhookController;
-
+use App\Http\Controllers\Admin\CommissionController;
 use Illuminate\Support\Facades\Route;
+
+
+// commission
+    // edit category commission
+    Route::patch('admin/category-commission/{id}',[CommissionController::class,'updateCategoryCommission']);
+    Route::patch('admin/category-commission/{cId}/seller/{sId}',[CommissionController::class,'updateSellerCategoryCommission']);
+    Route::patch('admin/product-commission/{id}',[CommissionController::class,'updateProductCommission']);
 
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('', fn () => redirect()->route('admin.auth.login'));

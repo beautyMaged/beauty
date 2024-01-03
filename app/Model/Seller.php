@@ -111,4 +111,7 @@ class Seller extends Authenticatable
     public function notifications(){
         return $this->hasMany(SellerNotification::class);
     }
+    public function categoryCommissions(){
+        return $this->hasMany(SellerCategoryCommission::class);
+    }
 }

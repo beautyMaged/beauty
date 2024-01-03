@@ -21,6 +21,7 @@ class Category extends Model
 
         // 'category_ids' => 'json'
     ];
+    protected $fillable = ['category_commission'];
 
     // public function products()
     // {
@@ -70,5 +71,8 @@ class Category extends Model
                 return $query->select('value', 'translationable_id')->where('locale', Helpers::default_lang());
             }]);
         });
+    }
+    public function sellersCommissions(){
+        return $this->hasMany(SellerCategoryCommission::class);
     }
 }
