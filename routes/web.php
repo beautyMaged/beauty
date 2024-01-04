@@ -45,6 +45,9 @@ Route::prefix('app')->group(function () {
     //for maintenance mode
     Route::get('maintenance-mode', 'Web\WebController@maintenance_mode')->name('maintenance-mode');
 
+    // route for similar products
+    Route::get('similar-products/{id}', 'Web\WebController@getSimilarProducts');
+
     Route::get('sallaTest', SallaTestController::class);
     Route::get('shopifyTest', ShopifyTestController::class);
 

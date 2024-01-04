@@ -2453,5 +2453,21 @@ class WebController extends Controller
             return response()->json(["error" => $e->getMessage()], 500);
         }
     }
+
+    // get similar products `by name`
+    public function getSimilarProducts($id){
+        $product = Product::find($id);
+        if(!$product){
+            return response()->json(['error'=>'product not found'],404);
+
+        }else{
+            $sameProducts = Product::where('name',$product->name)->where('id', '!=', $id)->get();
+            if(empty($sameProducts)){
+                return response()->json(['message'=>'no similar products found']);
+            }else{
+                return response()->json(['data'=>$sameProducts],200);
+            }
+        }
+    }
     
 }
