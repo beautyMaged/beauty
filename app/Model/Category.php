@@ -75,4 +75,7 @@ class Category extends Model
     public function sellersCommissions(){
         return $this->hasMany(SellerCategoryCommission::class);
     }
+    public function options(){
+        return $this->hasMany(Option::class);
+    }
 }

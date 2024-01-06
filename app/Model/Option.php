@@ -16,4 +16,7 @@ class Option extends Model
     public function values(){
         return $this->hasMany(Value::class);
     }
+    public function category(){
+        return $this->belongsTo(Category::class);
+    }
 }

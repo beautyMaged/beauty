@@ -45,6 +45,7 @@ use App\Model\DeliveryZipCode;
 use App\Model\ShippingAddress;
 use App\Model\FlashDealProduct;
 use function App\CPU\translate;
+use function PHPUnit\Framework\isEmpty;
 use function React\Promise\all;
 use App\Model\DeliveryCountryCode;
 use Gregwar\Captcha\PhraseBuilder;
@@ -59,6 +60,7 @@ use Facade\FlareClient\Http\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Collection;
+use App\Http\Resources\Product\ProductSearchResource;
 
 class WebController extends Controller
 {
@@ -436,12 +438,16 @@ class WebController extends Controller
             $query = ProductManager::translated_product_search_web($request['name']);
 
         $products = $query->take(10)->get();
+        if($products->isEmpty()){
+            return response()->json('no produts found');
+        }
 
         // return response()->json([
         //     'result' => view('web-views.partials._search-result', compact('products'))->render(),
         // ]);
+        // dd(ProductSearchResource::collection($products));
 
-        return response()->json($products);
+        return response()->json(ProductSearchResource::collection($products));
     }
 
     public function checkout_details(Request $request)
