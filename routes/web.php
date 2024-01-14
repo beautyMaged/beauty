@@ -32,6 +32,7 @@ Route::prefix('app')->group(function () {
         Route::get('translate/{locale}', 'translate');
         Route::get('banner/{type}', 'banner');
     });
+    // countries
     Route::resource('countries',CountryController::class);
     // routes for static pages
     Route::group(['namespace'=>'Admin'],function(){

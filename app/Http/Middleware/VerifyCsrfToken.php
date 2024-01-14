@@ -33,6 +33,7 @@ class VerifyCsrfToken extends Middleware
         '/app/countries',
         '/app/*',
         '/admin/category-commission/*',
-        '/admin/product-commission/*'
+        '/admin/product-commission/*',
+        '/seller/*'
     ];
 }

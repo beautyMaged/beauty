@@ -11,10 +11,12 @@
 |
  */
 
+use App\Http\Controllers\Seller\BestProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Seller\Shopify\OAuthController as ShopifyOAuthController;
 use App\Http\Controllers\Seller\Salla\OAuthController as SallaOAuthController;
 use App\Http\Controllers\Seller\Zid\OAuthController as ZidOAuthController;
+use App\Model\BestProduct;
 use Salla\WebhookController as SallaWebhookController;
 use Zid\WebhookController as ZidWebhookController;
 use Shopify\WebhookController as ShopifyWebhookController;
@@ -28,6 +30,9 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
     Route::post('zid/webhook', ZidWebhookController::class)->name('zid.webhook');
     // Shopify Webhooks
     Route::post('shopify/webhook', ShopifyWebhookController::class)->name('shopify.webhook');
+
+    // bestProducts
+    Route::resource('best-products','BestProductController');
 
     /*authentication*/
     Route::group(['namespace' => 'Auth', 'prefix' => 'auth', 'as' => 'auth.'], function () {

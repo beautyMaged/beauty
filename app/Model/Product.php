@@ -177,4 +177,8 @@ class Product extends Model
             }]);
         });
     }
+
+    public function bestProduct(){
+        return $this->hasOne(BestProduct::class);
+    }
 }

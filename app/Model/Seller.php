@@ -114,4 +114,8 @@ class Seller extends Authenticatable
     public function categoryCommissions(){
         return $this->hasMany(SellerCategoryCommission::class);
     }
+
+    public function bestProducts(){
+        return $this->hasManyThrough(BestProduct::class,Product::class);
+    }
 }
