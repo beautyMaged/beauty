@@ -16,6 +16,9 @@ class AddRatingColumnsToCategoryProductTable extends Migration
         Schema::table('category_product', function (Blueprint $table) {
             $table->boolean('top_rated')->default(false);
             $table->boolean('top_rated_globally')->default(false);
+            $table->boolean('best_selling')->default(false);
+            $table->boolean('best_selling_globally')->default(false);
+
         });
     }
 
@@ -27,7 +30,7 @@ class AddRatingColumnsToCategoryProductTable extends Migration
     public function down()
     {
         Schema::table('category_product', function (Blueprint $table) {
-            //
+            $table->dropColumn(['top_rated','top_rated_globally','best_selling','best_selling_globally']);
         });
     }
 }

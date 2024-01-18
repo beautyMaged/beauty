@@ -31,6 +31,7 @@ class Kernel extends ConsoleKernel
     {
         // update top rated products
         $schedule->command('toprated:products')->daily();
+        $schedule->command('bestselling:products')->daily();
         $schedule->job(new SallaCrons)->everyMinute();
         $schedule->job(new ShopifyCrons)->everyMinute();
 
