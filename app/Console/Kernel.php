@@ -6,7 +6,9 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Jobs\Salla\Crons as SallaCrons;
 use App\Jobs\Shopify\Crons as ShopifyCrons;
+use App\Jobs\TopRatedProductsJob;
 use App\Jobs\RefreshTokens;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -27,6 +29,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // update top rated products
+        $schedule->command('toprated:products')->daily();
         $schedule->job(new SallaCrons)->everyMinute();
         $schedule->job(new ShopifyCrons)->everyMinute();
 
