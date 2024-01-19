@@ -21,6 +21,8 @@ use Salla\WebhookController as SallaWebhookController;
 use Zid\WebhookController as ZidWebhookController;
 use Shopify\WebhookController as ShopifyWebhookController;
 
+
+Route::resource('seller/categories',CatgegoryController::class);
 Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'], function () {
     Route::get('/', fn () => redirect()->route('seller.auth.login'));
 
