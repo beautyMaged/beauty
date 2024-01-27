@@ -281,6 +281,7 @@ class ProductController extends Controller
         } else {
             if ($request->file('images')) {
                 foreach ($request->file('images') as $img) {
+                    $img = ImageManager::addLogo($img);
                     $image_name = ImageManager::upload('product/', 'png', $img);
                     $product_images[] = $image_name;
                     if ($request->has('colors_active')) {

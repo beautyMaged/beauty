@@ -46,7 +46,7 @@ class BestProductController extends Controller
 
         if ($user === 'seller') {
             $sellerId = auth('seller')->user()->id;
-            $product = Product::where('id', $request->product_id)->where('seller_id', $sellerId)->first();
+            $product = Product::where('id', $request->product_id)->where('user_id', $sellerId)->first();
             if($product->bestProduct){
                 return response()->json(['message'=>'the product is already set in best products'],409);
             }

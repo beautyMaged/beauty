@@ -109,7 +109,7 @@ class Product extends Model
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class);
+        return $this->belongsToMany(Category::class)->withPivot('top_rated', 'top_rated_globally','best_selling','best_selling_globally');
     }
 
     public function rating()
@@ -180,5 +180,10 @@ class Product extends Model
 
     public function bestProduct(){
         return $this->hasOne(BestProduct::class);
+    }
+
+    // directly accessing name 
+    public function name(){
+        return $this->belongsTo(ProductName::class,'name_id','id');
     }
 }

@@ -2462,18 +2462,56 @@ class WebController extends Controller
 
     // get similar products `by name`
     public function getSimilarProducts($id){
-        $product = Product::find($id);
-        if(!$product){
-            return response()->json(['error'=>'product not found'],404);
+        $ProductName = Product::find($id)->name()->getResults();
+        return $ProductName->products;
+    }
+    // // get similar products `by name`
+    // public function getSimilarProducts($id){
+    //     $product = Product::find($id);
+    //     if(!$product){
+    //         return response()->json(['error'=>'product not found'],404);
 
+    //     }else{
+    //         $sameProducts = Product::where('name',$product->name)->where('id', '!=', $id)->get();
+    //         if(empty($sameProducts)){
+    //             return response()->json(['message'=>'no similar products found']);
+    //         }else{
+    //             return response()->json(['data'=>$sameProducts],200);
+    //         }
+    //     }
+    // }
+
+    // sort products by recent products first
+    private function sortByCreatedAt($products)
+    {
+        if ($products instanceof \Illuminate\Database\Eloquent\Collection) {
+            return $products->sortByDesc('created_at');
         }else{
-            $sameProducts = Product::where('name',$product->name)->where('id', '!=', $id)->get();
-            if(empty($sameProducts)){
-                return response()->json(['message'=>'no similar products found']);
-            }else{
-                return response()->json(['data'=>$sameProducts],200);
-            }
+            throw new \Exception('Invalid parameter. parameter must be an instance of product collection');
+
+        }
+
+    }
+
+    // sort products by ratings
+    private function sortByRatings($products)
+    {
+        if ($products instanceof \Illuminate\Database\Eloquent\Collection) {
+            return $products->sortByDesc(function ($product) {
+                return $product->reviews->avg('rating');
+            });
+        }else{
+            throw new \Exception('Invalid parameter. parameter must be an instance of product collection');
+
         }
     }
+
+
+
+
+    // static function tindex(){
+    //     $products = Product::all(); // Get all products
+    //     return \App\Http\Resources\Product\ProductResource::collection($products)->resolve(); // Return products as a resource collection
+    // }
     
 }

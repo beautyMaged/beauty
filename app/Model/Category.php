@@ -58,7 +58,7 @@ class Category extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class);
+        return $this->belongsToMany(Product::class)->withPivot('top_rated', 'top_rated_globally','best_selling','best_selling_globally');
     }
 
     protected static function boot()

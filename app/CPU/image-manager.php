@@ -46,7 +46,7 @@ class ImageManager
 
     }
     
-    public function addLogo(UploadedFile $image)
+    public static function addLogo(UploadedFile $image)
     {
         $originalImage = Image::make($image);
 

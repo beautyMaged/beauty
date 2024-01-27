@@ -4,7 +4,6 @@ namespace Tests\Feature;
 use App\Model\Admin;
 use App\Model\Category;
 use App\Model\Seller;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
@@ -13,13 +12,25 @@ class SellerCategoryControllerTest extends TestCase
 {
     use WithFaker;
 
+    // unauthenticated
+    public function testIndexUnAuthorized()
+    {
+
+        $response = $this->get('/seller/categories');
+        
+        $response = $this->followRedirects($response);
+        
+        $response->assertStatus(401);
+    }
+
     public function testIndex()
     {
-        $this->actingAsSeller();
+        $this->actingAsAdmin();
 
         $response = $this->get('/seller/categories');
 
         $response->assertStatus(200);
+
         $response->assertJsonStructure(['categories']);
     }
 
@@ -44,7 +55,7 @@ class SellerCategoryControllerTest extends TestCase
 
     public function testView()
     {
-        $this->actingAsSeller();
+        $this->actingAsAdmin();
 
         $category = Category::first();
 
@@ -58,7 +69,7 @@ class SellerCategoryControllerTest extends TestCase
 
     public function testUpdate()
     {
-        $this->actingAsSeller();
+        $this->actingAsAdmin();
 
         $category = Category::first();
 
@@ -74,22 +85,29 @@ class SellerCategoryControllerTest extends TestCase
 
     public function testDestroy()
     {
-        $this->actingAsSeller();
+        $this->actingAsAdmin();
 
         $category = Category::latest()->first();
 
         $response = $this->delete("/seller/categories/{$category->id}");
 
         $response->assertStatus(200);
+
         $response->assertJson(['message' => 'Category deleted successfully']);
     }
 
-    protected function actingAsSeller()
+    private function actingAsSeller()
     {
-        $seller = Seller::all()->first();
-        
-        $this->actingAs($seller);
-        $this->be($seller);
+        $seller = Seller::take(1)->first();
+        $this->actingAs($seller,'seller');
+
+
+    }
+
+    private function actingAsAdmin()
+    {
+        $admin = Admin::take(1)->first();
+        $this->actingAs($admin,'admin');
 
     }
 }
