@@ -13,6 +13,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Customer\ShippingAddressController;
+use App\Http\Controllers\SocialMediaController;
 use Aws\Middleware;
 
 Route::prefix('app')->group(function () {
@@ -40,6 +41,8 @@ Route::prefix('app')->group(function () {
         Route::resource('page-categories',PageCategoryController::class);
         Route::get('footer','PageCategoryController@listPages');
     });
+
+    Route::resource('social-media', 'SocialMediaController');
 
     Route::post('confirm-location', [ShippingAddressController::class,'confirmLocation'])->name('confirm.location');
     Route::post('confirm-location-ajax', [ShippingAddressController::class,'confirmLocationAjax'])->name('confirm.location.ajax');
