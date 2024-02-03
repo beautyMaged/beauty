@@ -19,3 +19,4 @@ composer.json
 rsync
 resources/views/layouts/front-end/partials/_header.blade.php
 tinker.php
+phpunit.xml

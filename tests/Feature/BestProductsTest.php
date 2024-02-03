@@ -91,7 +91,6 @@ class BestProductsTest extends TestCase
     private function actingAsAdmin()
     {
         $admin = Admin::take(1)->first();
-        dd($admin);
         $this->actingAs($admin, 'admin');
     }
 }
