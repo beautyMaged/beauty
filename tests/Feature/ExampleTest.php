@@ -4,6 +4,8 @@
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;
 // use Tests\TestCase;
+// use Illuminate\Http\Response;
+
 
 // class ExampleTest extends TestCase
 // {
@@ -16,6 +18,6 @@
 //     {
 //         $response = $this->get('/');
 
-//         $response->assertStatus(200);
+//         $response->assertStatus(Response::HTTP_OK);
 //     }
 // }

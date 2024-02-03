@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Feature;
 
 use App\Model\Admin;
@@ -7,6 +8,7 @@ use App\Model\Seller;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
+use Illuminate\Http\Response;
 
 class SellerCategoryControllerTest extends TestCase
 {
@@ -17,10 +19,10 @@ class SellerCategoryControllerTest extends TestCase
     {
 
         $response = $this->get('/seller/categories');
-        
+
         $response = $this->followRedirects($response);
-        
-        $response->assertStatus(401);
+
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
     public function testIndex()
@@ -29,7 +31,7 @@ class SellerCategoryControllerTest extends TestCase
 
         $response = $this->get('/seller/categories');
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
 
         $response->assertJsonStructure(['categories']);
     }
@@ -47,7 +49,7 @@ class SellerCategoryControllerTest extends TestCase
             'parent_id' => Category::where('position', '<', 3)->first()->id,
         ];
 
-        $response = $this->post('/seller/categories', $data,['Accept' => 'application/json']);
+        $response = $this->post('/seller/categories', $data, ['Accept' => 'application/json']);
 
         $response->assertStatus(201);
         $response->assertJson(['message' => 'Category created successfully']);
@@ -61,7 +63,7 @@ class SellerCategoryControllerTest extends TestCase
 
         $response = $this->get("/seller/categories/{$category->id}");
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
         $response->assertJsonStructure(['category']);
     }
 
@@ -79,7 +81,7 @@ class SellerCategoryControllerTest extends TestCase
 
         $response = $this->put("/seller/categories/{$category->id}", $data);
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
         $response->assertJson(['message' => 'Category updated successfully']);
     }
 
@@ -91,7 +93,7 @@ class SellerCategoryControllerTest extends TestCase
 
         $response = $this->delete("/seller/categories/{$category->id}");
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
 
         $response->assertJson(['message' => 'Category deleted successfully']);
     }
@@ -99,15 +101,12 @@ class SellerCategoryControllerTest extends TestCase
     private function actingAsSeller()
     {
         $seller = Seller::take(1)->first();
-        $this->actingAs($seller,'seller');
-
-
+        $this->actingAs($seller, 'seller');
     }
 
     private function actingAsAdmin()
     {
         $admin = Admin::take(1)->first();
-        $this->actingAs($admin,'admin');
-
+        $this->actingAs($admin, 'admin');
     }
 }
