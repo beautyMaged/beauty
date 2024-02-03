@@ -149,7 +149,7 @@ class Product extends Model
     {
         if (strpos(url()->current(), '/admin') || strpos(url()->current(), '/seller'))
             return $name;
-        return $this->translations[0]->value ?? $name;
+        return $this->translations[0]->value ?? $this->name()->getResults()->name;
     }
 
     public function getDetailsAttribute($detail)

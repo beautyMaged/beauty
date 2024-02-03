@@ -9,7 +9,7 @@ use Illuminate\Http\UploadedFile;
 use App\Model\Admin;
 use Tests\TestCase;
 
-class socialMediaControllerTest extends TestCase
+class SocialMediaControllerTest extends TestCase
 {
     public function testIndex()
     {
@@ -82,7 +82,7 @@ class socialMediaControllerTest extends TestCase
     
     public function testUpdateWithoutAuthentication()
     {
-        $socialMedia = SocialMedia::first();
+        $socialMedia = SocialMedia::latest()->first();
     
         $data = [
             'name' => 'Updated Social Media',

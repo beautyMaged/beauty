@@ -93,4 +93,13 @@ class CommissionController extends Controller
                                  'product_name'=>$product->name,
                                 'product_commission'=>$product->product_commission],200);
     }
+
+    public function deleteSellerCategoryCommission($cId, $sId){
+        try{
+            SellerCategoryCommission::where('category_id',$cId)->where('seller_id',$sId)->delete();
+            return response()->json(['message'=>'commission deleted successfully'],200);
+        }catch(Exception $e){
+            return response()->json(['error'=>$e->getMessage()],404);
+        }
+    }
 }
