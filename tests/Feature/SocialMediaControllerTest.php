@@ -8,6 +8,7 @@ use App\Model\SocialMedia;
 use Illuminate\Http\UploadedFile;
 use App\Model\Admin;
 use Tests\TestCase;
+use Illuminate\Http\Response;
 
 class SocialMediaControllerTest extends TestCase
 {
@@ -15,7 +16,7 @@ class SocialMediaControllerTest extends TestCase
     {
         $response = $this->get('/app/social-media');
 
-        $response->assertStatus(200)
+        $response->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure(['data']);
     }
 
@@ -46,7 +47,7 @@ class SocialMediaControllerTest extends TestCase
         $response = $this->postJson('/app/social-media', $data);
         $response = $this->followRedirects($response);
 
-        $response->assertStatus(401); 
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
     public function testShow()
@@ -56,7 +57,7 @@ class SocialMediaControllerTest extends TestCase
 
         $response = $this->get("/app/social-media/{$socialMedia->id}");
 
-        $response->assertStatus(200)
+        $response->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure(['data']);
     }
 
@@ -65,21 +66,21 @@ class SocialMediaControllerTest extends TestCase
     public function testUpdateWithAuthentication()
     {
         $this->actingAsAdmin();
-    
+
         $socialMedia = SocialMedia::first();
-    
+
         $data = [
             'name' => 'Updated Social Media',
             'link' => 'https://updated-example.com',
             'icon' => UploadedFile::fake()->image('updated_icon.jpg'),
         ];
-    
+
         $response = $this->putJson("/app/social-media/{$socialMedia->id}", $data);
-    
-        $response->assertStatus(200)
+
+        $response->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure(['data']);
     }
-    
+
     public function testUpdateWithoutAuthentication()
     {
         $socialMedia = SocialMedia::latest()->first();
@@ -89,41 +90,40 @@ class SocialMediaControllerTest extends TestCase
             'link' => 'https://updated-example.com',
             'icon' => UploadedFile::fake()->image('updated_icon.jpg'),
         ];
-    
+
         $response = $this->putJson("/app/social-media/{$socialMedia->id}", $data);
         $response = $this->followRedirects($response);
-        $response->assertStatus(401); 
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
     public function testDestroyWithAuthentication()
-{
-    $this->actingAsAdmin();
+    {
+        $this->actingAsAdmin();
 
-    $socialMedia = SocialMedia::latest()->first();
+        $socialMedia = SocialMedia::latest()->first();
 
-    $response = $this->delete("/app/social-media/{$socialMedia->id}");
+        $response = $this->delete("/app/social-media/{$socialMedia->id}");
 
-    $response->assertStatus(200)
-        ->assertJson(['message' => 'Social Media deleted successfully']);
-}
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJson(['message' => 'Social Media deleted successfully']);
+    }
 
-public function testDestroyWithoutAuthentication()
-{
-    $socialMedia = SocialMedia::latest()->first();
+    public function testDestroyWithoutAuthentication()
+    {
+        $socialMedia = SocialMedia::latest()->first();
 
-    $response = $this->delete("/app/social-media/{$socialMedia->id}");
+        $response = $this->delete("/app/social-media/{$socialMedia->id}");
 
-    $response = $this->followRedirects($response);
+        $response = $this->followRedirects($response);
 
-    $response->assertStatus(401); 
-}
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
 
-    
+
 
     private function actingAsAdmin()
     {
         $admin = Admin::take(1)->first();
-        $this->actingAs($admin,'admin');
-
+        $this->actingAs($admin, 'admin');
     }
 }

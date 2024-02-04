@@ -10,6 +10,7 @@ use App\Model\Product;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Response;
 
 class BestProductsTest extends TestCase
 {
@@ -20,10 +21,10 @@ class BestProductsTest extends TestCase
     {
 
         $response = $this->get('/seller/best-products');
-        
+
         $response = $this->followRedirects($response);
-        
-        $response->assertStatus(401);
+
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
     public function testIndex()
@@ -32,7 +33,7 @@ class BestProductsTest extends TestCase
 
         $response = $this->get('/seller/best-products');
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
 
         $response->assertJsonStructure(['bestProducts']);
     }
@@ -45,7 +46,7 @@ class BestProductsTest extends TestCase
             'product_id' => Product::where('user_id', $seller_id)->inRandomOrder()->first()->id,
         ];
 
-        $response = $this->post('/seller/best-products', $data,['Accept' => 'application/json']);
+        $response = $this->post('/seller/best-products', $data, ['Accept' => 'application/json']);
         $response->assertStatus(201);
         $response->assertJson(['message' => 'Best product created successfully']);
     }
@@ -63,7 +64,7 @@ class BestProductsTest extends TestCase
 
         $response = $this->put("/seller/best-products/{$product->id}", $data);
         Log::info('Response: ' . $response->content());
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
         $response->assertJson(['message' => 'product updated successfully']);
     }
 
@@ -76,7 +77,7 @@ class BestProductsTest extends TestCase
 
         $response = $this->delete("/seller/best-products/{$product->id}");
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
 
         $response->assertJson(['message' => 'Best product deleted successfully']);
     }
@@ -84,15 +85,12 @@ class BestProductsTest extends TestCase
     private function actingAsSeller()
     {
         $seller = Seller::take(1)->first();
-        $this->actingAs($seller,'seller');
-
-
+        $this->actingAs($seller, 'seller');
     }
 
     private function actingAsAdmin()
     {
         $admin = Admin::take(1)->first();
-        $this->actingAs($admin,'admin');
-
+        $this->actingAs($admin, 'admin');
     }
 }
