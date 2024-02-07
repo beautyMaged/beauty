@@ -35,6 +35,8 @@ Route::prefix('app')->group(function () {
     });
     // countries
     Route::resource('countries',CountryController::class);
+    // cities
+    Route::resource('cities',CityController::class);
     // routes for static pages
     Route::group(['namespace'=>'Admin'],function(){
         Route::resource('pages',PageController::class);

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Model\Country;
+use App\Model\City;
 use Illuminate\Support\Facades\Storage;
 
-class CountryController extends Controller
+class CityController extends Controller
 {
     public function __construct() {
         $this->middleware('auth:admin')->only('store', 'update', 'destroy');
@@ -18,8 +18,8 @@ class CountryController extends Controller
      */
     public function index()
     {
-        $countries = Country::all();
-        return response()->json(['countries' => $countries]);
+        $cities = City::all();
+        return response()->json(['cities' => $cities]);
 
     }
 
@@ -35,19 +35,12 @@ class CountryController extends Controller
         // needs Authorization
         $validatedData = $request->validate([
             'name' => 'required|string',
-            'code' => 'required|string',
-            'flag' => 'required|image|mimes:png|max:2048', 
+            'country_id'=>'required|integer|exists:countries,id'
         ]);
 
-        // Store the uploaded img
-        $flagPath = $request->file('flag')->store('flags', 'public');
+        $city = City::create($validatedData);
 
-        
-        $validatedData['flag'] = $flagPath;
-
-        $country = Country::create($validatedData);
-
-        return response()->json(['message' => 'Country created successfully', 'country' => $country], 201);
+        return response()->json(['message' => 'City created successfully', 'city' => $city], 201);
     }
 
     /**
@@ -60,13 +53,13 @@ class CountryController extends Controller
     {
         // needs Authorization
 
-        $country = Country::find($id);
+        $city = City::find($id);
 
-        if (!$country) {
-            return response()->json(['error' => 'Country not found'], 404);
+        if (!$city) {
+            return response()->json(['error' => 'City not found'], 404);
         }
 
-        return response()->json(['country' => $country]);
+        return response()->json(['city' => $city]);
     }
 
 
@@ -82,20 +75,20 @@ class CountryController extends Controller
     {
         // needs Authorization
 
-        $country = Country::find($id);
+        $city = City::find($id);
 
-        if (!$country) {
-            return response()->json(['error' => 'Country not found'], 404);
+        if (!$city) {
+            return response()->json(['error' => 'City not found'], 404);
         }
 
         $validatedData = $request->validate([
             'name' => 'required|string',
-            'code' => 'required|string',
+            'country_id'=>'required|integer|exists:countries,id'
         ]);
 
-        $country->update($validatedData);
+        $city->update($validatedData);
 
-        return response()->json(['message' => 'Country updated successfully', 'country' => $country]);
+        return response()->json(['message' => 'City updated successfully', 'city' => $city]);
     
     }
 
@@ -109,20 +102,16 @@ class CountryController extends Controller
 {
     // needs Authorization
 
-    $country = Country::find($id);
+    $city = City::find($id);
 
-    if (!$country) {
-        return response()->json(['error' => 'Country not found'], 404);
+    if (!$city) {
+        return response()->json(['error' => 'City not found'], 404);
     }
 
-    // Delete the flag file from storage
-    if ($country->flag) {
-        Storage::disk('public')->delete($country->flag);
-    }
 
-    $country->delete();
+    $city->delete();
 
-    return response()->json(['message' => 'Country deleted successfully']);
+    return response()->json(['message' => 'City deleted successfully']);
 }
 
 }

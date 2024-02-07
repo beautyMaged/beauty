@@ -108,6 +108,11 @@ class Seller extends Authenticatable
     public function country(){
         return $this->belongsTo(Country::class);
     }
+
+    public function city(){
+        return $this->belongsTo(City::class);
+    }
+    
     public function notifications(){
         return $this->hasMany(SellerNotification::class);
     }
@@ -118,4 +123,13 @@ class Seller extends Authenticatable
     public function bestProducts(){
         return $this->hasManyThrough(BestProduct::class,Product::class);
     }
+
+    public function agency(){
+        return $this->hasOne(Agency::class);
+    }
+
+    public function manufacturer(){
+        return $this->hasOne(Manufacturer::class);
+    }
+
 }

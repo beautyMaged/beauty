@@ -112,6 +112,11 @@ class Product extends Model
         return $this->belongsToMany(Category::class)->withPivot('top_rated', 'top_rated_globally','best_selling','best_selling_globally');
     }
 
+    public function category(){
+        return $this->belongsTo(Category::class)->orderBy('position', 'desc')
+        ->first();
+    }
+
     public function rating()
     {
         return $this->hasMany(Review::class)

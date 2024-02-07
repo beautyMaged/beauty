@@ -78,4 +78,12 @@ class Category extends Model
     public function options(){
         return $this->hasMany(Option::class);
     }
+
+    public function agencies(){
+        return $this->hasMany(Agency::class);
+    }
+
+    public function manufacturers(){
+        return $this->hasMany(Manufacturer::class);
+    }
 }
