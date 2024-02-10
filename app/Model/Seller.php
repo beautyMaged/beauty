@@ -86,11 +86,12 @@ class Seller extends Authenticatable
         return $this->hasMany(Product::class, 'user_id')->where(['added_by' => 'seller']);
     }
 
-    public function categories()
-    {
-        // belongsToMany through hasMany
-        return Category::whereHas('products', fn ($query) => $query->where('user_id', $this->id))->get();
-    }
+    // replaced with another one
+    // public function categories()
+    // {
+    //     // belongsToMany through hasMany
+    //     return Category::whereHas('products', fn ($query) => $query->where('user_id', $this->id))->get();
+    // }
 
     public function brands()
     {
@@ -132,4 +133,11 @@ class Seller extends Authenticatable
         return $this->hasOne(Manufacturer::class);
     }
 
+    public function connections(){
+        return $this->hasMany(Connection::class);
+    }
+
+    public function categories(){
+        return $this->belongsToMany(Category::class);
+    }
 }

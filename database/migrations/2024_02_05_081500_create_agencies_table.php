@@ -16,6 +16,7 @@ class CreateAgenciesTable extends Migration
         Schema::create('agencies', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->string('name');
             $table->string('logo')->default('default.png');
             $table->unsignedBigInteger('country_id')->default(1);
             $table->unsignedBigInteger('category_id');

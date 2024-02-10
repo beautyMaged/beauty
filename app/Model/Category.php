@@ -86,4 +86,8 @@ class Category extends Model
     public function manufacturers(){
         return $this->hasMany(Manufacturer::class);
     }
+
+    public function sellers(){
+        return $this->belongsToMany(Seller::class);
+    }
 }

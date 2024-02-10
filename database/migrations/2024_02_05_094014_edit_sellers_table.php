@@ -65,7 +65,9 @@ class EditSellersTable extends Migration
 
             $table->unsignedBigInteger('trade_gov_no')->nullable();
 
-            $table->unsignedBigInteger('SBC_no')->nullable();
+            $table->unsignedBigInteger('AUTH_no')->nullable();
+
+            $table->enum('auth_authority',['maroof','SBC'])->nullable();
 
             $table->unsignedBigInteger('tax_no')->nullable();
 
@@ -97,17 +99,23 @@ class EditSellersTable extends Migration
     public function down()
     {
         Schema::table('sellers', function (Blueprint $table) {
+            // drop foreign keys
+            $table->dropForeign(['agency_id']);
+            $table->dropForeign(['manufacturer_id']);
+            $table->dropForeign(['city_id']);
+
             $table->dropColumn([
                 'trade_name',
                 'e_trade_name',
                 'type',
                 'commercial_record',
                 'trade_gov_no',
-                'SBC_no',
+                'AUTH_no',
                 'tax_no',
                 'agency_id',
                 'manufacturer_id',
-                'city_id'
+                'city_id',
+                'auth_authority'
             ]);
         });
 
