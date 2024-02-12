@@ -140,4 +140,19 @@ class Seller extends Authenticatable
     public function categories(){
         return $this->belongsToMany(Category::class);
     }
+
+    public function deliveryCompanies()
+    {
+        return $this->belongsToMany(DeliveryCompany::class);
+    }
+
+    public function shippingDurations()
+    {
+        return $this->hasMany(ShippingDuration::class);
+    }
+    
+    public function fastDeliveries()
+    {
+        return $this->hasMany(FastDelivery::class);
+    }
 }
