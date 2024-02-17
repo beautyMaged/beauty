@@ -56,7 +56,7 @@ class OrdersResource extends JsonResource
                         'name' => $detail->variant->values[0]->option->product->name,
                         'images' => $detail->variant->values[0]->option->product->images,
                         'refund_status' =>$this->checkRefund($detail),
-                        'seller_policies'=>$detail->seller->sellerPolicy];
+                        'seller_policies'=>$detail->seller->refundPolicy];
                      
                 }),
                 

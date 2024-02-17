@@ -25,4 +25,8 @@ class City extends Model
     {
         return $this->hasMany(FastDelivery::class);
     }
+
+    public function sellerRepositories(){
+        return $this->hasMany(SellerRepository::class);
+    }
 }

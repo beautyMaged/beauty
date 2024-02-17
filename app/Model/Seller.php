@@ -103,8 +103,8 @@ class Seller extends Authenticatable
     {
         return $this->hasOne(SellerWallet::class);
     }
-    public function sellerPolicy(){
-        return $this->hasOne(SellerPolicy::class);
+    public function refundPolicy(){
+        return $this->hasOne(RefundPolicy::class);
     }
     public function country(){
         return $this->belongsTo(Country::class);
@@ -154,5 +154,15 @@ class Seller extends Authenticatable
     public function fastDeliveries()
     {
         return $this->hasMany(FastDelivery::class);
+    }
+
+    public function policies()
+    {
+        return $this->belongsToMany(Policy::class)->withPivot('note', 'status');
+    }
+
+    public function sellerRepository()
+    {
+        return $this->hasOne(SellerRepository::class);
     }
 }

@@ -28,4 +28,8 @@ class Country extends Model
     public function cities(){
         return $this->hasMany(City::class);
     }
+
+    public function sellerRepositories(){
+        return $this->hasMany(SellerRepository::class);
+    }
 }

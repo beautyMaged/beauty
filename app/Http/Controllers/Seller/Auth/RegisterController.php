@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 use App\CPU\Helpers;
 use Illuminate\Support\Facades\Session;
 use App\Model\Cron;
-use App\Model\SellerPolicy;
+use App\Model\RefundPolicy;
 use App\Http\Requests\Seller\SellerRequest;
 
 use function App\CPU\translate;
@@ -138,7 +138,7 @@ class RegisterController extends Controller
             $shop->banner = ImageManager::upload('shop/banner/', 'png', $request->file('banner'));
             $shop->save();
 
-            $seller->sellerPolicy()->create([
+            $seller->refundPolicy()->create([
                 'shipping_min' => $request->shipping_min,
                 'shipping_max' => $request->shipping_max,
                 'refund_max' => $request->refund_max,

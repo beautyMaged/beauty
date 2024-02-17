@@ -59,10 +59,14 @@ class RefundRequestController extends Controller
 
         $order_details = OrderDetail::find($request->order_details_id);
 
+        if(!$order_details){
+            return response()->json(['error' => 'not found'],404);
+        }
+
         $seller = Seller::find($order_details->seller_id);
         // dd($seller);
         // check if the ordered item is refundable
-        if(!$this->isOrderRefundable($seller->sellerPolicy->refund_max, $order_details->created_at/* important!, change this to 'delivered_at' after handling it in orderController */)){
+        if(!$this->isOrderRefundable($seller->refundPolicy->refund_max, $order_details->created_at/* important!, change this to 'delivered_at' after handling it in orderController */)){
             return response()->json(['message' =>
                                     'The refund period for your order has expired. Please contact our customer service team for further assistance.'],400);
         }
