@@ -9,7 +9,7 @@ class Badge extends Model
 {
     use HasFactory;
     
-    public function seller(){
-        return $this->belongsTo(seller::class);
+    public function shop(){
+        return $this->belongsTo(Shop::class);
     }
 }

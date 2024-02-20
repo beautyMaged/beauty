@@ -125,26 +125,15 @@ class Seller extends Authenticatable
         return $this->hasManyThrough(BestProduct::class,Product::class);
     }
 
-    public function agency(){
-        return $this->hasOne(Agency::class);
-    }
 
-    public function manufacturer(){
-        return $this->hasOne(Manufacturer::class);
-    }
 
-    public function connections(){
-        return $this->hasMany(Connection::class);
-    }
+
 
     public function categories(){
         return $this->belongsToMany(Category::class);
     }
 
-    public function deliveryCompanies()
-    {
-        return $this->belongsToMany(DeliveryCompany::class);
-    }
+
 
     public function shippingDurations()
     {
@@ -161,8 +150,5 @@ class Seller extends Authenticatable
         return $this->belongsToMany(Policy::class)->withPivot('note', 'status');
     }
 
-    public function sellerRepository()
-    {
-        return $this->hasOne(SellerRepository::class);
-    }
+
 }

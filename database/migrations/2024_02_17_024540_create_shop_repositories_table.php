@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSellerRepositoriesTable extends Migration
+class CreateShopRepositoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateSellerRepositoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('seller_repositories', function (Blueprint $table) {
+        Schema::create('shop_repositories', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->unsignedBigInteger('seller_id');
+            $table->unsignedBigInteger('shop_id');
             $table->unsignedBigInteger('country_id');
             $table->unsignedBigInteger('city_id');
             $table->time('opening_time')->default('00:00:00');
@@ -27,7 +27,7 @@ class CreateSellerRepositoriesTable extends Migration
             $table->double('latitude');
 
             // foreign keys
-            $table->foreign('seller_id')->references('id')->on('sellers')->onDelete('cascade');
+            $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
             $table->foreign('country_id')->references('id')->on('countries');
             $table->foreign('city_id')->references('id')->on('cities');
 
@@ -41,6 +41,6 @@ class CreateSellerRepositoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('seller_repositories');
+        Schema::dropIfExists('shop_repositories');
     }
 }

@@ -15,9 +15,6 @@ class EditSellersTable extends Migration
     {
         Schema::table('sellers', function (Blueprint $table) {
             $table->dropColumn([
-                'f_name',
-                'l_name',
-                'phone',
                 'branch',
                 'FullManagerName',
                 'ownerEmail',
@@ -53,42 +50,7 @@ class EditSellersTable extends Migration
             ]);
         });
 
-        Schema::table('sellers', function (Blueprint $table){
-        
-            $table->string('trade_name');
 
-            $table->string('e_trade_name');
-
-            $table->enum('type',['company','organization', 'individual', 'local_seller', 'other']);
-
-            $table->unsignedBigInteger('commercial_record')->nullable();
-
-            $table->unsignedBigInteger('trade_gov_no')->nullable();
-
-            $table->unsignedBigInteger('AUTH_no')->nullable();
-
-            $table->enum('auth_authority',['maroof','SBC'])->nullable();
-
-            $table->unsignedBigInteger('tax_no')->nullable();
-
-            $table->unsignedBigInteger('city_id')->nullable();
-
-
-            $table->unsignedBigInteger('agency_id')->nullable();
-
-            $table->unsignedBigInteger('manufacturer_id')->nullable();
-
-
-            // foreign key constraints
-
-            $table->foreign('agency_id')->references('id')->on('agencies')->onDelete('set null');
-
-            $table->foreign('manufacturer_id')->references('id')->on('manufacturers')->onDelete('set null');
-
-            $table->foreign('city_id')->references('id')->on('cities')->onDelete('set null');
-
-
-        });
     }
 
     /**
@@ -98,31 +60,9 @@ class EditSellersTable extends Migration
      */
     public function down()
     {
-        Schema::table('sellers', function (Blueprint $table) {
-            // drop foreign keys
-            $table->dropForeign(['agency_id']);
-            $table->dropForeign(['manufacturer_id']);
-            $table->dropForeign(['city_id']);
 
-            $table->dropColumn([
-                'trade_name',
-                'e_trade_name',
-                'type',
-                'commercial_record',
-                'trade_gov_no',
-                'AUTH_no',
-                'tax_no',
-                'agency_id',
-                'manufacturer_id',
-                'city_id',
-                'auth_authority'
-            ]);
-        });
 
         Schema::table('sellers', function (Blueprint $table) {
-            $table->string('f_name',30)->nullable();
-            $table->string('l_name',30)->nullable();
-            $table->string('phone',25)->nullable();
             $table->string('branch')->nullable();
             $table->string('FullManagerName');
             $table->string('ownerEmail');

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDeliveryCompanySellerTable extends Migration
+class CreateDeliveryCompanyShopTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,16 @@ class CreateDeliveryCompanySellerTable extends Migration
      */
     public function up()
     {
-        Schema::create('delivery_company_seller', function (Blueprint $table) {
+        Schema::create('delivery_company_shop', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('seller_id');
+            $table->unsignedBigInteger('shop_id');
             $table->unsignedBigInteger('delivery_company_id');
-            $table->tinyInteger('main_cities')->nullable();
-            $table->tinyInteger('towns')->nullable();
-            $table->tinyInteger('vilages')->nullable();
+            $table->tinyInteger('main_cities_fees')->nullable();
+            $table->tinyInteger('towns_fees')->nullable();
+            $table->tinyInteger('vilages_fees')->nullable();
             
             // foreign keys
-            $table->foreign('seller_id')->references('id')->on('sellers')->onDelete('cascade');
+            $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
             $table->foreign('delivery_company_id')->references('id')->on('delivery_companies')->onDelete('cascade');
 
         });
@@ -35,6 +35,6 @@ class CreateDeliveryCompanySellerTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('delivery_company_seller');
+        Schema::dropIfExists('delivery_company_shop');
     }
 }

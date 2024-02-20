@@ -10,7 +10,7 @@ class Agency extends Model
     use HasFactory;
     protected $guarded = [];
 
-    public function seller(){
-        return $this->belongsTo(Seller::class);
+    public function shop(){
+        return $this->belongsTo(Shop::class);
     }
 }

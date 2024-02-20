@@ -5,12 +5,12 @@ namespace App\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SellerRepository extends Model
+class ShopRepository extends Model
 {
     use HasFactory;
 
-    public function seller(){
-        return $this->belongsTo(Seller::class);
+    public function shop(){
+        return $this->belongsTo(Shop::class);
     }
 
     public function country(){

@@ -9,9 +9,9 @@ class ShippingDuration extends Model
 {
     use HasFactory;
 
-    protected $table = 'delivery_company_seller';
+    protected $table = 'delivery_company_shop';
 
-    public function seller()
+    public function shop()
     {
         return $this->belongsTo(Seller::class);
     }

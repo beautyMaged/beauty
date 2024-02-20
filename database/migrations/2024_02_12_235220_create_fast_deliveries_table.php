@@ -16,15 +16,15 @@ class CreateFastDeliveriesTable extends Migration
         Schema::create('fast_deliveries', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->unsignedBigInteger('seller_id');
+            $table->unsignedBigInteger('shop_id');
             $table->unsignedBigInteger('city_id');
             $table->float('cost')->default(0);
             $table->string('note')->nullable();
 
             // foreign keys
-            $table->foreign('seller_id')->references('id')->on('sellers')->onDelete('cascade');
+            $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
-            $table->unique(['seller_id', 'city_id']);
+            $table->unique(['shop_id', 'city_id']);
 
         });
     }

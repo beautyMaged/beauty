@@ -16,7 +16,7 @@ class CreateBranchesTable extends Migration
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('seller_id');
+            $table->unsignedBigInteger('shop_id');
             $table->unsignedBigInteger('city_id');
             $table->unsignedBigInteger('district_id');
             $table->double('longitude');
@@ -26,7 +26,7 @@ class CreateBranchesTable extends Migration
             $table->string('description')->nullable();
 
             // foreign keys
-            $table->foreign('seller_id')->references('id')->on('sellers')->onDelete('cascade');
+            $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
             $table->foreign('city_id')->references('id')->on('cities');
             $table->foreign('district_id')->references('id')->on('districts');
 

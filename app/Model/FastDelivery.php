@@ -9,8 +9,8 @@ class FastDelivery extends Model
 {
     use HasFactory;
 
-    public function seller(){
-        return $this->belongsTo(Seller::class);
+    public function shop(){
+        return $this->belongsTo(Shop::class);
     }
 
     public function city(){

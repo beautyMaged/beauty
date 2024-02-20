@@ -20,9 +20,9 @@ class CreateBadgesTable extends Migration
             $table->string('note');
             $table->string('icon')->default('icon.png');
             $table->boolean('is_approved')->default(0);
-            $table->unsignedBigInteger('seller_id');
+            $table->unsignedBigInteger('shop_id');
 
-            $table->foreign('seller_id')->references('id')->on('sellers')->onDelete('cascade');
+            $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
         });
     }
 

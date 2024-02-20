@@ -35,4 +35,34 @@ class Shop extends Model
                 return $this->hasOne(ShopifyOauthToken::class);
         }
     }
+
+    public function agency(){
+        return $this->hasOne(Agency::class);
+    }
+
+    public function manufacturer(){
+        return $this->hasOne(Manufacturer::class);
+    }
+
+    public function branches(){
+        return $this->hasMany(Branch::class);
+    }
+
+    public function connections(){
+        return $this->hasMany(Connection::class);
+    }
+
+    public function deliveryCompanies()
+    {
+        return $this->belongsToMany(DeliveryCompany::class);
+    }
+
+    public function badges(){
+        return $this->hasMany(Badge::class);
+    }
+
+    public function shopRepository()
+    {
+        return $this->hasOne(ShopRepository::class);
+    }
 }

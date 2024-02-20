@@ -15,8 +15,8 @@ class Branch extends Model
         return $this->belongsTo(District::class);
     }
 
-    public function seller(){
-        return $this->belongsTo(Seller::class);
+    public function shop(){
+        return $this->belongsTo(Shop::class);
     }
 
     public function city(){

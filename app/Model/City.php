@@ -21,6 +21,10 @@ class City extends Model
         return $this->belongsTo(Seller::class);
     }
 
+    public function shops(){
+        return $this->belongsTo(Shop::class);
+    }
+
     public function fastDeliveries()
     {
         return $this->hasMany(FastDelivery::class);
