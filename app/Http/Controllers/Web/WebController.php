@@ -396,7 +396,7 @@ class WebController extends Controller
     public function all_brands(Request $request)
     {
         $brands = Brand::active()->paginate($request['take'] ?? 24);
-        if ($request->wantsJson())
+        // if ($request->wantsJson())
             return response()->json($brands);
         return view('web-views.brands', compact('brands'));
     }
@@ -1565,6 +1565,8 @@ class WebController extends Controller
         }
 
         /* sort_by */
+        $query = ProductManager::search_products_web($request['name']);
+
         switch ($request['sort_by']) {
             case 'latest':
                 $fetched = $query->latest();
@@ -1679,6 +1681,7 @@ class WebController extends Controller
                 // 'brands' => $brands,
             ], 200);
         }
+        return response()->json(['products'=>$products]);
         return view('web-views.products.view', compact('products', 'data', 'colors'/*, 'brands' */), $data);
     }
 

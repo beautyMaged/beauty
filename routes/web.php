@@ -14,6 +14,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Customer\ShippingAddressController;
 use App\Http\Controllers\SocialMediaController;
+use App\Model\DeliveryCompany;
 use Aws\Middleware;
 
 Route::prefix('app')->group(function () {
@@ -37,6 +38,10 @@ Route::prefix('app')->group(function () {
     Route::resource('countries',CountryController::class);
     // cities
     Route::resource('cities',CityController::class);
+    // districts
+    Route::resource('districts',DistrictController::class);
+    // districts
+    Route::resource('delivery-companies',DeliveryCompanyController::class);
     // routes for static pages
     Route::group(['namespace'=>'Admin'],function(){
         Route::resource('pages',PageController::class);

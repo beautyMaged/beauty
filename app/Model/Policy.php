@@ -9,6 +9,7 @@ class Policy extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
     public function sellers(){
         return $this->belongsToMany(Seller::class)->withPivot('note', 'status');
     }

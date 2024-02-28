@@ -2,6 +2,7 @@
 
 use WebhookController as ShopifyWebhookController;
 use App\Http\Controllers\Admin\CommissionController;
+// use \App\Http\Controllers\Admin\PolicyController as PolicyController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Route;
     Route::patch('admin/product-commission/{id}',[CommissionController::class,'updateProductCommission']);
     Route::delete('admin/category-commission/{cId}/seller/{sId}',[CommissionController::class,'deleteSellerCategoryCommission']);
 
+// seller policies
+    Route::resource('seller-policies',Admin\PolicyController::class);
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('', fn () => redirect()->route('admin.auth.login'));
 

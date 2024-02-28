@@ -15,6 +15,7 @@ class RenameSellerPoliciesTable extends Migration
     {
         Schema::rename('seller_policies', 'refund_policies');
         Schema::table('refund_policies', function (Blueprint $table) {
+            $table->id();
             $table->dropColumn(['shipping_min','shipping_max']);
             $table->integer('days_to_refund_before_reception');
             $table->integer('min_days_to_refund');

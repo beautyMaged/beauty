@@ -29,13 +29,5 @@ class StaticPageRequest extends FormRequest
             'image' => 'required_without:id|mimes:png,jpg,jpeg,webp',
         ];
     }
-    public function messages()
-    {
-        return [
-            'title.required' => 'العنوان مطلوب',
-            'description.required' => 'المحتوي مطلوب',
-            'image.required' => 'الصورة مطلوبة',
-            'image.mimes' => 'نوع الصورة غير صالح',
-        ];
-    }
+
 }

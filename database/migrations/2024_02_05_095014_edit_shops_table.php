@@ -40,6 +40,8 @@ class EditShopsTable extends Migration
 
             $table->unsignedBigInteger('manufacturer_id')->nullable();
 
+            $table->enum('status',['pending','approved', 'suspended', 'rejected'])->default('pending');
+
 
             // foreign key constraints
 
@@ -81,7 +83,8 @@ class EditShopsTable extends Migration
                 'manufacturer_id',
                 'city_id',
                 'country_id',
-                'auth_authority'
+                'auth_authority',
+                'status'
             ]);
         });
 
