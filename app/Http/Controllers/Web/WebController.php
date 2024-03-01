@@ -53,6 +53,7 @@ use Illuminate\Support\Facades\DB;
 use Gregwar\Captcha\CaptchaBuilder;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryResource;
 use Brian2694\Toastr\Facades\Toastr;
 use Exception;
 use Illuminate\Support\Facades\Mail;
@@ -335,12 +336,27 @@ class WebController extends Controller
         return view('web-views.sellers', compact('sellers'));
     }
 
-    public function all_categories()
+    public function all_categories(Request $request)
     {
-        $categories = Category::get();
-        return response()->json($categories);
-        return view('web-views.categories', ('categories'));
+        $category_ids = Category::all()->pluck('id')->implode(',');
+        try {
+            $request->validate([
+                'category_id' => 'in:0,'.$category_ids
+            ]);
+    
+            if ($request->category_id == 0) {
+                $categories = Category::where('parent_id', 0)->get();
+            } else {
+                $categories = Category::where('parent_id', $request->category_id)->get();
+            }
+    
+            return response()->json(CategoryResource::collection($categories));
+        } catch (Exception $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+        // return view('web-views.categories', ['categories' => $categories]);
     }
+    
 
     public function categories_with_product_count(Request $request)
     {
@@ -2507,6 +2523,13 @@ class WebController extends Controller
             throw new \Exception('Invalid parameter. parameter must be an instance of product collection');
 
         }
+    }
+
+    public function categoryProducts(Request $request){
+        $this->validate($request,[
+            'category_id' => 'required|exists:categories,id'
+        ]);
+
     }
 
 

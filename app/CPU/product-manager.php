@@ -135,17 +135,30 @@ class ProductManager
             'products' => $paginator->items()
         ];
     }
-    public static function search_products_web($name)
-    {
+    // public static function search_products_web($name)
+    // {
+    //     $key = explode(' ', $name);
+    //     return Product::active()->with(['tags'])->where(function ($q) use ($key) {
+    //         foreach ($key as $value)
+    //             $q->orWhere('name', 'like', "%{$value}%")
+    //                 ->orWhereHas('tags', function ($query) use ($value) {
+    //                     $query->where('tag', 'like', "%{$value}%");
+    //                 });
+    //     });
+    // }
+    public static function search_products_web($name){
         $key = explode(' ', $name);
-        return Product::active()->with(['tags'])->where(function ($q) use ($key) {
+        return Product::active()->with(['name', 'tags'])->where(function ($q) use ($key) {
             foreach ($key as $value)
-                $q->orWhere('name', 'like', "%{$value}%")
-                    ->orWhereHas('tags', function ($query) use ($value) {
-                        $query->where('tag', 'like', "%{$value}%");
-                    });
+                $q->orWhereHas('name', function ($query) use ($value) {
+                    $query->where('name', 'like', "%{$value}%");
+                })
+                ->orWhereHas('tags', function ($query) use ($value) {
+                    $query->where('tag', 'like', "%{$value}%");
+                });
         });
     }
+
 
     public static function translated_product_search($name, $limit = 10, $offset = 1)
     {
