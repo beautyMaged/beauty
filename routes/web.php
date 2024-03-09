@@ -14,6 +14,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Customer\ShippingAddressController;
 use App\Http\Controllers\SocialMediaController;
+use App\Model\ContactMessage;
 use App\Model\DeliveryCompany;
 use Aws\Middleware;
 
@@ -48,6 +49,11 @@ Route::prefix('app')->group(function () {
         Route::resource('page-categories',PageCategoryController::class);
         Route::get('footer','PageCategoryController@listPages');
     });
+
+    // contact messages
+    Route::resource('contact-messages',\ContactMessageController::class);
+
+    Route::get('contact-messages-types','ContactMessageController@messageTypes');
 
     Route::resource('social-media', 'SocialMediaController');
 

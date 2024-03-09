@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 
 // seller policies
     Route::resource('seller-policies',Admin\PolicyController::class);
+
+// connection channels
+    Route::resource('connection-channels',Admin\ConnectionChannelController::class);
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('', fn () => redirect()->route('admin.auth.login'));
 
