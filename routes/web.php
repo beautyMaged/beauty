@@ -53,7 +53,12 @@ Route::prefix('app')->group(function () {
     // contact messages
     Route::resource('contact-messages',\ContactMessageController::class);
 
-    Route::get('contact-messages-types','ContactMessageController@messageTypes');
+    // common questions
+    Route::resource('common-questions',\CommonQuestionController::class);
+
+    // common questions by type 
+    Route::get('common-questions/{type}/{user}','CommonQuestionController@getByType');
+
 
     Route::resource('social-media', 'SocialMediaController');
 
