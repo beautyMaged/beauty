@@ -20,10 +20,11 @@ class CategoryResource extends JsonResource
             'slug' => $this->slug,
             'icon' => $this->icon,
             'parent_id' => $this->parent_id,
-            'posistion' => $this->posistion,
+            'position' => $this->position,
             'home_status' => $this->home_status,
             'priority' => $this->priority,
             'status' => $this->status,
+            'products_count' => $this->products->count(),
             'children' => CategoryResource::collection($this->childes),
         ];
     }

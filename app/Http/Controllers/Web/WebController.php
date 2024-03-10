@@ -62,6 +62,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Collection;
 use App\Http\Resources\Product\ProductSearchResource;
+use App\Http\Resources\ShopResource;
 
 class WebController extends Controller
 {
@@ -1909,13 +1910,13 @@ class WebController extends Controller
         return view('web-views.contacts');
     }
 
-    public function about_us()
-    {
-        $about_us = BusinessSetting::where('type', 'about_us')->first();
-        return view('web-views.about-us', [
-            'about_us' => $about_us,
-        ]);
-    }
+    // public function about_us()
+    // {
+    //     $about_us = BusinessSetting::where('type', 'about_us')->first();
+    //     return view('web-views.about-us', [
+    //         'about_us' => $about_us,
+    //     ]);
+    // }
 
     public function termsandCondition()
     {
@@ -2531,6 +2532,55 @@ class WebController extends Controller
         ]);
 
     }
+
+    public function get_brands()
+    {
+        try {
+            $brands = BrandManager::get_active_brands();
+
+        } catch (\Exception $e) {
+
+            return response()->json($e->getMessage(),500);
+
+        }
+
+        return response()->json($brands,200);
+    }
+
+    public function about_us()
+    {
+
+        try {
+
+            $about_us = BusinessSetting::where('type', 'about_us')->first();
+
+        } catch (\Exception $e) {
+
+            return response()->json($e->getMessage(),500);
+
+        }
+
+        return response()->json($about_us->value ,200);
+
+
+    }
+
+    public function get_shops(){
+        try {
+
+        $shops = Shop::where('status','approved')->get();
+
+        } catch (\Exception $e) {
+
+            return response()->json($e->getMessage(),500);
+
+        }
+        Log::info(response()->json( ShopResource::collection($shops),200));
+        return response()->json( ShopResource::collection($shops),200);
+
+    }
+
+    
 
 
 

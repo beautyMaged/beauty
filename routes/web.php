@@ -59,6 +59,12 @@ Route::prefix('app')->group(function () {
     // common questions by type 
     Route::get('common-questions/{type}/{user}','CommonQuestionController@getByType');
 
+    // about_us
+    Route::get('about-us', 'Web\WebController@about_us');
+
+    // shops
+    Route::get('shops', 'Web\WebController@get_shops');
+
 
     Route::resource('social-media', 'SocialMediaController');
 
@@ -166,7 +172,7 @@ Route::prefix('app')->group(function () {
 
         Route::post('currency', 'CurrencyController@changeCurrency')->name('currency.change');
 
-        Route::get('about-us', 'WebController@about_us')->name('about-us');
+        // Route::get('about-us', 'WebController@about_us')->name('about-us');
 
         //profile Route
         Route::get('user-account', 'UserProfileController@user_account')->name('user-account');
