@@ -14,9 +14,8 @@ class AddRefundRequestReasonToRefundRequestsTable extends Migration
     public function up()
     {
         Schema::table('refund_requests', function (Blueprint $table) {
-            $table->enum("refund_request_reason",["different","expired","dislike","not_ordered","other"])->default("different");
+            $table->enum("refund_request_reason", ["different", "expired", "dislike", "not_ordered", "other"])->default("different");
             $table->string("bill_image");
-
         });
     }
 
@@ -28,7 +27,8 @@ class AddRefundRequestReasonToRefundRequestsTable extends Migration
     public function down()
     {
         Schema::table('refund_requests', function (Blueprint $table) {
-            //
+            $table->dropColumn('refund_request_reason');
+            $table->dropColumn('bill_image');
         });
     }
 }

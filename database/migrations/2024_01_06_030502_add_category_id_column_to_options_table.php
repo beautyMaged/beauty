@@ -28,6 +28,7 @@ class AddCategoryIdColumnToOptionsTable extends Migration
     public function down()
     {
         Schema::table('options', function (Blueprint $table) {
+            $table->dropForeign(['category_id']);
             $table->dropColumn('category_id');
         });
     }

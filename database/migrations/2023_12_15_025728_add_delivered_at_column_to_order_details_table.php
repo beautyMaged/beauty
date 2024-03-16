@@ -26,7 +26,7 @@ class AddDeliveredAtColumnToOrderDetailsTable extends Migration
     public function down()
     {
         Schema::table('order_details', function (Blueprint $table) {
-            //
+            $table->dropColumn('delivered_at');
         });
     }
 }

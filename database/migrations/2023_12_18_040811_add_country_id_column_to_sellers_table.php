@@ -14,7 +14,7 @@ class AddCountryIdColumnToSellersTable extends Migration
     public function up()
     {
         Schema::table('sellers', function (Blueprint $table) {
-            $table->unsignedBigInteger('country_id')->default(1);
+            $table->unsignedBigInteger('country_id')->nullable();
             // foreign key
             $table->foreign('country_id')->references('id')->on('countries');
         });
@@ -28,10 +28,9 @@ class AddCountryIdColumnToSellersTable extends Migration
     public function down()
     {
         Schema::table('sellers', function (Blueprint $table) {
-            
+
             $table->dropForeign(['country_id']);
             $table->dropColumn('country_id');
-    
         });
     }
 }
