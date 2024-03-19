@@ -76,7 +76,7 @@ class Category extends Model
         return $this->hasMany(SellerCategoryCommission::class);
     }
     public function options(){
-        return $this->hasMany(Option::class);
+        return $this->hasManyThrough(Option::class,Product::class);
     }
 
     public function agencies(){

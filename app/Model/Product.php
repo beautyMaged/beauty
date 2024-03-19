@@ -112,10 +112,12 @@ class Product extends Model
         return $this->belongsToMany(Category::class)->withPivot('top_rated', 'top_rated_globally','best_selling','best_selling_globally');
     }
 
-    public function category(){
-        return $this->belongsTo(Category::class)->orderBy('position', 'desc')
-        ->first();
-    }
+    public function getCategoryAttribute()
+    {
+        $categories = $this->categories()->orderBy('position', 'desc')->get();
+
+        return $categories->first();
+    }  
 
     public function rating()
     {
@@ -191,4 +193,25 @@ class Product extends Model
     public function name(){
         return $this->belongsTo(ProductName::class,'name_id','id');
     }
+
+    public function coupons()
+    {
+        return $this->belongsToMany(Coupon::class)->withPivot('state');
+    }
+
+    public function getBreadcrumbAttribute()
+    {
+        return $this->categories()->orderBy('position')->get()->map(function ($category) {
+            return [
+                'name' => $category->name,
+                'slug' => $category->slug,
+            ];
+        });
+    }
+
+    public function variants(){
+        return $this->hasMany(Variant::class)->with('values.option');
+    }
+    
+    
 }

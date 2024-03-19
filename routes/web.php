@@ -18,6 +18,7 @@ use App\Model\ContactMessage;
 use App\Model\DeliveryCompany;
 use Aws\Middleware;
 
+Route::get('products/details/{slug}', 'Web\WebController@get_product');
 Route::prefix('app')->group(function () {
 
     Route::controller('StaticDataController')->group(function () {

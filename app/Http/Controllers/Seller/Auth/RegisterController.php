@@ -177,7 +177,7 @@ class RegisterController extends Controller
                 $seller->create(['f_name'=>$request->f_name,
                                 'l_name'=>$request->l_name,
                                 'email'=>$request->email,
-                                'password'=>$request->password,
+                                'password'=>bcrypt($request->password),
                                 'image'=>$image_name,
                                 'country_id'=>$request->country_id,
                                 'phone'=>$request->phone,]);

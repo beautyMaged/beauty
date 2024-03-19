@@ -13,7 +13,7 @@ class RegisterShopRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -71,17 +71,17 @@ class RegisterShopRequest extends FormRequest
 
             // agencies
             'agency' => 'required_without:manufacturer',
-            'agency.name' => 'required|string',
-            'agency.logo' => 'required|mimes:jpg,jpeg,png,gif',
-            'agency.country_id' => 'required|numeric|exists:countries,id',
-            'agency.category_id' => 'required|numeric|exists:categories,id',
+            'agency.name' => 'required_without:manufacturer|string',
+            'agency.logo' => 'required_without:manufacturer|mimes:jpg,jpeg,png,gif',
+            'agency.country_id' => 'required_without:manufacturer|numeric|exists:countries,id',
+            'agency.category_id' => 'required_without:manufacturer|numeric|exists:categories,id',
 
             // manufacturer
             'manufacturer' => 'required_without:agency',
-            'manufacturer.name' => 'required|string',
-            'manufacturer.logo' => 'required|mimes:jpg,jpeg,png,gif',
-            'manufacturer.country_id' => 'required|numeric|exists:countries,id',
-            'manufacturer.category_id' => 'required|numeric|exists:categories,id',
+            'manufacturer.name' => 'required_without:agency|string',
+            'manufacturer.logo' => 'required_without:agency|mimes:jpg,jpeg,png,gif',
+            'manufacturer.country_id' => 'required_without:agency|numeric|exists:countries,id',
+            'manufacturer.category_id' => 'required_without:agency|numeric|exists:categories,id',
 
             // policies
             'policies.*.policy_id' => 'required|numeric|exists:countries,id',
@@ -114,8 +114,8 @@ class RegisterShopRequest extends FormRequest
             'shop_repository.closing_time' => 'required|date',
             'shop_repository.friday_opening_time' => 'required|date',
             'shop_repository.friday_closing_time' => 'required|date',
-            'shop_repository.longitude' => 'required|float',
-            'shop_repository.latitude' => 'required|float',
+            'shop_repository.longitude' => 'required|numeric',
+            'shop_repository.latitude' => 'required|numeric',
 
             // seller badges
             'badges.*.title' => 'required|string',

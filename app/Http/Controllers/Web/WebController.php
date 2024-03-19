@@ -2483,7 +2483,9 @@ class WebController extends Controller
     // get similar products `by name`
     public function getSimilarProducts($id){
         $ProductName = Product::find($id)->name()->getResults();
-        return $ProductName->products;
+        return $ProductName->products->filter(function($product) use($id) {
+            return $product->id != $id;
+        });
     }
     // // get similar products `by name`
     // public function getSimilarProducts($id){
@@ -2585,9 +2587,15 @@ class WebController extends Controller
 
 
 
-    // static function tindex(){
-    //     $products = Product::all(); // Get all products
-    //     return \App\Http\Resources\Product\ProductResource::collection($products)->resolve(); // Return products as a resource collection
-    // }
+    static function tindex(){
+        $products = Product::first(); // Get all products
+        return \App\Http\Resources\Product\ProductResource::collection($products)->resolve(); // Return products as a resource collection
+    }
+
+    static function get_product($slug){
+        $product = Product::with(['coupons', 'options'])->where(['slug' => $slug])->first();
+
+        return response()->json(['data'=>new \App\Http\Resources\Product\SingleProductResource($product)]);
+    }
     
 }

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Seller\RegisterShopRequest;
 
 class ShopController extends Controller
 {
@@ -85,6 +86,10 @@ class ShopController extends Controller
         $shop->save();
 
         return response()->json(['status' => true], 200);
+    }
+
+    public function store(RegisterShopRequest $request ){
+        return $request->image;
     }
 
 }

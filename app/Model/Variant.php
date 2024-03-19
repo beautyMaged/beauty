@@ -19,4 +19,14 @@ class Variant extends Model
     public function order_details(){
         return $this->hasMany(Orderdetail::class);
     }
+
+    public function product(){
+        return $this->belongsTo(Product::class);
+    }
+
+    public function getDiscountAttribute(){
+        
+        return floor(100 - ($this->sale_price / $this->price) * 100) . '%';
+
+    }
 }

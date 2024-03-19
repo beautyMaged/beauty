@@ -17,6 +17,6 @@ class Option extends Model
         return $this->hasMany(Value::class);
     }
     public function category(){
-        return $this->belongsTo(Category::class);
+        return $this->hasOneThrough(Category::class,Product::class);
     }
 }

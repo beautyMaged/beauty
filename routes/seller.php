@@ -20,7 +20,11 @@ use App\Model\BestProduct;
 use Salla\WebhookController as SallaWebhookController;
 use Zid\WebhookController as ZidWebhookController;
 use Shopify\WebhookController as ShopifyWebhookController;
+use App\Http\Controllers\Seller\Auth\RegisterController;
+use App\Http\Controllers\Seller\ShopController;
 
+Route::post('bePartner',[RegisterController::class,'store']);
+Route::post('registerShop',[ShopController::class,'store']);
 
 Route::resource('seller/categories',CatgegoryController::class);
 Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'], function () {
