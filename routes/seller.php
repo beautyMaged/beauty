@@ -26,6 +26,12 @@ use App\Http\Controllers\Seller\ShopController;
 Route::post('bePartner',[RegisterController::class,'store']);
 Route::post('registerShop',[ShopController::class,'store']);
 
+// seller policies
+Route::get('seller/policies','Admin\PolicyController@getPoliciesToSeller');
+
+// seller policies
+Route::post('seller/new-policy','Admin\PolicyController@storeForSeller');
+
 Route::resource('seller/categories',CatgegoryController::class);
 Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'], function () {
     Route::get('/', fn () => redirect()->route('seller.auth.login'));

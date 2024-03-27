@@ -9,6 +9,7 @@ use App\Model\CustomerNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use App\Model\Seller;
 
 class User extends Authenticatable
 {
@@ -68,6 +69,10 @@ class User extends Authenticatable
     public function notifications()
     {
         return $this->hasMany(CustomerNotification::class);
+    }
+
+    public function followedSellers(){
+        return $this->belongsToMany(Seller::class);
     }
 
 }

@@ -34,7 +34,7 @@ class DeliveryCompanyController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string',
+            'name' => 'required|string|unique:delivery_companies',
             'logo' => 'required|image|mimes:jpg,jpeg,png,gif',
         ]);
 

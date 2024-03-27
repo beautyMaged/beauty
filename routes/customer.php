@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+use App\Http\Controllers\Customer\NotificationController;
 use App\Http\Controllers\Customer\Auth\UpdateCustomerController;
 // use App\Http\Controllers\Customer\OrderController;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Route;
 Route::patch('app/customer/updateInfo',[UpdateCustomerController::class,"update"]);
 Route::patch('app/customer/updatePassword',[UpdateCustomerController::class,"updatePassword"]);
 
+Route::post('app/customer/follow/{sellerId}',[NotificationController::class,'followSeller']);
+Route::post('app/customer/unfollow/{sellerId}',[NotificationController::class,'unFollowSeller']);
 Route::prefix('app')->group(function () {
     /*Auth::routes();*/
     Route::get('authentication-failed', function () {

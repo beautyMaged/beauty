@@ -9,11 +9,7 @@ class RefundPolicy extends Model
 {
     public $timestamps = false;
 
-    protected $fillable = [
-        'seller_id',
-        'refund_max',
-        'substitution_max',
-    ];
+    protected $guarded = [];
 
     public function seller(){
         return $this->belongsTo(Seller::class);

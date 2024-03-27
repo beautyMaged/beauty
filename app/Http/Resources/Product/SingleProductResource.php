@@ -78,7 +78,9 @@ class SingleProductResource extends JsonResource
 
                     'price' => $variant->price,
 
-                    'sale_price' => $variant->sale_price,
+                    'discount' => ($variant->discount.'%'),
+
+                    'sale_price' => $variant->price - ($variant->discount/100 * $variant->price),
 
                     'quantity' => $variant->quantity,
 

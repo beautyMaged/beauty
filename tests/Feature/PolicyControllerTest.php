@@ -8,6 +8,7 @@ use Tests\TestCase;
 use App\Model\Policy;
 use Illuminate\Http\Response;
 use App\Model\Admin;
+use App\Model\Seller;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -43,12 +44,28 @@ class PolicyControllerTest extends TestCase
         $policyData = [
             'name' => 'Test Policy',
             'description' => 'Test Policy Description',
-            'is_approved' => true,
-            'is_global' => false,
             'type' => 'refund',
         ];
 
         $response = $this->post('/seller-policies', $policyData);
+        // Log::info($response);
+
+
+        $response->assertStatus(Response::HTTP_OK);
+
+    }
+
+    public function storeForSeller()
+    {
+        $this->actingAsSeller();
+
+        $policyData = [
+            'name' => 'Test Policy',
+            'description' => 'Test Policy Description',
+            'type' => 'refund',
+        ];
+
+        $response = $this->post('/seller/new-policy', $policyData);
         // Log::info($response);
 
 
@@ -78,7 +95,7 @@ class PolicyControllerTest extends TestCase
         $updatedData = [
             'name' => 'Updated Policy Name',
             'description' => 'Updated Policy Description',
-            'is_approved' => false,
+            'is_approved' => true,
             'is_global' => true,
             'type' => 'delivery',
         ];
@@ -106,5 +123,11 @@ class PolicyControllerTest extends TestCase
     {
         $admin = Admin::take(1)->first();
         $this->actingAs($admin, 'admin');
+    }
+
+    private function actingAsSeller()
+    {
+        $seller = Seller::take(1)->first();
+        $this->actingAs($seller, 'seller');
     }
 }

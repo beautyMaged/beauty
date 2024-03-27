@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Seller;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Support\Facades\DB;
 class RegisterShopRequest extends FormRequest
 {
     /**
@@ -84,7 +84,8 @@ class RegisterShopRequest extends FormRequest
             'manufacturer.category_id' => 'required_without:agency|numeric|exists:categories,id',
 
             // policies
-            'policies.*.policy_id' => 'required|numeric|exists:countries,id',
+            'policies' => 'array|required|size:'. $this->nOfPolicies(),
+            'policies.*.policy_id' => 'required|numeric|exists:policies,id',
             'policies.*.status' => 'required|boolean',
             'policies.*.note' => 'string',
 
@@ -108,22 +109,63 @@ class RegisterShopRequest extends FormRequest
             'new_policies.*.note' => 'string',
 
             // shop repositories
-            'shop_repository.country_id' => 'required|in:countries.id',
-            'shop_repository.city_id'  => 'required|in:cities.id',
-            'shop_repository.opening_time' => 'required|date',
-            'shop_repository.closing_time' => 'required|date',
-            'shop_repository.friday_opening_time' => 'required|date',
-            'shop_repository.friday_closing_time' => 'required|date',
-            'shop_repository.longitude' => 'required|numeric',
-            'shop_repository.latitude' => 'required|numeric',
+            'shop_repository' => 'array',
+            'shop_repository.country_id' => 'required_with:shop_repository|exists:countries,id',
+            'shop_repository.city_id'  => 'required_with:shop_repository|exists:cities,id',
+            'shop_repository.opening_time' => 'required_with:shop_repository|date',
+            'shop_repository.closing_time' => 'required_with:shop_repository|date',
+            'shop_repository.friday_opening_time' => 'required_with:shop_repository|date',
+            'shop_repository.friday_closing_time' => 'required_with:shop_repository|date',
+            'shop_repository.longitude' => 'required_with:shop_repository|numeric',
+            'shop_repository.latitude' => 'required_with:shop_repository|numeric',
 
             // seller badges
-            'badges.*.title' => 'required|string',
-            'badges.*.note' => 'required|string',
-            'badges.*.icon' => 'required|mimes:jpg,jpeg,png,gif'
+            'badges' => 'array',
+            'badges.*.title' => 'required_with:badges|string',
+            'badges.*.note' => 'required_with:badges|string',
+            'badges.*.icon' => 'required_with:badges|mimes:jpg,jpeg,png,gif',
+
+            // delivery companies
+            'delivery_companies' => 'array', 
+            'delivery_companies.*.delivery_company_id' => 'required_with:delivery_companies|exists:delivery_companies,id', 
+            'delivery_companies.*.main_cities_fees' => 'required_with:delivery_companies|numeric', 
+            'delivery_companies.*.towns_fees' => 'required_with:delivery_companies|numeric', 
+            'delivery_companies.*.vilages_fees' => 'required_with:delivery_companies|numeric', 
+            'delivery_companies.*.link' => 'required_with:delivery_companies|string',
+
+            
+            // 48 hour delivery details for each city
+            'fast_deliveries' => 'array', 
+            'fast_deliveries.*.city_id' => 'required_with:fast_deliveries|exists:cities,id', 
+            'fast_deliveries.*.cost' => 'required_with:fast_deliveries|numeric', 
+            'fast_deliveries.*.note' => 'required_with:fast_deliveries|string',
+            
+            // 24 hour delivery details for each city
+            'one_day_deliveries' => 'array', 
+            'one_day_deliveries.*.city_id' => 'required_with:one_day_deliveries|exists:cities,id', 
+            'one_day_deliveries.*.cost' => 'required_with:one_day_deliveries|numeric', 
+            'one_day_deliveries.*.note' => 'required_with:one_day_deliveries|string',
+
+            // refund policy
+            'refund_policy' => 'array|required',
+            'refund_policy.refund_max' => 'required|integer|max:100|min:0',
+            'refund_policy.substitution_max' => 'required|integer|max:100|min:0',
+            'refund_policy.days_to_refund_before_reception' => 'required|integer|max:100|min:0',
+            // refund duration for the whole process
+            'refund_policy.min_days_to_refund' => 'required|integer|max:100|min:0',
+            'refund_policy.max_days_to_refund'=> 'required|integer|max:100|min:0',
+
+
+
 
 
 
         ];
+    }
+
+
+    private function nOfPolicies(){
+        return DB::table('policies')->where('is_approved', '1')->where('is_global', '1')
+        ->count();
     }
 }

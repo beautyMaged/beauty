@@ -5,6 +5,7 @@ namespace App\Model;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\User;
 
 class Seller extends Authenticatable
 {
@@ -115,6 +116,10 @@ class Seller extends Authenticatable
     public function policies()
     {
         return $this->belongsToMany(Policy::class)->withPivot('note', 'status');
+    }
+
+    public function followingCustomers(){
+        return $this->belongsToMany(User::class);
     }
 
 

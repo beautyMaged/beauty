@@ -26,7 +26,7 @@ class Variant extends Model
 
     public function getDiscountAttribute(){
         
-        return floor(100 - ($this->sale_price / $this->price) * 100) . '%';
+        return floor(100 - ($this->sale_price / $this->price) * 100);
 
     }
 }

@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Exception;
+use Illuminate\Support\Facades\Log;
 use App\Http\Requests\Seller\RegisterShopRequest;
 
 class ShopController extends Controller
@@ -89,7 +91,85 @@ class ShopController extends Controller
     }
 
     public function store(RegisterShopRequest $request ){
-        return $request->image;
+    	try{
+    		$shopData = $this->shopData($request);
+
+            $newShop = Shop::create($shopData);
+		  
+            $branches = $request->branches;
+
+            // create branches
+            foreach($branches as $branch){
+                $newShop->branches()->create($branch);
+            }
+            
+            $connections = $request->connections;
+            // create connections
+            foreach($connections as $connection){
+                $newShop->connections()->create($connection);
+            }
+            // agency if present
+            $agency = $request->agency ?? null;
+
+            if($agency){
+            
+                $newShop->agency()->create($agency);
+            
+            }
+            // anufacturer if present
+            $manufacturer = $request->manufacturer ?? null;
+
+            if($manufacturer){
+            
+                $newShop->agency()->create($manufacturer);
+            
+            }
+            // policies of the seller
+            $policies = $request->policies;
+
+            foreach($policies as $policy){
+                Auth::seller()->policies()->where('id',$policy->id)->create($connection);
+            }
+            
+            $refund_policy = $request->refund_policy;
+            
+            $fast_deliveries = $request->fast_deliveries;
+            
+            $new_policies = $request->new_policies ?? null;
+            
+            $shop_repository = $request->shop_repository;
+            
+            $badges = $request->badges ?? null;
+            
+            $delivery_companies = $request->delivery_companies ?? null;
+            
+            $fast_deliveries = $request->fast_deliveries ?? null;
+            
+            $one_day_deliveries = $request->one_day_deliveries ?? null;
+		
+    	}catch(Exception $e){
+    		Log::info(response()->json($e->getMessage()));
+    	}
+        
+    }
+
+    private function shopData($request){
+        
+        return  $request->only([
+            'trade_name',
+            'e_trade_name',
+            'type',
+            'platform',
+            'image',
+            'banner',
+            'commercial_record',
+            'trade_gov_no',
+            'auth_authority',
+            'AUTH_no',
+            'tax_no',
+            'city_id',
+            'country_id']) ?? null;
+
     }
 
 }
